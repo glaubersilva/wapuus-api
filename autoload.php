@@ -1,6 +1,6 @@
 <?php
 /**
- * Autoloader for the plugin: GS Wapuus API
+ * Autoloader for the plugin: Wapuus API
  *
  * Based in the PSR-4 autoloader example found here:
  * https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader-examples.md
