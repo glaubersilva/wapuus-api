@@ -20,6 +20,7 @@ if ( ! class_exists( 'General_Tweaks' ) ) {
 			update_option( 'large_size_w', 1000 );
 			update_option( 'large_size_h', 1000 );
 			update_option( 'large_crop', 1 );
+			set_post_thumbnail_size( 300, 300, 1 );
 		}
 
 		public function unset_endpoints( $endpoints ) {

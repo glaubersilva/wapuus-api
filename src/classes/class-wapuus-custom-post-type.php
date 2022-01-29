@@ -24,28 +24,29 @@ if ( ! class_exists( 'Wapuus_Custom_Post_Type' ) ) {
 			$labels = array(
 				'name' => __('Wapuus', WAPUUS_API_TEXT_DOMAIN),
 				'singular_name' => __('Wapuu', WAPUUS_API_TEXT_DOMAIN),
-				'add_new' => __('Add new wapuu', WAPUUS_API_TEXT_DOMAIN),
-				'add_new_item' => __('Add new wapuu', WAPUUS_API_TEXT_DOMAIN),
-				'edit_item' => __('Edit wapuu', WAPUUS_API_TEXT_DOMAIN),
-				'new_item' => __('New wapuu', WAPUUS_API_TEXT_DOMAIN),
-				'view_item' => __('View wapuu', WAPUUS_API_TEXT_DOMAIN),
-				'search_items' => __('Search wapuus', WAPUUS_API_TEXT_DOMAIN),
-				'not_found' => __('No wapuu found', WAPUUS_API_TEXT_DOMAIN),
-				'not_found_in_trash' => __('No wapuu found in the trash', WAPUUS_API_TEXT_DOMAIN),
+				'add_new' => __('Add New Wapuu', WAPUUS_API_TEXT_DOMAIN),
+				'add_new_item' => __('Add New Wapuu', WAPUUS_API_TEXT_DOMAIN),
+				'edit_item' => __('Edit Wapuu', WAPUUS_API_TEXT_DOMAIN),
+				'new_item' => __('New Wapuu', WAPUUS_API_TEXT_DOMAIN),
+				'all_items' => __('All Wapuus', WAPUUS_API_TEXT_DOMAIN),				
+				'view_item' => __('View Wapuu', WAPUUS_API_TEXT_DOMAIN),
+				'search_items' => __('Search Wapuus', WAPUUS_API_TEXT_DOMAIN),
+				'not_found' => __('No Wapuu Found', WAPUUS_API_TEXT_DOMAIN),
+				'not_found_in_trash' => __('No Wapuu found in the trash', WAPUUS_API_TEXT_DOMAIN),
 				'menu_name' => __('Wapuus', WAPUUS_API_TEXT_DOMAIN),
-				'item_published' => __('wapuu published.', WAPUUS_API_TEXT_DOMAIN),
-				'item_published_privately' => __('wapuu published privately.', WAPUUS_API_TEXT_DOMAIN),
-				'item_reverted_to_draft' => __('wapuu reverted to draft.', WAPUUS_API_TEXT_DOMAIN),
-				'item_scheduled' => __('wapuu scheduled.', WAPUUS_API_TEXT_DOMAIN),
-				'item_updated' => __('wapuu updated.', WAPUUS_API_TEXT_DOMAIN),
+				'item_published' => __('Wapuu published.', WAPUUS_API_TEXT_DOMAIN),
+				'item_published_privately' => __('Wapuu published privately.', WAPUUS_API_TEXT_DOMAIN),
+				'item_reverted_to_draft' => __('Wapuu reverted to draft.', WAPUUS_API_TEXT_DOMAIN),
+				'item_scheduled' => __('Wapuu scheduled.', WAPUUS_API_TEXT_DOMAIN),
+				'item_updated' => __('Wapuu updated.', WAPUUS_API_TEXT_DOMAIN),
 			);
 
 			$args = array(
 				'labels' => $labels,
 				'hierarchical' => false,
 				'description' => __('Wapuus', WAPUUS_API_TEXT_DOMAIN),
-				'supports' => array( 'title', 'editor', 'excerpt', 'thumbnail', 'page-attributes', 'custom-fields'), // custom-fields é necessário pra habilitar os post_meta na API
-				'rewrite' => array('slug' => 'Wapuus'),
+				'supports' => array( 'title', /*'editor', 'excerpt', 'page-attributes',*/ 'thumbnail', 'custom-fields'), // custom-fields é necessário pra habilitar os post_meta na API
+				'rewrite' => array('slug' => 'wapuus'),
 				'public' => true,
 				'show_in_menu' => true, // Não vai aparecer no admin!
 				'show_in_rest' => true, // Habilita esse post type na API.

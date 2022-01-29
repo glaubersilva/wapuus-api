@@ -17,8 +17,11 @@ function gs_photo_data( $post ){
 		'title' => $post->post_title,
 		'date' => $post->post_date,
 		'src' => $src,
-		'weight' => $post_meta['weight'][0],
-		'age' => $post_meta['age'][0],
+		//'weight' => $post_meta['weight'][0],
+		//'age' => $post_meta['age'][0],
+		'from' => $post_meta['from'][0],
+		'from_url' => esc_url( $post_meta['from_url'][0] ),
+		'caption' => $post_meta['caption'][0],
 		'views' => $post_meta['views'][0],
 		'total_comments' => $total_comments,
 
@@ -96,7 +99,7 @@ function gs_api_photos_get( $request ) {
 	}
 
 	$args = array(
-		'post_type' => 'post',
+		'post_type' => 'wapuu',
 		'author' => $_user,
 		'posts_per_page' => $_total,
 		'paged' => $_page,

@@ -16,7 +16,7 @@ function gs_api_stats_get( $request ) {
 	}
 
 	$args = array(
-		'post_type'     => 'post',
+		'post_type'     => 'wapuu',
 		'author'        => $user->ID,
 		'post_per_page' => -1,
 	);
