@@ -9,7 +9,7 @@ function gs_api_photo_post( $request ) {
 	$user = wp_get_current_user();
 
 	if ( 0 === $user->ID ) {
-		$response = new WP_Error( 'error', 'Usuário não possui permissão.', array( 'status' => 401 ) );
+		$response = new WP_Error( 'error', 'User does not have permission.', array( 'status' => 401 ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -17,7 +17,7 @@ function gs_api_photo_post( $request ) {
 	$name  = sanitize_text_field( $request['name'] );
 
 	if ( empty( $name ) || empty( $files ) ) {
-		$response = new WP_Error( 'error', 'Dados incompletos.', array( 'status' => 422 ) );
+		$response = new WP_Error( 'error', 'Image and name are required.', array( 'status' => 422 ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -29,6 +29,28 @@ function gs_api_photo_post( $request ) {
 
 	if ( ! in_array( strtolower( $files['img']['type'] ), $allowed_image_types, true ) ) {
 		$response = new WP_Error( 'error', 'Invalide Image.', array( 'status' => 422 ) );
+		return rest_ensure_response( $response );
+	}
+
+	$file_size = $files['img']['size']; // In bytes.
+
+	/**
+	 * Convert Bytes to Megabytes
+	 * https://www.php.net/manual/pt_BR/function.filesize.php#112996
+	 */
+	$file_size = round( $file_size / pow( 1024, 2 ), 2 );
+
+	if ( $file_size > 5 ) {
+		$response = new WP_Error( 'error', 'The image size is greater than 5MB - the maximum size allowed.', array( 'status' => 422 ) );
+		return rest_ensure_response( $response );
+	}
+
+	$img_size   = getimagesize( $files['img']['tmp_name'] );
+	$img_width  = $img_size[0];
+	$img_height = $img_size[1];
+
+	if ( $img_width < 1000 || $img_height < 1000 ) {
+		$response = new WP_Error( 'error', 'The image should have at least 1000px X 1000px of dimensions.', array( 'status' => 422 ) );
 		return rest_ensure_response( $response );
 	}
 
