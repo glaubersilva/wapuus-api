@@ -4,7 +4,7 @@
  * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
  */
 
-function gs_api_photo_post( $request ) {
+function wappus_api_photo_post( $request ) {
 
 	$user = wp_get_current_user();
 
@@ -41,7 +41,7 @@ function gs_api_photo_post( $request ) {
 	$file_size = round( $file_size / pow( 1024, 2 ), 2 );
 
 	if ( $file_size > 5 ) {
-		$response = new WP_Error( 'error', 'The image size is greater than 5MB - the maximum size allowed.', array( 'status' => 422 ) );
+		$response = new WP_Error( 'error', 'The image is greater than 5MB - the maximum size allowed.', array( 'status' => 422 ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -96,16 +96,16 @@ function gs_api_photo_post( $request ) {
 	return rest_ensure_response( $response );
 }
 
-function gs_register_api_photo_post() {
+function wappus_register_api_photo_post() {
 
 	register_rest_route(
-		'gs-wapuus-api/v1',
+		'wapuus-api/v1',
 		'/photo',
 		array(
 			'methods'  => WP_REST_Server::CREATABLE, // POST
-			'callback' => 'gs_api_photo_post',
+			'callback' => 'wappus_api_photo_post',
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'gs_register_api_photo_post' );
+add_action( 'rest_api_init', 'wappus_register_api_photo_post' );

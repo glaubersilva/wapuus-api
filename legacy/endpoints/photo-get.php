@@ -43,7 +43,7 @@ function wappus_get_post_data( $post ) {
 	return $return;
 }
 
-function gs_api_photo_get( $request ) {
+function wappus_api_photo_get( $request ) {
 
 	$post_id = sanitize_key( $request['id'] );
 	$post    = get_post( $post_id );
@@ -73,21 +73,21 @@ function gs_api_photo_get( $request ) {
 	return rest_ensure_response( $response );
 }
 
-function gs_register_api_photo_get() {
+function wappus_register_api_photo_get() {
 
 	register_rest_route(
-		'gs-wapuus-api/v1',
+		'wapuus-api/v1',
 		'/photo/(?P<id>[0-9]+)',
 		array(
 			'methods'  => WP_REST_Server::READABLE, // GET
-			'callback' => 'gs_api_photo_get',
+			'callback' => 'wappus_api_photo_get',
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'gs_register_api_photo_get' );
+add_action( 'rest_api_init', 'wappus_register_api_photo_get' );
 
-function gs_api_photos_get( $request ) {
+function wappus_api_photos_get( $request ) {
 
 	$_total = sanitize_text_field( $request['_total'] ) ?: 6;
 	$_page  = sanitize_text_field( $request['_page'] ) ?: 1;
@@ -125,16 +125,16 @@ function gs_api_photos_get( $request ) {
 	return rest_ensure_response( $photos );
 }
 
-function gs_register_api_photos_get() {
+function wappus_register_api_photos_get() {
 
 	register_rest_route(
-		'gs-wapuus-api/v1',
+		'wapuus-api/v1',
 		'/photo',
 		array(
 			'methods'  => WP_REST_Server::READABLE, // GET
-			'callback' => 'gs_api_photos_get',
+			'callback' => 'wappus_api_photos_get',
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'gs_register_api_photos_get' );
+add_action( 'rest_api_init', 'wappus_register_api_photos_get' );

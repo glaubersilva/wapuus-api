@@ -4,7 +4,7 @@
  * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
  */
 
-function gs_api_password_lost( $request ) {
+function wappus_api_password_lost( $request ) {
 
 	$login = $request['login'];
 	$url   = $request['url'];
@@ -41,26 +41,26 @@ function gs_api_password_lost( $request ) {
 	return rest_ensure_response( 'Email enviado.' );
 }
 
-function gs_register_api_password_lost() {
+function wappus_register_api_password_lost() {
 
 	register_rest_route(
-		'gs-wapuus-api/v1',
+		'wapuus-api/v1',
 		'/password/lost',
 		array(
 			'methods'  => WP_REST_Server::CREATABLE, // POST
-			'callback' => 'gs_api_password_lost',
+			'callback' => 'wappus_api_password_lost',
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'gs_register_api_password_lost' );
+add_action( 'rest_api_init', 'wappus_register_api_password_lost' );
 
 
 
 
 
 
-function gs_api_password_reset( $request ) {
+function wappus_api_password_reset( $request ) {
 
 	//return rest_ensure_response( 'Senha Alterada TESTE.' );
 	$login = $request['login'];
@@ -88,16 +88,16 @@ function gs_api_password_reset( $request ) {
 }
 
 
-function gs_register_api_password_reset() {
+function wappus_register_api_password_reset() {
 
 	register_rest_route(
-		'gs-wapuus-api/v1',
+		'wapuus-api/v1',
 		'/password/reset',
 		array(
 			'methods'  => WP_REST_Server::CREATABLE, // POST
-			'callback' => 'gs_api_password_reset',
+			'callback' => 'wappus_api_password_reset',
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'gs_register_api_password_reset' );
+add_action( 'rest_api_init', 'wappus_register_api_password_reset' );

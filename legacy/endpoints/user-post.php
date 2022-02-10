@@ -4,7 +4,7 @@
  * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
  */
 
-function gs_api_user_post( $request ) {
+function wappus_api_user_post( $request ) {
 
 	$email    = sanitize_email( $request['email'] );
 	$username = sanitize_text_field( $request['username'] );
@@ -37,16 +37,16 @@ function gs_api_user_post( $request ) {
 	return rest_ensure_response( $response );
 }
 
-function gs_register_api_user_post() {
+function wappus_register_api_user_post() {
 
 	register_rest_route(
-		'gs-wapuus-api/v1',
+		'wapuus-api/v1',
 		'/user',
 		array(
 			'methods'  => WP_REST_Server::CREATABLE, // POST
-			'callback' => 'gs_api_user_post',
+			'callback' => 'wappus_api_user_post',
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'gs_register_api_user_post' );
+add_action( 'rest_api_init', 'wappus_register_api_user_post' );

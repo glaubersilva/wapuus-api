@@ -57,7 +57,7 @@ if ( ! class_exists( 'Wapuus_Custom_Post_Type' ) ) {
 
 			register_post_type($this->post_type, $args);
 
-			register_post_meta($this->post_type, 'idioma', [
+			/*register_post_meta($this->post_type, 'idioma', [
 				'show_in_rest' => true,
 				'single' => true,
 				'auth_callback' => '__return_true',
@@ -132,7 +132,7 @@ if ( ! class_exists( 'Wapuus_Custom_Post_Type' ) ) {
 				'sanitize_callback' => [ $this, 'sanitize_preco' ], // callback pra filtrar o valor do metadado antes de inserir
 				'type' => 'string',
 				'description' => __('Price', WAPUUS_API_TEXT_DOMAIN)
-			]);
+			]);*/
 
 		}
 
