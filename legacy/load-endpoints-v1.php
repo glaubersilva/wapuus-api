@@ -9,5 +9,6 @@ require_once WAPUUS_API_DIR . '/legacy/endpoints/photo-get.php';
 require_once WAPUUS_API_DIR . '/legacy/endpoints/photo-delete.php';
 require_once WAPUUS_API_DIR . '/legacy/endpoints/comment-post.php';
 require_once WAPUUS_API_DIR . '/legacy/endpoints/comment-get.php';
+require_once WAPUUS_API_DIR . '/legacy/endpoints/comment-delete.php';
 require_once WAPUUS_API_DIR . '/legacy/endpoints/stats-get.php';
 require_once WAPUUS_API_DIR . '/legacy/endpoints/password-lost-reset.php';
