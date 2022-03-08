@@ -8,9 +8,10 @@ function wappus_api_user_post( $request ) {
 
 	$email    = sanitize_email( $request['email'] );
 	$username = sanitize_text_field( $request['username'] );
-	$password = $request['password'];
+	//$password = $request['password'];
+	$url      = $request['url']; // Needs impletation on the frontend
 
-	if ( empty( $email ) || empty( $username ) || empty( $password ) ) {
+	if ( empty( $email ) || empty( $username ) /*|| empty( $password )*/ ) {
 		$response = new WP_Error( 'error', 'Dados incompletos', array( 'status' => 406 ) );
 		return rest_ensure_response( $response );
 	}
@@ -25,7 +26,7 @@ function wappus_api_user_post( $request ) {
 		return rest_ensure_response( $response );
 	}
 
-	$response = wp_insert_user(
+	$user_id = wp_insert_user(
 		array(
 			'user_login' => $username,
 			'user_email' => $email,
@@ -34,7 +35,18 @@ function wappus_api_user_post( $request ) {
 		)
 	);
 
-	return rest_ensure_response( $response );
+	if ( $user_id && ! is_wp_error( $user_id ) ) {
+
+		$user    = get_user_by( 'ID', $user_id );
+		$key     = get_password_reset_key( $user );
+		$message = "Use the link below to create your password: \r\n";
+		$url     = esc_url_raw( $url . "/?key=$key&login=" . rawurlencode( $username ) . "\r\n" );
+		$body    = $message . $url;
+
+		wp_mail( $email, 'Password Creation', $body );
+	}
+
+	return rest_ensure_response( $user_id );
 }
 
 function wappus_register_api_user_post() {
