@@ -40,8 +40,8 @@ function wappus_api_photo_post( $request ) {
 	 */
 	$file_size = round( $file_size / pow( 1024, 2 ), 2 );
 
-	if ( $file_size > 5 ) {
-		$response = new WP_Error( 'error', 'The image is greater than 5MB - the maximum size allowed.', array( 'status' => 422 ) );
+	if ( $file_size > 1 ) {
+		$response = new WP_Error( 'error', 'The image is greater than 1MB - the maximum size allowed.', array( 'status' => 422 ) );
 		return rest_ensure_response( $response );
 	}
 
