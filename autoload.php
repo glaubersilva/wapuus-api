@@ -10,47 +10,50 @@
  */
 
 spl_autoload_register(
-    function ( $class ) {
+	function ( $class ) {
 
-        // project-specific namespace prefix
-        $prefix = 'Wapuus_API\\';
+		// project-specific namespace prefix
+		$prefix = 'Wapuus_API\\';
 
-        // base directory for the namespace prefix
-        $base_dir = trailingslashit( dirname( __FILE__ ) );
+		// base directory for the namespace prefix
+		$base_dir = trailingslashit( dirname( __FILE__ ) );
 
-        // does the class use the namespace prefix?
-        $len = strlen( $prefix );
-        if ( strncmp( $prefix, $class, $len ) !== 0 ) {
-            // no, move to the next registered autoloader
-            return;
-        }
-
-        $relative_class = substr( $class, $len ) . '.php';
-
-        $path = explode( '\\', strtolower( str_replace( '_', '-', $relative_class ) ) );
-        $file = array_pop( $path );
-
-        if ( strpos( strtolower($relative_class), 'trait') == false ) {
-            $file = 'class-' . $file;
-        } else {
-			$file = 'trait-' . $file;
+		// does the class use the namespace prefix?
+		$len = strlen( $prefix );
+		if ( strncmp( $prefix, $class, $len ) !== 0 ) {
+			// no, move to the next registered autoloader
+			return;
 		}
 
-        /*$reflection = new ReflectionClass( $class );
+		$relative_class = substr( $class, $len ) . '.php';
 
-        if ( $reflection->isInterface() ) {
-            $file = 'interface-' . $file;
-        } elseif ( $reflection->isTrait() ) {
-            $file = 'trait-' . $file;
-        } else {
-            $file = 'class-' . $file;
-        }*/
+		$path = explode( '\\', strtolower( str_replace( '_', '-', $relative_class ) ) );
+		$file = array_pop( $path );
 
-        $file = $base_dir . implode( '/', $path ) . '/' . $file;
+		if ( strpos( strtolower( $relative_class ), 'trait' ) !== false ) {
+			$file = 'trait-' . $file;
+		} elseif ( strpos( strtolower( $relative_class ), 'interface' ) !== false ) {
+			$file = 'interface-' . $file;
+		} else {
+			$file = 'class-' . $file;
+		}
 
-        // if the file exists, require it
-        if ( file_exists( $file ) ) {
-            require $file;
-        }
-    }
+		/*
+		$reflection = new ReflectionClass( $class );
+
+		if ( $reflection->isInterface() ) {
+			$file = 'interface-' . $file;
+		} elseif ( $reflection->isTrait() ) {
+			$file = 'trait-' . $file;
+		} else {
+			$file = 'class-' . $file;
+		}*/
+
+		$file = $base_dir . implode( '/', $path ) . '/' . $file;
+
+		// if the file exists, require it
+		if ( file_exists( $file ) ) {
+			require $file;
+		}
+	}
 );

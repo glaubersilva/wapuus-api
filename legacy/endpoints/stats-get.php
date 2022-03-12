@@ -8,12 +8,12 @@ function wappus_api_stats_get( $request ) {
 
 	$user = wp_get_current_user();
 
-	if ( 0 === $user->ID ) {
+	/*if ( 0 === $user->ID ) {
 
 		$response = new WP_Error( 'error', 'Usuário não possui permissão.', array( 'status' => 401 ) );
 		return rest_ensure_response( $response );
 
-	}
+	}*/
 
 	$args = array(
 		'post_type'     => 'wapuu',
@@ -40,6 +40,18 @@ function wappus_api_stats_get( $request ) {
 	return rest_ensure_response( $stats );
 }
 
+function wappus_api_stats_permission_callback(){
+
+	if ( ! is_user_logged_in() ) {
+
+		$response = new \WP_Error( 'error', 'Usuário não possui permissão.', array( 'status' => 401 ) );
+		return rest_ensure_response( $response );
+
+	}
+
+	return true;
+}
+
 function wappus_register_api_stats_get() {
 
 	register_rest_route(
@@ -48,6 +60,7 @@ function wappus_register_api_stats_get() {
 		array(
 			'methods'  => WP_REST_Server::READABLE, // GET
 			'callback' => 'wappus_api_stats_get',
+			'permission_callback' => 'wappus_api_stats_permission_callback',
 		)
 	);
 
