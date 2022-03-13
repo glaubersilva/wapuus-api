@@ -11,7 +11,7 @@ if ( ! class_exists( 'My_REST_Posts_Controller' ) ) {
 			$this->namespace     = '/gs-posts/v1';
 			$this->resource_name = 'posts';
 
-			//add_action('rest_api_init', array($this, 'register_routes'));
+			add_action('rest_api_init', array($this, 'register_routes'));
 		}
 
 		// Register our routes.

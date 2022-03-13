@@ -12,7 +12,7 @@ class Stats_Get extends Abstract_Endpoint {
 	}
 
 	public function get_methods() {
-		return \WP_REST_Server::READABLE; //GET method.
+		return \WP_REST_Server::READABLE; // GET method.
 	}
 
 	public function get_arguments() {
