@@ -5,6 +5,7 @@ namespace Wapuus_API\Tests;
 class Wapuus_API_V1_Comment_Tests extends Unit_API_Test_Case {
 
 	public $comment_sample = 'This is a sample comment! =)';
+	public $comment_sample_id;
 	public $post_sample_id;
 
 	/**
@@ -26,6 +27,17 @@ class Wapuus_API_V1_Comment_Tests extends Unit_API_Test_Case {
 				'post_status' => 'publish',
 			)
 		);
+
+		$user = wp_get_current_user();
+
+		$response = array(
+			'user_id'         => $user->ID,
+			'comment_author'  => $user->user_login,
+			'comment_content' => $this->comment_sample,
+			'comment_post_ID' => $this->post_sample_id,
+		);
+
+		$this->comment_sample_id = wp_insert_comment( $response );
 	}
 
 	public function tear_down() {
@@ -61,17 +73,6 @@ class Wapuus_API_V1_Comment_Tests extends Unit_API_Test_Case {
 
 	public function test_comment_get() {
 
-		$user = wp_get_current_user();
-
-		$response = array(
-			'user_id'         => $user->ID,
-			'comment_author'  => $user->user_login,
-			'comment_content' => $this->comment_sample,
-			'comment_post_ID' => $this->post_sample_id,
-		);
-
-		$comment_id = wp_insert_comment( $response );
-
 		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/comment/' . $this->post_sample_id );
 
 		$response = $this->server->dispatch( $request );
@@ -85,8 +86,29 @@ class Wapuus_API_V1_Comment_Tests extends Unit_API_Test_Case {
 		$result   = $data[0]->comment_content;
 		$this->assertEquals( $expected, $result );
 
-		$expected = $comment_id;
+		$expected = $this->comment_sample_id;
 		$result   = $data[0]->comment_ID;
+		$this->assertEquals( $expected, $result );
+
+		$headers  = $response->get_headers();
+		$expected = $headers;
+		$result   = array();
+		$this->assertEquals( $expected, $result );
+	}
+
+	public function test_comment_delete() {
+
+		$request = new \WP_REST_Request( 'DELETE', '/wapuus-api/v1/comment/' . $this->comment_sample_id );
+
+		$response = $this->server->dispatch( $request );
+
+		$expected = 200;
+		$result   = $response->get_status();
+		$this->assertEquals( $expected, $result );
+
+		$data     = $response->get_data();
+		$expected = true;
+		$result   = $data;
 		$this->assertEquals( $expected, $result );
 
 		$headers  = $response->get_headers();
