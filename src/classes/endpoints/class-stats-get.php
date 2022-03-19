@@ -50,7 +50,6 @@ class Stats_Get extends Abstract_Endpoint {
 					'id'    => $post->ID,
 					'title' => $post->post_title,
 					'views' => get_post_meta( $post->ID, 'views', true ),
-
 				);
 			}
 		}

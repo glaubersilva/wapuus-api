@@ -8,10 +8,10 @@ if ( ! class_exists( 'My_REST_Posts_Controller' ) ) {
 
 		// Here initialize our namespace and resource name.
 		public function __construct() {
-			$this->namespace     = '/gs-posts/v1';
+			$this->namespace     = 'gs-posts/v1';
 			$this->resource_name = 'posts';
 
-			add_action('rest_api_init', array($this, 'register_routes'));
+			add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		}
 
 		// Register our routes.
@@ -216,7 +216,8 @@ if ( ! class_exists( 'My_REST_Posts_Controller' ) ) {
 }
 
 // Function to register our new routes from the controller.
-/*function prefix_register_my_rest_routes() {
+/*
+function prefix_register_my_rest_routes() {
 	$controller = new My_REST_Posts_Controller();
 	$controller->register_routes();
 }

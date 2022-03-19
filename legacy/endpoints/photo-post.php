@@ -96,6 +96,11 @@ function wappus_api_photo_post( $request ) {
 	return rest_ensure_response( $response );
 }
 
+function wappus_register_api_photo_post_permission_callback(){
+
+	return true;
+}
+
 function wappus_register_api_photo_post() {
 
 	register_rest_route(
@@ -104,6 +109,7 @@ function wappus_register_api_photo_post() {
 		array(
 			'methods'  => WP_REST_Server::CREATABLE, // POST
 			'callback' => 'wappus_api_photo_post',
+			'permission_callback' => 'wappus_register_api_photo_post_permission_callback',
 		)
 	);
 

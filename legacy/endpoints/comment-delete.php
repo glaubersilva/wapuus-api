@@ -20,6 +20,11 @@ function wappus_api_comment_delete( $request ) {
 	return rest_ensure_response( $response );
 }
 
+function wappus_api_comment_delete_permission_callback(){
+	
+	return true;
+}
+
 function wappus_register_api_comment_delete() {
 
 	register_rest_route(
@@ -28,6 +33,7 @@ function wappus_register_api_comment_delete() {
 		array(
 			'methods'  => WP_REST_Server::DELETABLE, // DELETE
 			'callback' => 'wappus_api_comment_delete',
+			'permission_callback' => 'wappus_api_comment_delete_permission_callback',
 		)
 	);
 }

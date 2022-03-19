@@ -49,7 +49,7 @@ if ( ! class_exists( 'Wapuus_Custom_Post_Type' ) ) {
 				'rewrite' => array('slug' => 'wapuus'),
 				'public' => true,
 				'show_in_menu' => true, // Não vai aparecer no admin!
-				'show_in_rest' => true, // Habilita esse post type na API.
+				'show_in_rest' => false, // Habilita esse post type na API.
 				'rest_base' => 'Wapuus', // Faz com que o endpoint da API seja 'Wapuus' no plural, e não wapuu, no singular, como é o o slug do post type.
 				'has_archive' => true,
 				'exclude_from_search' => true,

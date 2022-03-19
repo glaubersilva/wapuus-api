@@ -49,6 +49,11 @@ function wappus_api_user_post( $request ) {
 	return rest_ensure_response( $user_id );
 }
 
+function wappus_register_api_user_post_permission_callback(){
+
+	return true;
+}
+
 function wappus_register_api_user_post() {
 
 	register_rest_route(
@@ -57,6 +62,7 @@ function wappus_register_api_user_post() {
 		array(
 			'methods'  => WP_REST_Server::CREATABLE, // POST
 			'callback' => 'wappus_api_user_post',
+			'permission_callback' => 'wappus_register_api_user_post_permission_callback',
 		)
 	);
 

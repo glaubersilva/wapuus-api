@@ -73,6 +73,11 @@ function wappus_api_photo_get( $request ) {
 	return rest_ensure_response( $response );
 }
 
+function wappus_api_photo_get_permission_callback() {
+
+	return true;
+}
+
 function wappus_register_api_photo_get() {
 
 	register_rest_route(
@@ -81,6 +86,7 @@ function wappus_register_api_photo_get() {
 		array(
 			'methods'  => WP_REST_Server::READABLE, // GET
 			'callback' => 'wappus_api_photo_get',
+			'permission_callback' => 'wappus_api_photo_get_permission_callback',
 		)
 	);
 
@@ -125,6 +131,11 @@ function wappus_api_photos_get( $request ) {
 	return rest_ensure_response( $photos );
 }
 
+function wappus_api_photos_get_permission_callback() {
+
+	return true;
+}
+
 function wappus_register_api_photos_get() {
 
 	register_rest_route(
@@ -133,6 +144,7 @@ function wappus_register_api_photos_get() {
 		array(
 			'methods'  => WP_REST_Server::READABLE, // GET
 			'callback' => 'wappus_api_photos_get',
+			'permission_callback' => 'wappus_api_photos_get_permission_callback',
 		)
 	);
 

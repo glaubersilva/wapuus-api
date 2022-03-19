@@ -33,7 +33,7 @@ function wappus_api_stats_get( $request ) {
 	return rest_ensure_response( $stats );
 }
 
-function wappus_api_stats_permission_callback(){
+function wappus_api_stats_get_permission_callback(){
 
 	if ( ! is_user_logged_in() ) {
 
@@ -53,7 +53,7 @@ function wappus_register_api_stats_get() {
 		array(
 			'methods'  => WP_REST_Server::READABLE, // GET
 			'callback' => 'wappus_api_stats_get',
-			'permission_callback' => 'wappus_api_stats_permission_callback',
+			'permission_callback' => 'wappus_api_stats_get_permission_callback',
 		)
 	);
 

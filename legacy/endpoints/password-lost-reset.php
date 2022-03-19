@@ -4,6 +4,11 @@
  * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
  */
 
+function wappus_api_password_permission_callback(){
+
+	return true;
+}
+
 function wappus_api_password_lost( $request ) {
 
 	$login = $request['login'];
@@ -49,6 +54,7 @@ function wappus_register_api_password_lost() {
 		array(
 			'methods'  => WP_REST_Server::CREATABLE, // POST
 			'callback' => 'wappus_api_password_lost',
+			'permission_callback' => 'wappus_api_password_permission_callback',
 		)
 	);
 
@@ -87,7 +93,6 @@ function wappus_api_password_reset( $request ) {
 	return rest_ensure_response( 'Senha Alterada.' );
 }
 
-
 function wappus_register_api_password_reset() {
 
 	register_rest_route(
@@ -96,6 +101,8 @@ function wappus_register_api_password_reset() {
 		array(
 			'methods'  => WP_REST_Server::CREATABLE, // POST
 			'callback' => 'wappus_api_password_reset',
+			'callback' => 'wappus_api_password_reset',
+			'permission_callback' => 'wappus_api_password_permission_callback',
 		)
 	);
 

@@ -36,6 +36,11 @@ function wappus_api_comment_post( $request ) {
 	return rest_ensure_response( $comment );
 }
 
+function wappus_api_comment_post_permission_callback(){
+	
+	return true;
+}
+
 function wappus_register_api_comment_post() {
 
 	register_rest_route(
@@ -44,6 +49,7 @@ function wappus_register_api_comment_post() {
 		array(
 			'methods'  => WP_REST_Server::CREATABLE, // POST
 			'callback' => 'wappus_api_comment_post',
+			'permission_callback' => 'wappus_api_comment_post_permission_callback',
 		)
 	);
 
