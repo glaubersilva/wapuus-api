@@ -14,12 +14,22 @@ class Unit_Test_Case extends \WP_UnitTestCase {
 
 	protected $user_id;
 
+	protected $user_login = 'admin38974238473824';
+
+	protected $user_pass = 'admin38974238473824';
+
 	public function set_up() {
 
 		parent::set_up();
 
 		// Antes de cada teste, cria um novo admin e faz login com ele.
-		$new_admin_user = $this->factory()->user->create( array( 'role' => 'administrator' ) );
+		$new_admin_user = $this->factory()->user->create(
+			array(
+				'role'       => 'administrator',
+				'user_login' => $this->user_login,
+				'user_pass'  => $this->user_pass,
+			)
+		);
 		wp_set_current_user( $new_admin_user );
 		$this->user_id = $new_admin_user;
 

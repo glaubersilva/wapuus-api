@@ -14,6 +14,7 @@ function wappus_api_photo_post( $request ) {
 	}
 
 	$files = $request->get_file_params();
+
 	$name  = sanitize_text_field( $request['name'] );
 
 	if ( empty( $name ) || empty( $files ) ) {
@@ -87,7 +88,25 @@ function wappus_api_photo_post( $request ) {
 	require_once ABSPATH . 'wp-admin/includes/file.php';
 	require_once ABSPATH . 'wp-admin/includes/media.php';
 
-	$photo_id = media_handle_upload( 'img', $post_id );
+	if ( ! empty( $_FILES ) ) {
+		/**
+		 * If $_FILES is not empty it means that the data from $files['img'] come by an "input file field" from a form.
+		 *
+		 * So we need to use the media_handle_upload() function because it will use the PHP is_uploaded_file() method to check if the file on the $_FILES is valid.
+		 */
+		$photo_id = media_handle_upload( 'img', $post_id ); // Should be used for file uploads (input file field).
+	} else {
+		/**
+		 * Handle sideloads, which is the process of retrieving a media item from another server instead of a traditional media upload.
+		 *
+		 * Definition of sideload: (2) Copying a file from a site on the Internet to the user's account in an online storage service, rather than downloading it directly to the user's computer.
+		 * More details here: https://www.pcmag.com/encyclopedia/term/sideload
+		 *
+		 * This is necessary to get the upload done - escaping the is_uploaded_file() verification - in cases where we are testing our endpoint via PHPUnit.
+		 */
+		$photo_id = media_handle_sideload( $files['img'], $post_id ); // Should be used for remote file uploads (input text field).
+	}
+
 	update_post_meta( $post_id, 'img', $photo_id );
 	set_post_thumbnail( $post_id, $photo_id );
 
@@ -96,7 +115,7 @@ function wappus_api_photo_post( $request ) {
 	return rest_ensure_response( $response );
 }
 
-function wappus_register_api_photo_post_permission_callback(){
+function wappus_register_api_photo_post_permission_callback() {
 
 	return true;
 }
@@ -107,8 +126,8 @@ function wappus_register_api_photo_post() {
 		'wapuus-api/v1',
 		'/photo',
 		array(
-			'methods'  => WP_REST_Server::CREATABLE, // POST
-			'callback' => 'wappus_api_photo_post',
+			'methods'             => WP_REST_Server::CREATABLE, // POST
+			'callback'            => 'wappus_api_photo_post',
 			'permission_callback' => 'wappus_register_api_photo_post_permission_callback',
 		)
 	);
