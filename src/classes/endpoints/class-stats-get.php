@@ -4,6 +4,7 @@ namespace Wapuus_API\Src\Classes\Endpoints;
 
 use Wapuus_API\Src\Classes\Endpoints\Abstract_Endpoint;
 use Wapuus_API\Src\Classes\Responses\Error\Unauthorized;
+use Wapuus_API\Src\Classes\Resource_Schema;
 
 class Stats_Get extends Abstract_Endpoint {
 
@@ -17,6 +18,10 @@ class Stats_Get extends Abstract_Endpoint {
 
 	public function get_arguments() {
 		return array();
+	}
+
+	public function resource_schema() {
+		return Resource_Schema::get_instance()->stats;
 	}
 
 	public function check_permissions() {

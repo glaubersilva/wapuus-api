@@ -67,10 +67,13 @@ if ( ! class_exists( 'Load_Endpoints_V2' ) ) {
 				'wapuus-api/v2',
 				$endpoint->get_path(),
 				array(
-					'args'                => $endpoint->get_arguments(),
-					'callback'            => $endpoint->get_callback(),
-					'methods'             => $endpoint->get_methods(),
-					'permission_callback' => $endpoint->get_permission_callback(),
+					'schema' => $endpoint->get_schema(), // Here we add our PHP representation of JSON Schema for the resource >>> https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Check this link for more details!
+					array(
+						'args'                => $endpoint->get_arguments(), // Here we add our PHP representation of JSON Schema for the args >>> https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema <<< Check this link for more details!
+						'callback'            => $endpoint->get_callback(),
+						'methods'             => $endpoint->get_methods(),
+						'permission_callback' => $endpoint->get_permission_callback(),
+					),
 				)
 			);
 		}

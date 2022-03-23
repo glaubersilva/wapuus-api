@@ -14,6 +14,15 @@ abstract class Abstract_Endpoint implements Endpoint {
 	 *
 	 * @return callable
 	 */
+	final public function get_schema() {
+		return array( $this, 'resource_schema' );
+	}
+
+	/**
+	 * Get the callback used by the REST API endpoint.
+	 *
+	 * @return callable
+	 */
 	final public function get_callback() {
 		return array( $this, 'respond' );
 	}
