@@ -20,7 +20,31 @@ if ( ! class_exists( 'Stats_Resource' ) ) {
 
 			$this->name = 'stats';
 
-			$this->schema = array();
+			$this->schema = array(
+				'$schema'    => 'http://json-schema.org/draft-04/schema#',
+				'title'      => 'stats',
+				'type'       => 'object',
+				'properties' => array(
+					'id'    => array(
+						'description' => __( 'Unique identifier for the photo.' ),
+						'type'        => 'integer',
+						'context'     => array( 'view' ),
+						'readonly'    => true,
+					),
+					'name'  => array(
+						'description' => __( 'The name of the photo.' ),
+						'type'        => 'string',
+						'context'     => array( 'view' ),
+						'readonly'    => true,
+					),
+					'views' => array(
+						'description' => __( 'The views counter of the photo.' ),
+						'type'        => 'integer',
+						'context'     => array( 'view' ),
+						'readonly'    => true,
+					),
+				),
+			);
 
 			return $this->schema;
 		}

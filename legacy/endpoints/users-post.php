@@ -30,7 +30,7 @@ function wappus_api_user_post( $request ) {
 		array(
 			'user_login' => $username,
 			'user_email' => $email,
-			'user_pass'  => $password,
+			//'user_pass'  => $password,
 			'role'       => 'subscriber',
 		)
 	);

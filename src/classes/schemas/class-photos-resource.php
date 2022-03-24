@@ -20,7 +20,19 @@ if ( ! class_exists( 'Photos_Resource' ) ) {
 
 			$this->name = 'photos';
 
-			$this->schema = array();
+			$this->schema = array(
+				'$schema'    => 'http://json-schema.org/draft-04/schema#',
+				'title'      => 'photo',
+				'type'       => 'object',
+				'properties' => array(
+					'id'           => array(
+						'description' => __( 'Unique identifier for the photo.' ),
+						'type'        => 'integer',
+						'context'     => array( 'view', 'edit', 'embed' ),
+						'readonly'    => true,
+					),
+				),
+			);
 
 			return $this->schema;
 		}
