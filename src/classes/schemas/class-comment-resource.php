@@ -18,6 +18,8 @@ if ( ! class_exists( 'Comment_Resource' ) ) {
 
 		protected function init() {
 
+			$this->name = 'comment';
+
 			$this->schema = array(
 				// This tells the spec of JSON Schema we are using which is draft 4.
 				'$schema'    => 'http://json-schema.org/draft-04/schema#',

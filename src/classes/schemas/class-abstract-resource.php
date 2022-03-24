@@ -15,6 +15,13 @@ namespace Wapuus_API\Src\Classes\Schemas;
 abstract class Abstract_Resource {
 
 	/**
+	 * The name of the resource.
+	 *
+	 * @var $name
+	 */
+	protected $name;
+
+	/**
 	 * Stores the schema of the resource.
 	 *
 	 * @var $schema
@@ -40,6 +47,18 @@ abstract class Abstract_Resource {
 		$this->schema = $this->init();
 
 		return $this->schema;
+	}
+
+	/**
+	 * Return the name of the resource - comment, photo, user etc.
+	 */
+	final public function name() {
+
+		if ( empty( $this->name ) ) {
+			$this->name = 'Undefined';
+		}
+
+		return $this->name;
 	}
 
 	/**

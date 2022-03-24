@@ -18,9 +18,11 @@ if ( ! class_exists( 'Stats_Resource' ) ) {
 
 		protected function init() {
 
-			$schema = array();
+			$this->name = 'stats';
 
-			return $schema;
+			$this->schema = array();
+
+			return $this->schema;
 		}
 	}
 }

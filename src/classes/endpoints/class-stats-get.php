@@ -9,7 +9,7 @@ use Wapuus_API\Src\Classes\Schemas\Stats_Resource;
 class Stats_Get extends Abstract_Endpoint {
 
 	public function get_path() {
-		return '/stats';
+		return '/' . Stats_Resource::get_instance()->name();
 	}
 
 	public function get_methods() {
