@@ -1,8 +1,8 @@
 <?php
 /**
- * Schema for the comment resource.
+ * Schema for the comments resource.
  *
- * @package \Wapuus_API\Src\Classes\Schemas\Comment
+ * @package \Wapuus_API\Src\Classes\Schemas\Comments_Resource
  */
 
 namespace Wapuus_API\Src\Classes\Schemas;
@@ -10,15 +10,15 @@ namespace Wapuus_API\Src\Classes\Schemas;
 use \Wapuus_API\Src\Classes\Schemas\Abstract_Resource;
 use \Wapuus_API\Src\Traits\Singleton;
 
-if ( ! class_exists( 'Comment_Resource' ) ) {
+if ( ! class_exists( 'Comments_Resource' ) ) {
 
-	class Comment_Resource extends Abstract_Resource {
+	class Comments_Resource extends Abstract_Resource {
 
 		use Singleton;
 
 		protected function init() {
 
-			$this->name = 'comment';
+			$this->name = 'comments';
 
 			$this->schema = array(
 				// This tells the spec of JSON Schema we are using which is draft 4.

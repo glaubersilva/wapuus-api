@@ -55,9 +55,9 @@ class Wapuus_API_V1_Photo_Tests extends Unit_API_Test_Case {
 		parent::tear_down();
 	}
 
-	public function test_photo_post() {
+	public function test_photos_post() {
 
-		$request = new \WP_REST_Request( 'POST', '/wapuus-api/v1/photo' );
+		$request = new \WP_REST_Request( 'POST', '/wapuus-api/v1/photos' );
 
 		$file_params = array(
 			'img' => $this->temp_file_data(),

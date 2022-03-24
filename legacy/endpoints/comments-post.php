@@ -45,9 +45,9 @@ function wappus_register_api_comment_post() {
 
 	register_rest_route(
 		'wapuus-api/v1',
-		'/comment/(?P<id>[0-9]+)',
+		'/comments/(?P<id>[0-9]+)',
 		array( // Isso declara o Schema do endpoint. Note que o schema é o mesmo para todos os métodos que o endpoint aceita.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comment_Resource::get_instance(), 'schema' ),
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ),
 			array(
 				'methods'  => WP_REST_Server::CREATABLE, // POST
 				'callback' => 'wappus_api_comment_post',

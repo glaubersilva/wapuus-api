@@ -32,7 +32,7 @@ function wappus_register_api_user_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
-		'/user',
+		'/users',
 		array(
 			'methods'  => WP_REST_Server::READABLE, // GET
 			'callback' => 'wappus_api_user_get',

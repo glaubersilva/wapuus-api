@@ -1,8 +1,8 @@
 <?php
 /**
- * Schema for the stats resource.
+ * Schema for the photos resource.
  *
- * @package \Wapuus_API\Src\Classes\Schemas\Stats_Resource
+ * @package \Wapuus_API\Src\Classes\Schemas\Photos_Resource
  */
 
 namespace Wapuus_API\Src\Classes\Schemas;
@@ -10,15 +10,15 @@ namespace Wapuus_API\Src\Classes\Schemas;
 use \Wapuus_API\Src\Classes\Schemas\Abstract_Resource;
 use \Wapuus_API\Src\Traits\Singleton;
 
-if ( ! class_exists( 'Stats_Resource' ) ) {
+if ( ! class_exists( 'Photos_Resource' ) ) {
 
-	class Stats_Resource extends Abstract_Resource {
+	class Photos_Resource extends Abstract_Resource {
 
 		use Singleton;
 
 		protected function init() {
 
-			$this->name = 'stats';
+			$this->name = 'photos';
 
 			$this->schema = array();
 

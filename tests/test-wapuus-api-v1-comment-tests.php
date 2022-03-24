@@ -44,9 +44,9 @@ class Wapuus_API_V1_Comment_Tests extends Unit_API_Test_Case {
 		parent::tear_down();
 	}
 
-	public function test_comment_post() {
+	public function test_comments_post() {
 
-		$request = new \WP_REST_Request( 'POST', '/wapuus-api/v1/comment/' . $this->post_sample_id );
+		$request = new \WP_REST_Request( 'POST', '/wapuus-api/v1/comments/' . $this->post_sample_id );
 
 		$request_query = array(
 			'comment' => $this->comment_sample,
@@ -71,9 +71,9 @@ class Wapuus_API_V1_Comment_Tests extends Unit_API_Test_Case {
 		$this->assertEquals( $expected, $result );
 	}
 
-	public function test_comment_get() {
+	public function test_comments_get() {
 
-		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/comment/' . $this->post_sample_id );
+		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/comments/' . $this->post_sample_id );
 
 		$response = $this->server->dispatch( $request );
 
@@ -96,9 +96,9 @@ class Wapuus_API_V1_Comment_Tests extends Unit_API_Test_Case {
 		$this->assertEquals( $expected, $result );
 	}
 
-	public function test_comment_delete() {
+	public function test_comments_delete() {
 
-		$request = new \WP_REST_Request( 'DELETE', '/wapuus-api/v1/comment/' . $this->comment_sample_id );
+		$request = new \WP_REST_Request( 'DELETE', '/wapuus-api/v1/comments/' . $this->comment_sample_id );
 
 		$response = $this->server->dispatch( $request );
 

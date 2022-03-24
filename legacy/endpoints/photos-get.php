@@ -82,7 +82,7 @@ function wappus_register_api_photo_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
-		'/photo/(?P<id>[0-9]+)',
+		'/photos/(?P<id>[0-9]+)',
 		array(
 			'methods'  => WP_REST_Server::READABLE, // GET
 			'callback' => 'wappus_api_photo_get',
@@ -140,7 +140,7 @@ function wappus_register_api_photos_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
-		'/photo',
+		'/photos',
 		array(
 			'methods'  => WP_REST_Server::READABLE, // GET
 			'callback' => 'wappus_api_photos_get',

@@ -124,7 +124,7 @@ function wappus_register_api_photo_post() {
 
 	register_rest_route(
 		'wapuus-api/v1',
-		'/photo',
+		'/photos',
 		array(
 			'methods'             => WP_REST_Server::CREATABLE, // POST
 			'callback'            => 'wappus_api_photo_post',
