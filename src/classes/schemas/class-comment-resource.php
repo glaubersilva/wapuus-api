@@ -1,29 +1,24 @@
 <?php
 /**
- * The schema for a resource indicates what fields are present for a particular object.
- * When we register our routes we can also specify the resource schema for the route.
- * More details here: https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema
+ * Schema for the comment resource.
  *
- * @package \Wapuus_API\Src\Classes\Resource_Schema
+ * @package \Wapuus_API\Src\Classes\Schemas\Comment
  */
 
-namespace Wapuus_API\Src\Classes;
+namespace Wapuus_API\Src\Classes\Schemas;
 
-if ( ! class_exists( 'Resource_Schema' ) ) {
+use \Wapuus_API\Src\Classes\Schemas\Abstract_Resource;
+use \Wapuus_API\Src\Traits\Singleton;
 
-	class Resource_Schema {
+if ( ! class_exists( 'Comment_Resource' ) ) {
 
-		use \Wapuus_API\Src\Traits\Singleton;
+	class Comment_Resource extends Abstract_Resource {
 
-		public $comment = array();
-		public $stats   = array();
+		use Singleton;
 
 		protected function init() {
-			$this->comment = $this->get_comment_schema();
-		}
 
-		public function get_comment_schema() {
-			$schema = array(
+			$this->schema = array(
 				// This tells the spec of JSON Schema we are using which is draft 4.
 				'$schema'    => 'http://json-schema.org/draft-04/schema#',
 				// The title property marks the identity of the resource.
@@ -48,7 +43,7 @@ if ( ! class_exists( 'Resource_Schema' ) ) {
 				),
 			);
 
-			return $schema;
+			return $this->schema;
 		}
 	}
 }

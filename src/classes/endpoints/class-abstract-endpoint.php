@@ -51,4 +51,11 @@ abstract class Abstract_Endpoint implements Endpoint {
 	 * @return mixed
 	 */
 	abstract public function check_permissions();
+
+	/**
+	 * Desc.
+	 *
+	 * @return mixed
+	 */
+	abstract public function resource_schema();
 }
