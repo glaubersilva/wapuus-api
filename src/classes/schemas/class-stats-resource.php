@@ -26,19 +26,19 @@ if ( ! class_exists( 'Stats_Resource' ) ) {
 				'type'       => 'object',
 				'properties' => array(
 					'id'    => array(
-						'description' => __( 'Unique identifier for the photo.' ),
+						'description' => __( 'Unique identifier for the photo object.' ),
 						'type'        => 'integer',
 						'context'     => array( 'view' ),
 						'readonly'    => true,
 					),
-					'name'  => array(
-						'description' => __( 'The name of the photo.' ),
+					'title'  => array(
+						'description' => __( 'The name of the photo object.' ),
 						'type'        => 'string',
 						'context'     => array( 'view' ),
 						'readonly'    => true,
 					),
 					'views' => array(
-						'description' => __( 'The views counter of the photo.' ),
+						'description' => __( 'The views counter of the photo object.' ),
 						'type'        => 'integer',
 						'context'     => array( 'view' ),
 						'readonly'    => true,

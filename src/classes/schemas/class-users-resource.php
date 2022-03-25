@@ -40,14 +40,14 @@ if ( ! class_exists( 'Users_Resource' ) ) {
 							'sanitize_callback' => array( $this, 'check_username' ),
 						),
 					),
-					/*'name'     => array(
+					'name'     => array(
 						'description' => __( 'Display name for the user.' ),
 						'type'        => 'string',
 						'context'     => array( 'embed', 'view', 'edit' ),
 						'arg_options' => array(
 							'sanitize_callback' => 'sanitize_text_field',
 						),
-					),*/
+					),
 					'email'    => array(
 						'description' => __( 'The email address for the user.' ),
 						'type'        => 'string',

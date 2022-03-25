@@ -33,10 +33,13 @@ function wappus_register_api_user_get() {
 	register_rest_route(
 		'wapuus-api/v1',
 		'/users',
-		array(
-			'methods'  => WP_REST_Server::READABLE, // GET
-			'callback' => 'wappus_api_user_get',
-			'permission_callback' => 'wappus_api_user_get_permission_callback',
+		array( // Isso declara o Schema do endpoint. Note que o schema é o mesmo para todos os métodos que o endpoint aceita.
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Users_Resource::get_instance(), 'schema' ),
+			array(
+				'methods'  => WP_REST_Server::READABLE, // GET
+				'callback' => 'wappus_api_user_get',
+				'permission_callback' => 'wappus_api_user_get_permission_callback',
+			),
 		)
 	);
 

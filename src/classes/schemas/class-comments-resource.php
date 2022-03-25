@@ -25,26 +25,25 @@ if ( ! class_exists( 'Comments_Resource' ) ) {
 				'title'      => 'comment',
 				'type'       => 'object',
 				'properties' => array(
-					'id'           => array(
+					'comment_post_ID' => array(
+						'description' => __( 'Unique identifier for the photo object.' ),
+						'type'        => 'integer',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+					'comment_author'  => array(
+						'description' => __( 'The username of the user object.' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),
+					'comment_ID'      => array(
 						'description' => __( 'Unique identifier for the comment.' ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
-						'readonly'    => true,
 					),
-					'author'       => array(
-						'description' => __( 'The ID of the user object, if author was a user.' ),
-						'type'        => 'integer',
-						'context'     => array( 'view', 'edit', 'embed' ),
-					),
-					'author_email' => array(
-						'description' => __( 'Email address for the comment author.' ),
+					'comment_content' => array(
+						'description' => __( 'The content of the comment.' ),
 						'type'        => 'string',
-						'format'      => 'email',
-						'context'     => array( 'edit' ),
-						'arg_options' => array(
-							'sanitize_callback' => array( $this, 'check_comment_author_email' ),
-							'validate_callback' => null, // Skip built-in validation of 'email'.
-						),
+						'context'     => array( 'view', 'edit', 'embed' ),
 					),
 				),
 			);

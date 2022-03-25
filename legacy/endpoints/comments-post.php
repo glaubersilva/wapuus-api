@@ -73,7 +73,7 @@ function wappus_api_comment_post_args() {
 
 	$args = array( // A declaração dos argumentos que esse endpoint aceita.
 		'id' => array( // Cada argumento descrito em JSON Schema.
-			'description' => 'The ID of the photo (Wapuu) that will receive the comment.',
+			'description' => 'The ID of the photo object that will receive the comment.',
 			'type'        => 'integer',
 			//'default'     => 0,
 			'required'    => true,
