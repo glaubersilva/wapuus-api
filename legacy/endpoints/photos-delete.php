@@ -39,9 +39,22 @@ function wappus_register_api_photo_delete() {
 				'methods'  => WP_REST_Server::DELETABLE, // DELETE
 				'callback' => 'wappus_api_photo_delete',
 				'permission_callback' => 'wappus_api_photo_delete_permission_callback',
+				'args' => wappus_api_photo_delete_args(),
 			),
 		)
 	);
 
 }
 add_action( 'rest_api_init', 'wappus_register_api_photo_delete' );
+
+function wappus_api_photo_delete_args(){
+	$args = array( 
+		'id' => array( 
+			'description' => 'The ID of the photo to delete.',
+			'type'        => 'integer',
+			'required'    => true,
+		),
+	);
+
+	return $args;
+}

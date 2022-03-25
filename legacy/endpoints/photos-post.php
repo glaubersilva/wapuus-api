@@ -15,7 +15,7 @@ function wappus_api_photo_post( $request ) {
 
 	$files = $request->get_file_params();
 
-	$name  = sanitize_text_field( $request['name'] );
+	$name = sanitize_text_field( $request['name'] );
 
 	if ( empty( $name ) || empty( $files ) ) {
 		$response = new WP_Error( 'error', 'Image and name are required.', array( 'status' => 422 ) );
@@ -131,9 +131,40 @@ function wappus_register_api_photo_post() {
 				'methods'             => WP_REST_Server::CREATABLE, // POST
 				'callback'            => 'wappus_api_photo_post',
 				'permission_callback' => 'wappus_register_api_photo_post_permission_callback',
+				'args'                => wappus_api_photo_post_args(),
 			),
 		)
 	);
 
 }
 add_action( 'rest_api_init', 'wappus_register_api_photo_post' );
+
+function wappus_api_photo_post_args() {
+	$args = array(
+		'name'     => array(
+			'description' => __( 'The name of the photo.' ),
+			'type'        => 'string',
+			'required'    => true,
+		),
+		'img'      => array(
+			'description' => __( 'The photo file (use an input file field on your form).' ),
+			'type'        => 'null',
+			'required'    => true,
+		),
+		'from'     => array(
+			'description' => __( 'The source of the photo.' ),
+			'type'        => 'string',
+		),
+		'from_url' => array(
+			'description' => __( 'URL to the source of the photo.' ),
+			'type'        => 'string',
+			'format'      => 'uri',
+		),
+		'caption'  => array(
+			'description' => __( 'The caption of the photo.' ),
+			'type'        => 'string',
+		),
+	);
+
+	return $args;
+}

@@ -89,12 +89,26 @@ function wappus_register_api_photo_get() {
 				'methods'  => WP_REST_Server::READABLE, // GET
 				'callback' => 'wappus_api_photo_get',
 				'permission_callback' => 'wappus_api_photo_get_permission_callback',
+				'args' => wappus_api_photo_get_args(),
 			),
 		)
 	);
 
 }
 add_action( 'rest_api_init', 'wappus_register_api_photo_get' );
+
+function wappus_api_photo_get_args() {
+
+	$args = array(
+		'id' => array(
+			'description' => 'The ID of the photo to retrieve.',
+			'type'        => 'integer',
+			'required'    => true,
+		),
+	);
+
+	return $args;
+}
 
 function wappus_api_photos_get( $request ) {
 
@@ -149,10 +163,22 @@ function wappus_register_api_photos_get() {
 			array(
 				'methods'  => WP_REST_Server::READABLE, // GET
 				'callback' => 'wappus_api_photos_get',
-				'permission_callback' => 'wappus_api_photos_get_permission_callback',
+				'permission_callback' => 'wappus_api_photos_get_permission_callback',	
+				'args' => wappus_api_photos_get_args(),
 			),
 		)
 	);
 
 }
 add_action( 'rest_api_init', 'wappus_register_api_photos_get' );
+
+function wappus_api_photos_get_args() {
+
+	$args = array(
+		'none' => array(
+			'description' => 'If logged, return the current user photos.',
+		),
+	);
+
+	return $args;
+}
