@@ -56,9 +56,20 @@ function wappus_register_api_stats_get() {
 				'methods'  => WP_REST_Server::READABLE, // GET
 				'callback' => 'wappus_api_stats_get',
 				'permission_callback' => 'wappus_api_stats_get_permission_callback',
+				'args' => wappus_api_stats_get_args(),
 			),
 		)
 	);
 
 }
 add_action( 'rest_api_init', 'wappus_register_api_stats_get' );
+
+function wappus_api_stats_get_args(){
+	$args = array(
+		'none' => array(
+			'description' => 'If logged, return the current user stats.',
+		),
+	);
+
+	return $args;
+}
