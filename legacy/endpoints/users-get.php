@@ -39,9 +39,21 @@ function wappus_register_api_user_get() {
 				'methods'  => WP_REST_Server::READABLE, // GET
 				'callback' => 'wappus_api_user_get',
 				'permission_callback' => 'wappus_api_user_get_permission_callback',
+				'args' => wappus_api_user_get_args(),
 			),
 		)
 	);
 
 }
 add_action( 'rest_api_init', 'wappus_register_api_user_get' );
+
+function wappus_api_user_get_args() {
+
+	$args = array(
+		'none' => array(
+			'description' => 'If logged, return the current user.',
+		),
+	);
+
+	return $args;
+}

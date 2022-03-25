@@ -65,9 +65,42 @@ function wappus_register_api_user_post() {
 				'methods'  => WP_REST_Server::CREATABLE, // POST
 				'callback' => 'wappus_api_user_post',
 				'permission_callback' => 'wappus_register_api_user_post_permission_callback',
+				'args' => wappus_api_user_post_args(),
 			),
 		)
 	);
 
 }
 add_action( 'rest_api_init', 'wappus_register_api_user_post' );
+
+function wappus_api_user_post_args() {
+
+	$args = array(
+		'username' => array(
+			'description' => __( 'Login name for the user.' ),
+			'type'        => 'string',
+			'context'     => array( 'edit' ),
+			'required'    => true,
+			/*'arg_options' => array(
+				'sanitize_callback' => array( $this, 'check_username' ),
+			),*/
+		),
+		'email'    => array(
+			'description' => __( 'The email address for the user.' ),
+			'type'        => 'string',
+			'format'      => 'email',
+			'context'     => array( 'edit' ),
+			'required'    => true,
+		),
+		'url'    => array(
+			'description' => __( 'Base URL used to create the "password creation" link that is sent by email.' ),
+			'type'        => 'string',
+			'format'      => 'uri',
+			'context'     => array( 'view', 'edit', 'embed' ),
+			'readonly'    => true,
+		),
+	);
+
+	return $args;
+}
+

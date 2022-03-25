@@ -36,9 +36,9 @@ if ( ! class_exists( 'Users_Resource' ) ) {
 						'type'        => 'string',
 						'context'     => array( 'edit' ),
 						'required'    => true,
-						'arg_options' => array(
+						/*'arg_options' => array(
 							'sanitize_callback' => array( $this, 'check_username' ),
-						),
+						),*/
 					),
 					'name'     => array(
 						'description' => __( 'Display name for the user.' ),
