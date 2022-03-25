@@ -147,9 +147,9 @@ function wappus_api_photo_post_args() {
 			'required'    => true,
 		),
 		'img'      => array(
-			'description' => __( 'The photo file (use an input file field on your form).' ),
-			'type'        => 'null',
-			'required'    => true,
+			'description' => __( "The photo file - this is a REQUIRED field but it isn't set here as required because it should be sent to the API through an input file field in your form ( if it were set as required an error would be generated because the file is sent in a different way and not as a default argument)." ),
+			'type'        => 'object',
+			'required'    => false,
 		),
 		'from'     => array(
 			'description' => __( 'The source of the photo.' ),
