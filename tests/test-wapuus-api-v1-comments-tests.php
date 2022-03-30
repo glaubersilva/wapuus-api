@@ -2,7 +2,7 @@
 
 namespace Wapuus_API\Tests;
 
-class Wapuus_API_V1_Comment_Tests extends Unit_API_Test_Case {
+class Wapuus_API_V1_Comments_Tests extends Unit_API_Test_Case {
 
 	public $comment_sample = 'This is a sample comment! =)';
 	public $comment_sample_id;
