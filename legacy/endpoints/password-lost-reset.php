@@ -16,7 +16,7 @@ function wappus_api_password_lost( $request ) {
 
 	if ( empty( $login ) ) {
 
-		$response = new WP_Error( 'error', 'Informe o email ou login.', array( 'status' => 406 ) );
+		$response = new WP_Error( 'error', 'Enter your email or login.', array( 'status' => 406 ) );
 		return rest_ensure_response( $response );
 
 	}
@@ -29,7 +29,7 @@ function wappus_api_password_lost( $request ) {
 
 	if ( empty( $user ) ) {
 
-		$response = new WP_Error( 'error', 'Usuário não existe.', array( 'status' => 401 ) );
+		$response = new WP_Error( 'error', 'User does not exist.', array( 'status' => 401 ) );
 		return rest_ensure_response( $response );
 
 	}
@@ -37,13 +37,13 @@ function wappus_api_password_lost( $request ) {
 	$user_login = $user->user_login;
 	$user_email = $user->user_email;
 	$key        = get_password_reset_key( $user );
-	$message    = "utilize o link abaixo para resetar a sua senha: \r\n";
+	$message    = "Use the link below to reset your password: \r\n";
 	$url = esc_url_raw( $url . "/?key=$key&login=" . rawurlencode( $user_login ) . "\r\n" );
 	$body = $message . $url;
 
 	wp_mail( $user_email, 'Password Reset', $body );
 
-	return rest_ensure_response( 'Email enviado.' );
+	return rest_ensure_response( 'Email sent.' );
 }
 
 function wappus_register_api_password_lost() {
@@ -76,7 +76,7 @@ function wappus_api_password_reset( $request ) {
 
 	if ( empty( $user ) ) {
 
-		$response = new WP_Error( 'error', 'Usuário não existe.', array( 'status' => 401 ) );
+		$response = new WP_Error( 'error', 'User does not exist.', array( 'status' => 401 ) );
 		return rest_ensure_response( $response );
 
 	}
@@ -84,13 +84,13 @@ function wappus_api_password_reset( $request ) {
 	$check_key = check_password_reset_key( $key, $login );
 
 	if ( is_wp_error( $check_key ) ) {
-		$response = new WP_Error( 'error', 'Token expirado.', array( 'status' => 401 ) );
+		$response = new WP_Error( 'error', 'Expired token.', array( 'status' => 401 ) );
 		return rest_ensure_response( $response );
 	}
 
 	reset_password( $user, $password );
 
-	return rest_ensure_response( 'Senha Alterada.' );
+	return rest_ensure_response( 'Password has been changed.' );
 }
 
 function wappus_register_api_password_reset() {
