@@ -19,7 +19,7 @@ function wappus_api_photo_delete( $request ) {
 	wp_delete_attachment( $attachment_id, true );
 	wp_delete_post( $post_id, true );
 
-	$response = 'Post deletado.';
+	$response = 'Deleted.';
 	return rest_ensure_response( $response );
 }
 
