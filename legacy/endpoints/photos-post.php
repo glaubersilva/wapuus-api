@@ -147,9 +147,14 @@ function wappus_api_photo_post_args() {
 			'required'    => true,
 		),
 		'img'      => array(
-			'description' => __( "The photo file - this is a REQUIRED field but it isn't set here as required because it should be sent to the API through an input file field in your form ( if it were set as required an error would be generated because the file is sent in a different way and not as a default argument)." ),
-			'type'        => 'object',
-			'required'    => false,
+			'description' => __( 'The photo file - it should be sent to the API through an input file field in your form' ),
+			'type'        => 'string',
+			'media'       => array( // https://datatracker.ietf.org/doc/html/draft-luff-json-hyper-schema-00#section-4.3
+				'binaryEncoding' => 'binary', // https://datatracker.ietf.org/doc/html/rfc2045#section-6.1
+				//'type'           => 'image/png',
+			),
+			// 'format'      => 'binary',
+			'required'    => true,
 		),
 		'from'     => array(
 			'description' => __( 'The source of the photo.' ),
