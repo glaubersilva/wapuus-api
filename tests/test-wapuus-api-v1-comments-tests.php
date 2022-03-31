@@ -20,7 +20,7 @@ class Wapuus_API_V1_Comments_Tests extends Unit_API_Test_Case {
 	public function set_up() {
 		parent::set_up();
 
-		$this->post_sample_id = $this->factory->post->create(
+		$this->photo_sample_id = $this->factory->post->create(
 			array(
 				'post_title'  => 'My Wapuu',
 				'post_type'   => 'wapuu',
@@ -34,7 +34,7 @@ class Wapuus_API_V1_Comments_Tests extends Unit_API_Test_Case {
 			'user_id'         => $user->ID,
 			'comment_author'  => $user->user_login,
 			'comment_content' => $this->comment_sample,
-			'comment_post_ID' => $this->post_sample_id,
+			'comment_post_ID' => $this->photo_sample_id,
 		);
 
 		$this->comment_sample_id = wp_insert_comment( $response );
@@ -46,7 +46,7 @@ class Wapuus_API_V1_Comments_Tests extends Unit_API_Test_Case {
 
 	public function test_comments_post() {
 
-		$request = new \WP_REST_Request( 'POST', '/wapuus-api/v1/comments/' . $this->post_sample_id );
+		$request = new \WP_REST_Request( 'POST', '/wapuus-api/v1/comments/' . $this->photo_sample_id );
 
 		$request_query = array(
 			'comment' => $this->comment_sample,
@@ -73,7 +73,7 @@ class Wapuus_API_V1_Comments_Tests extends Unit_API_Test_Case {
 
 	public function test_comments_get() {
 
-		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/comments/' . $this->post_sample_id );
+		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/comments/' . $this->photo_sample_id );
 
 		$response = $this->server->dispatch( $request );
 
@@ -96,7 +96,7 @@ class Wapuus_API_V1_Comments_Tests extends Unit_API_Test_Case {
 		$this->assertEquals( $expected, $result );
 	}
 
-	public function test_comments_delete() {
+	public function test_comment_delete() {
 
 		$request = new \WP_REST_Request( 'DELETE', '/wapuus-api/v1/comments/' . $this->comment_sample_id );
 

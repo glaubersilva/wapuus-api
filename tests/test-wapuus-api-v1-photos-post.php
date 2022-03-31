@@ -17,7 +17,7 @@ class Wapuus_API_V1_Photos_Tests extends Unit_API_Test_Case {
 	public function set_up() {
 		parent::set_up();
 
-		$this->post_sample_id = $this->factory->post->create(
+		$this->photo_sample_id = $this->factory->post->create(
 			array(
 				'post_title'  => 'My Wapuu',
 				'post_type'   => 'wapuu',
@@ -40,10 +40,10 @@ class Wapuus_API_V1_Photos_Tests extends Unit_API_Test_Case {
 			'img' => $this->temp_file_data(),
 		);
 
-		$this->photo_sample_id = media_handle_sideload( $files['img'], $this->post_sample_id );
+		$this->media_sample_id = media_handle_sideload( $files['img'], $this->photo_sample_id );
 
-		update_post_meta( $this->post_sample_id, 'img', $this->photo_sample_id );
-		set_post_thumbnail( $this->post_sample_id, $this->photo_sample_id );
+		update_post_meta( $this->photo_sample_id, 'img', $this->media_sample_id );
+		set_post_thumbnail( $this->photo_sample_id, $this->media_sample_id );
 	}
 
 	public function temp_file_data() {
@@ -81,7 +81,7 @@ class Wapuus_API_V1_Photos_Tests extends Unit_API_Test_Case {
 		parent::tear_down();
 	}
 
-	public function test_photos_post() {
+	public function test_photo_post() {
 
 		$request = new \WP_REST_Request( 'POST', '/wapuus-api/v1/photos' );
 
@@ -124,7 +124,7 @@ class Wapuus_API_V1_Photos_Tests extends Unit_API_Test_Case {
 
 	public function test_photo_get() {
 
-		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/photos/' . $this->post_sample_id );
+		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/photos/' . $this->photo_sample_id );
 
 		$response = $this->server->dispatch( $request );
 
@@ -138,5 +138,24 @@ class Wapuus_API_V1_Photos_Tests extends Unit_API_Test_Case {
 		$this->assertEquals( $expected, $result );
 	}
 
+	public function test_photo_delete() {
 
+		$request = new \WP_REST_Request( 'DELETE', '/wapuus-api/v1/photos/' . $this->photo_sample_id );
+
+		$response = $this->server->dispatch( $request );
+
+		$expected = 200;
+		$result   = $response->get_status();
+		$this->assertEquals( $expected, $result );
+
+		$data     = $response->get_data();
+		$expected = 'Deleted.';
+		$result   = $data;
+		$this->assertEquals( $expected, $result );
+
+		$headers  = $response->get_headers();
+		$expected = $headers;
+		$result   = array();
+		$this->assertEquals( $expected, $result );
+	}
 }
