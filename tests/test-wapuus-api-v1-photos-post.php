@@ -17,7 +17,8 @@ class Wapuus_API_V1_Photos_Tests extends Unit_API_Test_Case {
 	public function set_up() {
 		parent::set_up();
 
-		$this->photo_sample_id = $this->factory->post->create(
+		$this->photo_sample_view = random_int( 100, 999 );
+		$this->photo_sample_id   = $this->factory->post->create(
 			array(
 				'post_title'  => 'My Wapuu',
 				'post_type'   => 'wapuu',
@@ -27,7 +28,7 @@ class Wapuus_API_V1_Photos_Tests extends Unit_API_Test_Case {
 					'from'     => 'WordPress Japan',
 					'from_url' => 'https://ja.wordpress.org/',
 					'caption'  => 'This is the first one Wappu from the world!',
-					'views'    => 0,
+					'views'    => $this->photo_sample_view,
 				),
 			)
 		);
@@ -130,6 +131,27 @@ class Wapuus_API_V1_Photos_Tests extends Unit_API_Test_Case {
 
 		$expected = 200;
 		$result   = $response->get_status();
+		$this->assertEquals( $expected, $result );
+
+		$headers  = $response->get_headers();
+		$expected = $headers;
+		$result   = array();
+		$this->assertEquals( $expected, $result );
+	}
+
+	public function test_stats_get() {
+
+		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/stats' );
+
+		$response = $this->server->dispatch( $request );
+
+		$expected = 200;
+		$result   = $response->get_status();
+		$this->assertEquals( $expected, $result );
+
+		$data     = $response->get_data();
+		$expected = $this->photo_sample_view;
+		$result   = $data[0]['views'];
 		$this->assertEquals( $expected, $result );
 
 		$headers  = $response->get_headers();
