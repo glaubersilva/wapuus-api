@@ -18,6 +18,8 @@ class Unit_Test_Case extends \WP_UnitTestCase {
 
 	protected $user_pass = 'admin38974238473824';
 
+	protected $user_email  = 'admin38974238473824@test.com';
+
 	public function set_up() {
 
 		parent::set_up();
@@ -28,6 +30,7 @@ class Unit_Test_Case extends \WP_UnitTestCase {
 				'role'       => 'administrator',
 				'user_login' => $this->user_login,
 				'user_pass'  => $this->user_pass,
+				'user_email'  => $this->user_email,
 			)
 		);
 		wp_set_current_user( $new_admin_user );

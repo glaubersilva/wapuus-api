@@ -2,8 +2,7 @@
 
 namespace Wapuus_API\Tests;
 
-class Wapuus_API_V1_Photos_Tests extends Unit_API_Test_Case {
-
+class Wapuus_API_V1_Stats_And_Photos_Tests extends Unit_API_Test_Case {
 
 	/**
 	 * A cada teste o WordPress é zerado e volta ao seu estado de logo após a instalação.
@@ -45,6 +44,27 @@ class Wapuus_API_V1_Photos_Tests extends Unit_API_Test_Case {
 
 		update_post_meta( $this->photo_sample_id, 'img', $this->media_sample_id );
 		set_post_thumbnail( $this->photo_sample_id, $this->media_sample_id );
+	}
+
+	public function test_stats_get() {
+
+		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/stats' );
+
+		$response = $this->server->dispatch( $request );
+
+		$expected = 200;
+		$result   = $response->get_status();
+		$this->assertEquals( $expected, $result );
+
+		$data     = $response->get_data();
+		$expected = $this->photo_sample_view;
+		$result   = $data[0]['views'];
+		$this->assertEquals( $expected, $result );
+
+		$headers  = $response->get_headers();
+		$expected = $headers;
+		$result   = array();
+		$this->assertEquals( $expected, $result );
 	}
 
 	public function temp_file_data() {
@@ -131,27 +151,6 @@ class Wapuus_API_V1_Photos_Tests extends Unit_API_Test_Case {
 
 		$expected = 200;
 		$result   = $response->get_status();
-		$this->assertEquals( $expected, $result );
-
-		$headers  = $response->get_headers();
-		$expected = $headers;
-		$result   = array();
-		$this->assertEquals( $expected, $result );
-	}
-
-	public function test_stats_get() {
-
-		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/stats' );
-
-		$response = $this->server->dispatch( $request );
-
-		$expected = 200;
-		$result   = $response->get_status();
-		$this->assertEquals( $expected, $result );
-
-		$data     = $response->get_data();
-		$expected = $this->photo_sample_view;
-		$result   = $data[0]['views'];
 		$this->assertEquals( $expected, $result );
 
 		$headers  = $response->get_headers();
