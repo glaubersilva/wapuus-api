@@ -150,11 +150,11 @@ function wappus_api_image_post_args() {
 			'description' => __( 'The image file - it should be sent to the API through an input file field in your form' ),
 			'type'        => 'string',
 			'media'       => array( // https://datatracker.ietf.org/doc/html/draft-luff-json-hyper-schema-00#section-4.3
-				'binaryEncoding' => 'binary', // https://datatracker.ietf.org/doc/html/rfc2045#section-6.1
+				'required'       => true,
+				//'binaryEncoding' => 'binary', // https://datatracker.ietf.org/doc/html/rfc2045#section-6.1
 				//'type'           => 'image/png',
-			),
-			// 'format'      => 'binary',
-			'required'    => true,
+			),			
+			'required'    => false,
 		),
 		'from'     => array(
 			'description' => __( 'The source of the image.' ),

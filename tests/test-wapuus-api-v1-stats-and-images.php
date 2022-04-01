@@ -111,7 +111,6 @@ class Wapuus_API_V1_Stats_And_Images_Tests extends Unit_API_Test_Case {
 		);
 
 		$body_params = array(
-			'img'      => 'any string', // We need to pass this value here because the schema for this param is a string and is required.
 			'name'     => 'The Original Wapuu',
 			'from'     => 'WordPress Japan',
 			'from_url' => 'https://ja.wordpress.org/',
