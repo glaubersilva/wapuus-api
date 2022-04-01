@@ -26,7 +26,7 @@ if ( ! class_exists( 'Comments_Resource' ) ) {
 				'type'       => 'object',
 				'properties' => array(
 					'comment_post_ID' => array(
-						'description' => __( 'Unique identifier for the photo object.' ),
+						'description' => __( 'Unique identifier for the image object.' ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 					),

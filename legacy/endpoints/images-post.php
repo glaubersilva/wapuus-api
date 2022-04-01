@@ -4,7 +4,7 @@
  * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
  */
 
-function wappus_api_photo_post( $request ) {
+function wappus_api_image_post( $request ) {
 
 	$user = wp_get_current_user();
 
@@ -94,7 +94,7 @@ function wappus_api_photo_post( $request ) {
 		 *
 		 * So we need to use the media_handle_upload() function because it will use the PHP is_uploaded_file() method to check if the file on the $_FILES is valid.
 		 */
-		$photo_id = media_handle_upload( 'img', $post_id ); // Should be used for file uploads (input file field).
+		$image_id = media_handle_upload( 'img', $post_id ); // Should be used for file uploads (input file field).
 	} else {
 		/**
 		 * Handle sideloads, which is the process of retrieving a media item from another server instead of a traditional media upload.
@@ -104,50 +104,50 @@ function wappus_api_photo_post( $request ) {
 		 *
 		 * This is necessary to get the upload done - escaping the is_uploaded_file() verification - in cases where we are testing our endpoint via PHPUnit.
 		 */
-		$photo_id = media_handle_sideload( $files['img'], $post_id ); // Should be used for remote file uploads (input text field).
+		$image_id = media_handle_sideload( $files['img'], $post_id ); // Should be used for remote file uploads (input text field).
 	}
 
-	update_post_meta( $post_id, 'img', $photo_id );
-	set_post_thumbnail( $post_id, $photo_id );
+	update_post_meta( $post_id, 'img', $image_id );
+	set_post_thumbnail( $post_id, $image_id );
 
 	$response = $post;
 
 	return rest_ensure_response( $response );
 }
 
-function wappus_register_api_photo_post_permission_callback() {
+function wappus_register_api_image_post_permission_callback() {
 
 	return true;
 }
 
-function wappus_register_api_photo_post() {
+function wappus_register_api_image_post() {
 
 	register_rest_route(
 		'wapuus-api/v1',
-		'/photos',
+		'/images',
 		array( // Isso declara o Schema do endpoint. Note que o schema é o mesmo para todos os métodos que o endpoint aceita.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Photos_Resource::get_instance(), 'schema' ),
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ),
 			array(
 				'methods'             => WP_REST_Server::CREATABLE, // POST
-				'callback'            => 'wappus_api_photo_post',
-				'permission_callback' => 'wappus_register_api_photo_post_permission_callback',
-				'args'                => wappus_api_photo_post_args(),
+				'callback'            => 'wappus_api_image_post',
+				'permission_callback' => 'wappus_register_api_image_post_permission_callback',
+				'args'                => wappus_api_image_post_args(),
 			),
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'wappus_register_api_photo_post' );
+add_action( 'rest_api_init', 'wappus_register_api_image_post' );
 
-function wappus_api_photo_post_args() {
+function wappus_api_image_post_args() {
 	$args = array(
 		'name'     => array(
-			'description' => __( 'The name of the photo.' ),
+			'description' => __( 'The name of the image.' ),
 			'type'        => 'string',
 			'required'    => true,
 		),
 		'img'      => array(
-			'description' => __( 'The photo file - it should be sent to the API through an input file field in your form' ),
+			'description' => __( 'The image file - it should be sent to the API through an input file field in your form' ),
 			'type'        => 'string',
 			'media'       => array( // https://datatracker.ietf.org/doc/html/draft-luff-json-hyper-schema-00#section-4.3
 				'binaryEncoding' => 'binary', // https://datatracker.ietf.org/doc/html/rfc2045#section-6.1
@@ -157,16 +157,16 @@ function wappus_api_photo_post_args() {
 			'required'    => true,
 		),
 		'from'     => array(
-			'description' => __( 'The source of the photo.' ),
+			'description' => __( 'The source of the image.' ),
 			'type'        => 'string',
 		),
 		'from_url' => array(
-			'description' => __( 'URL to the source of the photo.' ),
+			'description' => __( 'URL to the source of the image.' ),
 			'type'        => 'string',
 			'format'      => 'uri',
 		),
 		'caption'  => array(
-			'description' => __( 'The caption of the photo.' ),
+			'description' => __( 'The caption of the image.' ),
 			'type'        => 'string',
 		),
 	);

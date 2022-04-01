@@ -50,9 +50,9 @@ add_action( 'rest_api_init', 'wappus_register_api_user_get' );
 function wappus_api_user_get_args() {
 
 	$args = array(
-		'none' => array(
+		/*'none' => array(
 			'description' => 'If logged, return the current user.',
-		),
+		),*/
 	);
 
 	return $args;

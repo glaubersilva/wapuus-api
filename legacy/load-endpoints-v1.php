@@ -4,9 +4,9 @@
  */
 require_once WAPUUS_API_DIR . '/legacy/endpoints/users-get.php';
 require_once WAPUUS_API_DIR . '/legacy/endpoints/users-post.php';
-require_once WAPUUS_API_DIR . '/legacy/endpoints/photos-post.php';
-require_once WAPUUS_API_DIR . '/legacy/endpoints/photos-get.php';
-require_once WAPUUS_API_DIR . '/legacy/endpoints/photos-delete.php';
+require_once WAPUUS_API_DIR . '/legacy/endpoints/images-post.php';
+require_once WAPUUS_API_DIR . '/legacy/endpoints/images-get.php';
+require_once WAPUUS_API_DIR . '/legacy/endpoints/images-delete.php';
 require_once WAPUUS_API_DIR . '/legacy/endpoints/comments-post.php';
 require_once WAPUUS_API_DIR . '/legacy/endpoints/comments-get.php';
 require_once WAPUUS_API_DIR . '/legacy/endpoints/comments-delete.php';

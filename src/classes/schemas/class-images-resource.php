@@ -1,8 +1,8 @@
 <?php
 /**
- * Schema for the photos resource.
+ * Schema for the images resource.
  *
- * @package \Wapuus_API\Src\Classes\Schemas\Photos_Resource
+ * @package \Wapuus_API\Src\Classes\Schemas\Images_Resource
  */
 
 namespace Wapuus_API\Src\Classes\Schemas;
@@ -10,23 +10,23 @@ namespace Wapuus_API\Src\Classes\Schemas;
 use \Wapuus_API\Src\Classes\Schemas\Abstract_Resource;
 use \Wapuus_API\Src\Traits\Singleton;
 
-if ( ! class_exists( 'Photos_Resource' ) ) {
+if ( ! class_exists( 'Images_Resource' ) ) {
 
-	class Photos_Resource extends Abstract_Resource {
+	class Images_Resource extends Abstract_Resource {
 
 		use Singleton;
 
 		protected function init() {
 
-			$this->name = 'photos';
+			$this->name = 'images';
 
 			$this->schema = array(
 				'$schema'    => 'http://json-schema.org/draft-04/schema#',
-				'title'      => 'photo',
+				'title'      => 'image',
 				'type'       => 'object',
 				'properties' => array(
 					'id'     => array(
-						'description' => __( 'Unique identifier for the photo.' ),
+						'description' => __( 'Unique identifier for the image.' ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 						'readonly'    => true,
@@ -38,48 +38,48 @@ if ( ! class_exists( 'Photos_Resource' ) ) {
 						'readonly'    => true,
 					),
 					'title'  => array(
-						'description' => __( 'The name of the photo object.' ),
+						'description' => __( 'The name of the image object.' ),
 						'type'        => 'string',
 						'context'     => array( 'view' ),
 					),
 					'date'   => array(
-						'description' => __( "The date the photo was published, in the site's timezone." ),
+						'description' => __( "The date the image was published, in the site's timezone." ),
 						'type'        => array( 'string', 'null' ),
 						'format'      => 'date-time',
 						'context'     => array( 'view', 'edit', 'embed' ),
 						'readonly'    => true,
 					),
 					'src'    => array(
-						'description' => __( 'URL to the photo file.' ),
+						'description' => __( 'URL to the image file.' ),
 						'type'        => 'string',
 						'format'      => 'uri',
 						'context'     => array( 'view', 'edit', 'embed' ),
 						'readonly'    => true,
 					),
 					'from' => array(
-						'description' => __( 'The source of the photo.' ),
+						'description' => __( 'The source of the image.' ),
 						'type'        => 'string',
 						'context'     => array( 'view', 'edit', 'embed' ),
 					),
 					'from_url'    => array(
-						'description' => __( 'URL to the source of the photo.' ),
+						'description' => __( 'URL to the source of the image.' ),
 						'type'        => 'string',
 						'format'      => 'uri',
 						'context'     => array( 'view', 'edit', 'embed' ),
 					),
 					'caption' => array(
-						'description' => __( 'The caption of the photo.' ),
+						'description' => __( 'The caption of the image.' ),
 						'type'        => 'string',
 						'context'     => array( 'view', 'edit', 'embed' ),
 					),
 					'views'     => array(
-						'description' => __( 'The views counter of the photo.' ),
+						'description' => __( 'The views counter of the image.' ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 						'readonly'    => true,
 					),
 					'total_comments'     => array(
-						'description' => __( 'The comments counter of the photo.' ),
+						'description' => __( 'The comments counter of the image.' ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 						'readonly'    => true,

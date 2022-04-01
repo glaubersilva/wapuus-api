@@ -2,7 +2,7 @@
 
 namespace Wapuus_API\Tests;
 
-class Wapuus_API_V1_Stats_And_Photos_Tests extends Unit_API_Test_Case {
+class Wapuus_API_V1_Stats_And_Images_Tests extends Unit_API_Test_Case {
 
 	/**
 	 * A cada teste o WordPress é zerado e volta ao seu estado de logo após a instalação.
@@ -16,8 +16,8 @@ class Wapuus_API_V1_Stats_And_Photos_Tests extends Unit_API_Test_Case {
 	public function set_up() {
 		parent::set_up();
 
-		$this->photo_sample_view = random_int( 100, 999 );
-		$this->photo_sample_id   = $this->factory->post->create(
+		$this->image_sample_view = random_int( 100, 999 );
+		$this->image_sample_id   = $this->factory->post->create(
 			array(
 				'post_title'  => 'My Wapuu',
 				'post_type'   => 'wapuu',
@@ -27,7 +27,7 @@ class Wapuus_API_V1_Stats_And_Photos_Tests extends Unit_API_Test_Case {
 					'from'     => 'WordPress Japan',
 					'from_url' => 'https://ja.wordpress.org/',
 					'caption'  => 'This is the first one Wappu from the world!',
-					'views'    => $this->photo_sample_view,
+					'views'    => $this->image_sample_view,
 				),
 			)
 		);
@@ -40,10 +40,10 @@ class Wapuus_API_V1_Stats_And_Photos_Tests extends Unit_API_Test_Case {
 			'img' => $this->temp_file_data(),
 		);
 
-		$this->media_sample_id = media_handle_sideload( $files['img'], $this->photo_sample_id );
+		$this->media_sample_id = media_handle_sideload( $files['img'], $this->image_sample_id );
 
-		update_post_meta( $this->photo_sample_id, 'img', $this->media_sample_id );
-		set_post_thumbnail( $this->photo_sample_id, $this->media_sample_id );
+		update_post_meta( $this->image_sample_id, 'img', $this->media_sample_id );
+		set_post_thumbnail( $this->image_sample_id, $this->media_sample_id );
 	}
 
 	public function test_stats_get() {
@@ -57,7 +57,7 @@ class Wapuus_API_V1_Stats_And_Photos_Tests extends Unit_API_Test_Case {
 		$this->assertEquals( $expected, $result );
 
 		$data     = $response->get_data();
-		$expected = $this->photo_sample_view;
+		$expected = $this->image_sample_view;
 		$result   = $data[0]['views'];
 		$this->assertEquals( $expected, $result );
 
@@ -102,15 +102,16 @@ class Wapuus_API_V1_Stats_And_Photos_Tests extends Unit_API_Test_Case {
 		parent::tear_down();
 	}
 
-	public function test_photo_post() {
+	public function test_image_post() {
 
-		$request = new \WP_REST_Request( 'POST', '/wapuus-api/v1/photos' );
+		$request = new \WP_REST_Request( 'POST', '/wapuus-api/v1/images' );
 
-		$file_params = array(
+		$img = array(
 			'img' => $this->temp_file_data(),
 		);
 
 		$body_params = array(
+			'img'      => 'any string', // We need to pass this value here because the schema for this param is a string and is required.
 			'name'     => 'The Original Wapuu',
 			'from'     => 'WordPress Japan',
 			'from_url' => 'https://ja.wordpress.org/',
@@ -118,7 +119,7 @@ class Wapuus_API_V1_Stats_And_Photos_Tests extends Unit_API_Test_Case {
 		);
 
 		$request->set_body_params( $body_params );
-		$request->set_file_params( $file_params );
+		$request->set_file_params( $img );
 
 		$response = $this->server->dispatch( $request );
 
@@ -127,25 +128,9 @@ class Wapuus_API_V1_Stats_And_Photos_Tests extends Unit_API_Test_Case {
 		$this->assertEquals( $expected, $result );
 	}
 
-	public function test_photos_get() {
+	public function test_images_get() {
 
-		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/photos' );
-
-		$response = $this->server->dispatch( $request );
-
-		$expected = 200;
-		$result   = $response->get_status();
-		$this->assertEquals( $expected, $result );
-
-		$headers  = $response->get_headers();
-		$expected = $headers;
-		$result   = array();
-		$this->assertEquals( $expected, $result );
-	}
-
-	public function test_photo_get() {
-
-		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/photos/' . $this->photo_sample_id );
+		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/images' );
 
 		$response = $this->server->dispatch( $request );
 
@@ -159,9 +144,25 @@ class Wapuus_API_V1_Stats_And_Photos_Tests extends Unit_API_Test_Case {
 		$this->assertEquals( $expected, $result );
 	}
 
-	public function test_photo_delete() {
+	public function test_image_get() {
 
-		$request = new \WP_REST_Request( 'DELETE', '/wapuus-api/v1/photos/' . $this->photo_sample_id );
+		$request = new \WP_REST_Request( 'GET', '/wapuus-api/v1/images/' . $this->image_sample_id );
+
+		$response = $this->server->dispatch( $request );
+
+		$expected = 200;
+		$result   = $response->get_status();
+		$this->assertEquals( $expected, $result );
+
+		$headers  = $response->get_headers();
+		$expected = $headers;
+		$result   = array();
+		$this->assertEquals( $expected, $result );
+	}
+
+	public function test_image_delete() {
+
+		$request = new \WP_REST_Request( 'DELETE', '/wapuus-api/v1/images/' . $this->image_sample_id );
 
 		$response = $this->server->dispatch( $request );
 

@@ -10,7 +10,7 @@
 namespace Wapuus_API\Src\Classes\Schemas;
 
 /**
- * This class should be extended and used as the base to create a schema for new resources - comment, photo, user, etc.
+ * This class should be extended and used as the base to create a schema for new resources - comment, image, user, etc.
  */
 abstract class Abstract_Resource {
 
@@ -29,7 +29,7 @@ abstract class Abstract_Resource {
 	protected $schema;
 
 	/**
-	 * Return the final schema for the resource - comment, photo, user etc.
+	 * Return the final schema for the resource - comment, image, user etc.
 	 */
 	final public function schema() {
 
@@ -50,7 +50,7 @@ abstract class Abstract_Resource {
 	}
 
 	/**
-	 * Return the name of the resource - comment, photo, user etc.
+	 * Return the name of the resource - comment, image, user etc.
 	 */
 	final public function name() {
 
@@ -65,7 +65,7 @@ abstract class Abstract_Resource {
 	 * The abastract keyword force extending class to define this method.
 	 * Source: https://www.php.net/manual/en/language.oop5.abstract.php
 	 *
-	 * @return array With the schema for a particular resource - comment, photo, user etc. - that extends this abstract class.
+	 * @return array With the schema for a particular resource - comment, image, user etc. - that extends this abstract class.
 	 */
 	abstract protected function init();
 }
