@@ -16,7 +16,7 @@ function wappus_api_user_get( $request ) {
 	$response = array(
 		'id'       => $user->ID,
 		'username' => $user->user_login,
-		'name'     => $user->display_name,
+		//'name'     => $user->display_name,
 		'email'    => $user->user_email,
 	);
 

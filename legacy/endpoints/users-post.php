@@ -46,7 +46,13 @@ function wappus_api_user_post( $request ) {
 		wp_mail( $email, 'Password Creation', $body );
 	}
 
-	return rest_ensure_response( $user_id );
+	$response = array(
+		'id'       => $user_id,
+		'username' => $username,
+		'email'    => $email,
+	);
+
+	return rest_ensure_response( $response );
 }
 
 function wappus_register_api_user_post_permission_callback(){
