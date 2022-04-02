@@ -115,7 +115,7 @@ function wappus_api_image_post( $request ) {
 	update_post_meta( $post_id, 'img', $image_id );
 	set_post_thumbnail( $post_id, $image_id );
 
-	$response = $post;
+	$response = wappus_api_get_post_data( $post_id );
 
 	return rest_ensure_response( $response );
 }
