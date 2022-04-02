@@ -39,8 +39,13 @@ class Wapuus_API_V1_Users_And_Password_Tests extends Unit_API_Test_Case {
 		$result   = $response->get_status();
 		$this->assertEquals( $expected, $result );
 
-		$data = $response->get_data(); // Should return the new user ID that shoulb be a int value.
-		$this->assertIsInt( $data );
+		//$data = $response->get_data(); // Should return the new user ID that shoulb be a int value.
+		//$this->assertIsInt( $data );
+
+		$data     = $response->get_data();
+		$expected = $body_params['username'];
+		$result   = $data['username'];
+		$this->assertEquals( $expected, $result );
 	}
 
 

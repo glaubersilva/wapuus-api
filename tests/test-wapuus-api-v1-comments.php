@@ -62,7 +62,7 @@ class Wapuus_API_V1_Comments_Tests extends Unit_API_Test_Case {
 
 		$data     = $response->get_data();
 		$expected = $this->comment_sample;
-		$result   = $data->comment_content;
+		$result   = $data['comment'];
 		$this->assertEquals( $expected, $result );
 
 		$headers  = $response->get_headers();
@@ -83,11 +83,11 @@ class Wapuus_API_V1_Comments_Tests extends Unit_API_Test_Case {
 
 		$data     = $response->get_data();
 		$expected = $this->comment_sample;
-		$result   = $data[0]->comment_content;
+		$result   = $data[0]['comment'];
 		$this->assertEquals( $expected, $result );
 
 		$expected = $this->comment_sample_id;
-		$result   = $data[0]->comment_ID;
+		$result   = $data[0]['id'];
 		$this->assertEquals( $expected, $result );
 
 		$headers  = $response->get_headers();
