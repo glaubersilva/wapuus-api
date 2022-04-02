@@ -7,42 +7,6 @@
  * @link https://glaubersilva.me/
  */
 
-/**
- * Get data from Wapuus posts.
- *
- * @param object|WP_Post|int $post The post object or int.
- */
-function wappus_get_post_data( $post ) {
-
-	if ( ! $post instanceof WP_Post && ! is_numeric( $post ) ) {
-		return false;
-	}
-
-	if ( is_numeric( $post ) ) {
-		$post = get_post( $post );
-	}
-
-	$post_meta      = get_post_meta( $post->ID );
-	$src            = wp_get_attachment_image_src( $post_meta['img'][0], 'large' )[0];
-	$user           = get_userdata( $post->post_author );
-	$total_comments = get_comments_number( $post->ID );
-
-	$return = array(
-		'id'             => $post->ID,
-		'author'         => $user->user_login,
-		'title'          => $post->post_title,
-		'date'           => $post->post_date,
-		'src'            => $src,
-		'from'           => $post_meta['from'][0],
-		'from_url'       => esc_url( $post_meta['from_url'][0] ),
-		'caption'        => $post_meta['caption'][0],
-		'views'          => $post_meta['views'][0],
-		'total_comments' => $total_comments,
-	);
-
-	return $return;
-}
-
 function wappus_api_image_get( $request ) {
 
 	$post_id = sanitize_key( $request['id'] );
@@ -53,7 +17,7 @@ function wappus_api_image_get( $request ) {
 		return rest_ensure_response( $response );
 	}
 
-	$image = wappus_get_post_data( $post );
+	$image = wappus_api_get_post_data( $post );
 
 	$image['views'] = (int) $image['views'] + 1;
 	update_post_meta( $post_id, 'views', $image['views'] );
@@ -141,7 +105,7 @@ function wappus_api_images_get( $request ) {
 
 	if ( $posts ) {
 		foreach ( $posts as $post ) {
-			$images[] = wappus_get_post_data( $post );
+			$images[] = wappus_api_get_post_data( $post );
 		}
 	}
 
@@ -159,7 +123,7 @@ function wappus_register_api_images_get() {
 		'wapuus-api/v1',
 		'/images',
 		array( // Isso declara o Schema do endpoint. Note que o schema é o mesmo para todos os métodos que o endpoint aceita.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ),			
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ),
 			array(
 				'methods'  => WP_REST_Server::READABLE, // GET
 				'callback' => 'wappus_api_images_get',

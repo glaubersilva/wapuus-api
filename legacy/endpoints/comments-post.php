@@ -6,18 +6,23 @@
 
 function wappus_api_comment_post( $request ) {
 
-    
+
 	$user = wp_get_current_user();
 
 	if ( $user->ID === 0 ) {
-		$response = new WP_Error( 'error', 'Sem permissão.', array( 'status' => 401 ) );
+		$response = new WP_Error( 'error', 'User does not have permission.', array( 'status' => 401 ) );
+		return rest_ensure_response( $response );
+	}
+
+	if ( wapuus_api_is_demo_user( $user ) ) {
+		$response = new WP_Error( 'error', 'Demo user does not have permission.', array( 'status' => 401 ) );
 		return rest_ensure_response( $response );
 	}
 
     $comment = sanitize_textarea_field( $request['comment'] );
 
 	if ( empty( $comment) ) {
-		$response = new WP_Error( 'error', 'Dados incompletos.', array( 'status' => 422 ) );
+		$response = new WP_Error( 'error', 'The comment is required.', array( 'status' => 422 ) );
 		return rest_ensure_response( $response );
 	}
 

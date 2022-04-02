@@ -21,7 +21,7 @@ function wappus_api_password_lost( $request ) {
 
 	}
 
-	$user = get_user_by( 'email', $login );
+	$user = get_user_by( 'email', $login );	
 
 	if ( empty( $user ) ) {
 		$user = get_user_by( 'login', $login );
@@ -32,6 +32,11 @@ function wappus_api_password_lost( $request ) {
 		$response = new WP_Error( 'error', 'User does not exist.', array( 'status' => 401 ) );
 		return rest_ensure_response( $response );
 
+	}
+
+	if ( wapuus_api_is_demo_user( $user ) ) {
+		$response = new WP_Error( 'error', 'Demo user does not have permission.', array( 'status' => 401 ) );
+		return rest_ensure_response( $response );
 	}
 
 	$user_login = $user->user_login;
@@ -78,7 +83,11 @@ function wappus_api_password_reset( $request ) {
 
 		$response = new WP_Error( 'error', 'User does not exist.', array( 'status' => 401 ) );
 		return rest_ensure_response( $response );
+	}
 
+	if ( wapuus_api_is_demo_user( $user ) ) {
+		$response = new WP_Error( 'error', 'Demo user does not have permission.', array( 'status' => 401 ) );
+		return rest_ensure_response( $response );
 	}
 
 	$check_key = check_password_reset_key( $key, $login );

@@ -6,12 +6,17 @@
 
 function wappus_api_image_delete( $request ) {
 
-	$post_id = sanitize_key( $request['id'] );
-	$post    = get_post( $post_id );
 	$user    = wp_get_current_user();
+	$post_id = sanitize_key( $request['id'] );
+	$post    = get_post( $post_id );	
 
 	if ( (int) $user->ID !== (int) $post->post_author || ! isset( $post ) ) {
-		$response = new WP_Error( 'error', 'Sem permissão.', array( 'status' => 401 ) );
+		$response = new WP_Error( 'error', 'User does not have permission.', array( 'status' => 401 ) );
+		return rest_ensure_response( $response );
+	}
+
+	if ( wapuus_api_is_demo_user( $user ) ) {
+		$response = new WP_Error( 'error', 'Demo user does not have permission.', array( 'status' => 401 ) );
 		return rest_ensure_response( $response );
 	}
 

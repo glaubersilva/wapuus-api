@@ -25,6 +25,7 @@ define( 'WAPUUS_API_TEXT_DOMAIN', 'wapuus-api' );
  * Initial Setup
  */
 require_once WAPUUS_API_DIR . '/autoload.php';
+require_once WAPUUS_API_DIR . '/src/helpers.php';
 \Wapuus_API\Src\Classes\General_Tweaks::get_instance();
 \Wapuus_API\Src\Classes\Wapuus_Custom_Post_Type::get_instance();
 

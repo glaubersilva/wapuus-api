@@ -6,12 +6,17 @@
 
 function wappus_api_comment_delete( $request ) {
 
+	$user = wp_get_current_user();
 	$comment_id = sanitize_key( $request['id'] );
 	$comment    = get_comment( $comment_id ); // $comment_author = get_user_by( 'email', $comment->comment_author_email );
-	$user       = wp_get_current_user();
 
 	if ( (int) $user->ID !== (int) $comment->user_id || ! isset( $comment ) ) {
-		$response = new WP_Error( 'error', 'Sem permissão.', array( 'status' => 401 ) );
+		$response = new WP_Error( 'error', 'User does not have permission.', array( 'status' => 401 ) );
+		return rest_ensure_response( $response );
+	}
+
+	if ( wapuus_api_is_demo_user( $user ) ) {
+		$response = new WP_Error( 'error', 'Demo user does not have permission.', array( 'status' => 401 ) );
 		return rest_ensure_response( $response );
 	}
 

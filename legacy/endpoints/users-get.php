@@ -9,7 +9,7 @@ function wappus_api_user_get( $request ) {
 	$user = wp_get_current_user();
 
 	if ( 0 === $user->ID ) {
-		$response = new WP_Error( 'error', 'Usuário não possui permissão', array( 'status' => 401 ) );
+		$response = new WP_Error( 'error', 'User does not have permission.', array( 'status' => 401 ) );
 		return rest_ensure_response( $response );
 	}
 

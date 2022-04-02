@@ -12,17 +12,17 @@ function wappus_api_user_post( $request ) {
 	$url      = $request['url']; // Needs impletation on the frontend
 
 	if ( empty( $email ) || empty( $username ) /*|| empty( $password )*/ ) {
-		$response = new WP_Error( 'error', 'Dados incompletos', array( 'status' => 406 ) );
+		$response = new WP_Error( 'error', 'Email and username are required.', array( 'status' => 406 ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( username_exists( $username ) ) {
-		$response = new WP_Error( 'error', 'Username já cadastrado', array( 'status' => 403 ) );
+		$response = new WP_Error( 'error', 'Username already in use.', array( 'status' => 403 ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( email_exists( $email ) ) {
-		$response = new WP_Error( 'error', 'E-mail já cadastrado', array( 'status' => 403 ) );
+		$response = new WP_Error( 'error', 'Email already in use.', array( 'status' => 403 ) );
 		return rest_ensure_response( $response );
 	}
 

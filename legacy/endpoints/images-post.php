@@ -13,6 +13,11 @@ function wappus_api_image_post( $request ) {
 		return rest_ensure_response( $response );
 	}
 
+	if ( wapuus_api_is_demo_user( $user ) ) {
+		$response = new WP_Error( 'error', 'Demo user does not have permission.', array( 'status' => 401 ) );
+		return rest_ensure_response( $response );
+	}
+
 	$files = $request->get_file_params();
 
 	$name = sanitize_text_field( $request['name'] );
