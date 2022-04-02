@@ -14,6 +14,10 @@ function wappus_api_comment_get( $request ) {
 		)
 	);
 
+	foreach ( $comments as $key => $comment ) {
+		$comments[ $key ] = wappus_api_get_comment_data( $comment );
+	}
+
 	return rest_ensure_response( $comments );
 }
 

@@ -38,6 +38,8 @@ function wappus_api_comment_post( $request ) {
 	$comment_id = wp_insert_comment( $response );
 	$comment = get_comment( $comment_id );
 
+	$comment = wappus_api_get_comment_data( $comment );
+
 	return rest_ensure_response( $comment );
 }
 

@@ -36,6 +36,26 @@ function wappus_api_get_post_data( $post ) {
 	return $return;
 }
 
+function wappus_api_get_comment_data( $comment ) {
+
+	if ( ! $comment instanceof WP_Comment && ! is_numeric( $comment ) ) {
+		return false;
+	}
+
+	if ( is_numeric( $comment ) ) {
+		$comment = get_comment( $comment );
+	}
+
+	$return = array(
+		'image_id'   => $comment->comment_post_ID,
+		'author'     => $comment->comment_author,
+		'comment_id' => $comment->comment_ID,
+		'comment'    => $comment->comment_content,
+	);
+
+	return $return;
+}
+
 
 function wapuus_api_is_demo_user( $user ) {
 

@@ -25,22 +25,22 @@ if ( ! class_exists( 'Comments_Resource' ) ) {
 				'title'      => 'comment',
 				'type'       => 'object',
 				'properties' => array(
-					'comment_post_ID' => array(
+					'image_id' => array( //comment_post_ID
 						'description' => __( 'Unique identifier for the image object.' ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 					),
-					'comment_author'  => array(
+					'author'  => array( //comment_author
 						'description' => __( 'The username of the user object.' ),
 						'type'        => 'string',
 						'context'     => array( 'view', 'edit', 'embed' ),
 					),
-					'comment_ID'      => array(
+					'comment_id'      => array( //comment_ID
 						'description' => __( 'Unique identifier for the comment.' ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 					),
-					'comment_content' => array(
+					'comment' => array( //comment_content
 						'description' => __( 'The content of the comment.' ),
 						'type'        => 'string',
 						'context'     => array( 'view', 'edit', 'embed' ),
