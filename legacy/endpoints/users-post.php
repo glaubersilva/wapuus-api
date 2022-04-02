@@ -79,25 +79,19 @@ function wappus_api_user_post_args() {
 		'username' => array(
 			'description' => __( 'Login name for the user.' ),
 			'type'        => 'string',
-			'context'     => array( 'edit' ),
 			'required'    => true,
-			/*'arg_options' => array(
-				'sanitize_callback' => array( $this, 'check_username' ),
-			),*/
 		),
 		'email'    => array(
 			'description' => __( 'The email address for the user.' ),
 			'type'        => 'string',
 			'format'      => 'email',
-			'context'     => array( 'edit' ),
 			'required'    => true,
 		),
 		'url'    => array(
 			'description' => __( 'Base URL used to create the "password creation" link that is sent by email.' ),
 			'type'        => 'string',
 			'format'      => 'uri',
-			'context'     => array( 'view', 'edit', 'embed' ),
-			'readonly'    => true,
+			'required'    => true,
 		),
 	);
 

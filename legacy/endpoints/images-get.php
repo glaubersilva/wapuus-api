@@ -84,7 +84,7 @@ function wappus_api_images_get( $request ) {
 		$user = get_user_by( 'login', $_user );
 
 		if ( ! $user ) {
-			$response = new WP_Error( 'error', 'Usuário não encontrado.', array( 'status' => 404 ) );
+			$response = new WP_Error( 'error', 'User not found.', array( 'status' => 404 ) );
 			return rest_ensure_response( $response );
 		}
 
@@ -139,9 +139,18 @@ add_action( 'rest_api_init', 'wappus_register_api_images_get' );
 function wappus_api_images_get_args() {
 
 	$args = array(
-		/*'none' => array(
-			'description' => 'If logged, return the current user images.',
-		),*/
+		'_total' => array(
+			'description' => 'Total number of images per page - if not set, the default value is 6.',
+			'type'        => 'integer',
+		),
+		'_page' => array(
+			'description' => 'The number of the page to retrieve - if not set, the default value is 1.',
+			'type'        => 'integer',
+		),
+		'_user' => array(
+			'description' => 'The ID or username of the user object to retrieve the images - if not set, returns images from all users.',
+			'type'        => 'string',
+		),
 	);
 
 	return $args;

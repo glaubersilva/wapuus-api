@@ -86,7 +86,7 @@ function wappus_api_comment_post_args() {
 			// 'sanitize_callback' => 'my_custom_sanitize_callback', // IMPORTANT: if you specify a custom sanitize_callback for your argument definition, the built-in JSON Schema validation will not apply.
 		),
 		'comment' => array( // Cada argumento descrito em JSON Schema.
-			'description' => 'The content for the comment.',
+			'description' => 'The content of the comment.',
 			'type'        => 'string',
 			'required'    => true,
 		),

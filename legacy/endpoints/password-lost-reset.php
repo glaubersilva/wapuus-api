@@ -60,6 +60,7 @@ function wappus_register_api_password_lost() {
 			'methods'  => WP_REST_Server::CREATABLE, // POST
 			'callback' => 'wappus_api_password_lost',
 			'permission_callback' => 'wappus_api_password_permission_callback',
+			'args' => wappus_api_password_lost_args(),
 		)
 	);
 
@@ -67,7 +68,24 @@ function wappus_register_api_password_lost() {
 add_action( 'rest_api_init', 'wappus_register_api_password_lost' );
 
 
+function wappus_api_password_lost_args() {
 
+	$args = array(
+		'login' => array(
+			'description' => 'The username of the user object to reset the password.',
+			'type'        => 'string',
+			'required'    => true,
+		),
+		'url' => array(
+			'description' => 'Base URL used to create the "reset password" link that is sent by email.',
+			'type'        => 'string',
+			'format'      => 'uri',
+			'required'    => true,
+		),
+	);
+
+	return $args;
+}
 
 
 
@@ -82,6 +100,12 @@ function wappus_api_password_reset( $request ) {
 	if ( empty( $user ) ) {
 
 		$response = new WP_Error( 'error', 'User does not exist.', array( 'status' => 401 ) );
+		return rest_ensure_response( $response );
+	}
+
+	if ( empty( $password ) ) {
+
+		$response = new WP_Error( 'error', 'Password is required.', array( 'status' => 422 ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -112,8 +136,32 @@ function wappus_register_api_password_reset() {
 			'callback' => 'wappus_api_password_reset',
 			'callback' => 'wappus_api_password_reset',
 			'permission_callback' => 'wappus_api_password_permission_callback',
+			'args' => wappus_api_password_reset_args(),
 		)
 	);
 
 }
 add_action( 'rest_api_init', 'wappus_register_api_password_reset' );
+
+function wappus_api_password_reset_args() {
+
+	$args = array(
+		'login' => array(
+			'description' => 'The username of the user object to reset the password.',
+			'type'        => 'string',
+			'required'    => true,
+		),
+		'password' => array(
+			'description' => 'The new password of the user object.',
+			'type'        => 'string',
+			'required'    => true,
+		),
+		'key' => array(
+			'description' => 'The password reset key for the user object.',
+			'type'        => 'string',
+			'required'    => true,
+		),
+	);
+
+	return $args;
+}
