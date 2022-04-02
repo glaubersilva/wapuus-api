@@ -29,6 +29,10 @@ function wappus_api_image_get( $request ) {
 		)
 	);
 
+	foreach ( $comments as $key => $comment ) {
+		$comments[ $key ] = wappus_api_get_comment_data( $comment );
+	}
+
 	$response = array(
 		'image'    => $image,
 		'comments' => $comments,

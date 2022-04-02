@@ -47,10 +47,10 @@ function wappus_api_get_comment_data( $comment ) {
 	}
 
 	$return = array(
-		'image_id'   => $comment->comment_post_ID,
+		'id' => $comment->comment_ID,
+		'comment'    => $comment->comment_content,		
 		'author'     => $comment->comment_author,
-		'comment_id' => $comment->comment_ID,
-		'comment'    => $comment->comment_content,
+		//'parent_id'   => $comment->comment_post_ID,		
 	);
 
 	return $return;

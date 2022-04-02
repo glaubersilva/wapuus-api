@@ -24,18 +24,8 @@ if ( ! class_exists( 'Comments_Resource' ) ) {
 				'$schema'    => 'http://json-schema.org/draft-04/schema#',
 				'title'      => 'comment',
 				'type'       => 'object',
-				'properties' => array(
-					'image_id' => array( //comment_post_ID
-						'description' => __( 'Unique identifier for the image object.' ),
-						'type'        => 'integer',
-						'context'     => array( 'view', 'edit', 'embed' ),
-					),
-					'author'  => array( //comment_author
-						'description' => __( 'The username of the user object.' ),
-						'type'        => 'string',
-						'context'     => array( 'view', 'edit', 'embed' ),
-					),
-					'comment_id'      => array( //comment_ID
+				'properties' => array(					
+					'id'      => array( //comment_ID
 						'description' => __( 'Unique identifier for the comment.' ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
@@ -45,6 +35,16 @@ if ( ! class_exists( 'Comments_Resource' ) ) {
 						'type'        => 'string',
 						'context'     => array( 'view', 'edit', 'embed' ),
 					),
+					'author'  => array( //comment_author
+						'description' => __( 'The username of the user object.' ),
+						'type'        => 'string',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),					
+					/*'parent_id' => array( //comment_post_ID
+						'description' => __( 'Unique identifier for the parent object of the comment.' ),
+						'type'        => 'integer',
+						'context'     => array( 'view', 'edit', 'embed' ),
+					),*/
 				),
 			);
 

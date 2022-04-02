@@ -28,19 +28,19 @@ function wappus_api_comment_post( $request ) {
 
 	$post_id = sanitize_key( $request['id'] );
 
-	$response = array(
+	$new_wp_comment = array(
 		'user_id'         => $user->ID,
 		'comment_author'  => $user->user_login,
 		'comment_content' => $comment,
 		'comment_post_ID' => $post_id,
 	);
 
-	$comment_id = wp_insert_comment( $response );
+	$comment_id = wp_insert_comment( $new_wp_comment );
 	$comment = get_comment( $comment_id );
 
-	$comment = wappus_api_get_comment_data( $comment );
+	$response = wappus_api_get_comment_data( $comment );
 
-	return rest_ensure_response( $comment );
+	return rest_ensure_response( $response );
 }
 
 function wappus_api_comment_post_permission_callback(){
