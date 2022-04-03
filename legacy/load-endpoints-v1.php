@@ -1,6 +1,12 @@
 <?php
 /**
  * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
+ *
+ * @package Wapuus_API
+ */
+
+/**
+ * Load all endpoints from the API V1 one by one.
  */
 require_once WAPUUS_API_DIR . '/legacy/endpoints/users-get.php';
 require_once WAPUUS_API_DIR . '/legacy/endpoints/users-post.php';

@@ -1,9 +1,41 @@
 <?php
-
 /**
- * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
+ * The legacy API V1 endpoint for comment delete.
+ *
+ * @package Wapuus_API
  */
 
+/**
+ * Register the "comment get" endpoint.
+ */
+function wappus_register_api_comment_get() {
+
+	register_rest_route(
+		'wapuus-api/v1',
+		'/comments/(?P<id>[0-9]+)',
+		array( // The callback to the endpoint resource schema - note that the resource schema is the same for all methods that the endpoint accepts.
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ),
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => 'wappus_api_comment_get',
+				'permission_callback' => 'wappus_api_comment_get_permissions_check',
+				'args'                => wappus_api_comment_get_args(),
+			),
+			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
+		)
+	);
+}
+add_action( 'rest_api_init', 'wappus_register_api_comment_get' );
+
+/**
+ * The callback to get an image comment.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
+ *                                   is already an instance, WP_REST_Response, otherwise
+ *                                   returns a new WP_REST_Response instance.
+ */
 function wappus_api_comment_get( $request ) {
 
 	$post_id = sanitize_key( $request['id'] );
@@ -21,48 +53,30 @@ function wappus_api_comment_get( $request ) {
 	return rest_ensure_response( $comments );
 }
 
-function wappus_api_comment_get_permission_callback() {
+/**
+ * The permission callback to delete an image comment.
+ *
+ * @param object|\WP_REST_Request $request The current request object.
+ *
+ * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
+ */
+function wappus_api_comment_get_permissions_check( $request ) {
 
 	return true;
 }
 
-function wappus_register_api_comment_get() {
-
-	register_rest_route(
-		'wapuus-api/v1',
-		'/comments/(?P<id>[0-9]+)',
-		array( // Isso declara o Schema do endpoint. Note que o schema é o mesmo para todos os métodos que o endpoint aceita.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ),
-			array(
-				'methods'             => WP_REST_Server::READABLE, // GET
-				'callback'            => 'wappus_api_comment_get',
-				'permission_callback' => 'wappus_api_comment_get_permission_callback',
-				'args'                => wappus_api_comment_get_args(),
-			),
-			// Aqui poderia ter outro array com a declaração do método POST por exemplo.
-		)
-	);
-}
-add_action( 'rest_api_init', 'wappus_register_api_comment_get' );
-
 /**
- * Get the argument schema for this example endpoint.
+ * Get the expected arguments for the REST API endpoint.
  *
- * You use it to configure what arguments (thus the name args) the WordPress REST API expects to receive for the
- * endpoint that you’re registering. You also use it to tell the WordPress REST API how to process these arguments
- * when it receives them. And, like its parent array, the args array is also an associative array. Each key of the
- * array is a parameter that your endpoint can accept.
+ * @return array Arguments.
  */
 function wappus_api_comment_get_args() {
 
-	$args = array( // A declaração dos argumentos que esse endpoint aceita.
-		'id' => array( // Cada argumento descrito em JSON Schema.
+	$args = array(
+		'id' => array(
 			'description' => 'The ID of the image object to retrieve the comments.',
 			'type'        => 'integer',
-			//'default'     => 0,
 			'required'    => true,
-			// 'validate_callback' => 'my_custom_validate_callback', // IMPORTANT: if you specify a custom validate_callback for your argument definition, the built-in JSON Schema validation will not apply.
-			// 'sanitize_callback' => 'my_custom_sanitize_callback', // IMPORTANT: if you specify a custom sanitize_callback for your argument definition, the built-in JSON Schema validation will not apply.
 		),
 	);
 

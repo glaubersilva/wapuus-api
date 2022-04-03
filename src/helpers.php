@@ -1,9 +1,16 @@
 <?php
+/**
+ * Helper functions that are used on the endpoint callbacks.
+ *
+ * @package Wapuus_API
+ */
 
 /**
  * Get data from Wapuus posts.
  *
- * @param object|WP_Post|int $post The post object or int.
+ * @param WP_Post|int $post The post object or int.
+ *
+ * @return array Post Data.
  */
 function wappus_api_get_post_data( $post ) {
 
@@ -20,7 +27,7 @@ function wappus_api_get_post_data( $post ) {
 	$user           = get_userdata( $post->post_author );
 	$total_comments = get_comments_number( $post->ID );
 
-	$return = array(
+	$post_data = array(
 		'id'             => $post->ID,
 		'author'         => $user->user_login,
 		'title'          => $post->post_title,
@@ -33,9 +40,16 @@ function wappus_api_get_post_data( $post ) {
 		'total_comments' => $total_comments,
 	);
 
-	return $return;
+	return $post_data;
 }
 
+/**
+ * Get data from Wapuus comments.
+ *
+ * @param WP_Comment|int $comment The comment object or int.
+ *
+ * @return array Comment Data.
+ */
 function wappus_api_get_comment_data( $comment ) {
 
 	if ( ! $comment instanceof WP_Comment && ! is_numeric( $comment ) ) {
@@ -46,17 +60,23 @@ function wappus_api_get_comment_data( $comment ) {
 		$comment = get_comment( $comment );
 	}
 
-	$return = array(
-		'id' => $comment->comment_ID,
-		'comment'    => $comment->comment_content,		
-		'author'     => $comment->comment_author,
-		//'parent_id'   => $comment->comment_post_ID,		
+	$comment_data = array(
+		'id'        => $comment->comment_ID,
+		'comment'   => $comment->comment_content,
+		'author'    => $comment->comment_author,
+		'parent_id' => $comment->comment_post_ID,
 	);
 
-	return $return;
+	return $comment_data;
 }
 
-
+/**
+ * Check if the user is a demo user.
+ *
+ * @param WP_User|int $user The user object or int.
+ *
+ * @return bool Returns true for a demo user or false for a not demo user.
+ */
 function wapuus_api_is_demo_user( $user ) {
 
 	$is_demo_user = false;
@@ -67,7 +87,7 @@ function wapuus_api_is_demo_user( $user ) {
 			$user = get_userdata( $user );
 		}
 
-		if ( 'demo' == strtolower( $user->user_login ) ) {
+		if ( 'demo' === strtolower( $user->user_login ) ) {
 			$is_demo_user = true;
 		}
 	}

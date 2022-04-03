@@ -1,31 +1,46 @@
 <?php
-
 /**
- * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
+ * The legacy API V1 endpoint for comment delete.
+ *
+ * @package Wapuus_API
  */
 
+/**
+ * Register the "comment post" endpoint.
+ */
+function wappus_register_api_comment_post() {
+
+	register_rest_route(
+		'wapuus-api/v1',
+		'/comments/(?P<id>[0-9]+)',
+		array( // The callback to the endpoint resource schema - note that the resource schema is the same for all methods that the endpoint accepts.
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ),
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => 'wappus_api_comment_post',
+				'permission_callback' => 'wappus_api_comment_post_permissions_check',
+				'args'                => wappus_api_comment_post_args(),
+			),
+			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
+		)
+	);
+
+}
+add_action( 'rest_api_init', 'wappus_register_api_comment_post' );
+
+/**
+ * The callback to post an image comment.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
+ *                                   is already an instance, WP_REST_Response, otherwise
+ *                                   returns a new WP_REST_Response instance.
+ */
 function wappus_api_comment_post( $request ) {
 
-
-	$user = wp_get_current_user();
-
-	if ( $user->ID === 0 ) {
-		$response = new WP_Error( 'error', 'User does not have permission.', array( 'status' => 401 ) );
-		return rest_ensure_response( $response );
-	}
-
-	if ( wapuus_api_is_demo_user( $user ) ) {
-		$response = new WP_Error( 'error', 'Demo user does not have permission.', array( 'status' => 401 ) );
-		return rest_ensure_response( $response );
-	}
-
-    $comment = sanitize_textarea_field( $request['comment'] );
-
-	if ( empty( $comment) ) {
-		$response = new WP_Error( 'error', 'The comment is required.', array( 'status' => 422 ) );
-		return rest_ensure_response( $response );
-	}
-
+	$user    = wp_get_current_user();
+	$comment = sanitize_textarea_field( $request['comment'] );
 	$post_id = sanitize_key( $request['id'] );
 
 	$new_wp_comment = array(
@@ -36,58 +51,73 @@ function wappus_api_comment_post( $request ) {
 	);
 
 	$comment_id = wp_insert_comment( $new_wp_comment );
-	$comment = get_comment( $comment_id );
+	$comment    = get_comment( $comment_id );
 
 	$response = wappus_api_get_comment_data( $comment );
 
 	return rest_ensure_response( $response );
 }
 
-function wappus_api_comment_post_permission_callback(){
-	
+/**
+ * The permission callback to delete an image comment.
+ *
+ * @param object|\WP_REST_Request $request The current request object.
+ *
+ * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
+ */
+function wappus_api_comment_post_permissions_check( $request ) {
+
+	$user = wp_get_current_user();
+
+	/**
+	 * To better understand the "client error responses", check the link below:
+	 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
+	 */
+	if ( is_user_logged_in() ) {
+		$no_permission_status = 403;
+		$no_permission_code   = 'Forbidden';
+	} else {
+		$no_permission_status = 401;
+		$no_permission_code   = 'Unauthorized';
+	}
+
+	$incomplete_data_status = 422;
+	$incomplete_data_code   = 'Unprocessable Entity';
+
+	if ( 0 === $user->ID ) {
+		$response = new WP_Error( $no_permission_code, __( 'User does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
+		return rest_ensure_response( $response );
+	}
+
+	if ( wapuus_api_is_demo_user( $user ) ) {
+		$response = new WP_Error( $no_permission_code, __( 'Demo user does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
+		return rest_ensure_response( $response );
+	}
+
+	$comment = sanitize_textarea_field( $request['comment'] );
+
+	if ( empty( $comment ) ) {
+		$response = new WP_Error( $incomplete_data_code, __( 'The comment is required.', 'wapuus-api' ), array( 'status' => $incomplete_data_status ) );
+		return rest_ensure_response( $response );
+	}
+
 	return true;
 }
 
-function wappus_register_api_comment_post() {
-
-	register_rest_route(
-		'wapuus-api/v1',
-		'/comments/(?P<id>[0-9]+)',
-		array( // Isso declara o Schema do endpoint. Note que o schema é o mesmo para todos os métodos que o endpoint aceita.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ),
-			array(
-				'methods'  => WP_REST_Server::CREATABLE, // POST
-				'callback' => 'wappus_api_comment_post',
-				'permission_callback' => 'wappus_api_comment_post_permission_callback',
-				'args'                => wappus_api_comment_post_args(),
-			),
-		)
-	);
-
-}
-add_action( 'rest_api_init', 'wappus_register_api_comment_post' );
-
-
 /**
- * Get the argument schema for this example endpoint.
+ * Get the expected arguments for the REST API endpoint.
  *
- * You use it to configure what arguments (thus the name args) the WordPress REST API expects to receive for the
- * endpoint that you’re registering. You also use it to tell the WordPress REST API how to process these arguments
- * when it receives them. And, like its parent array, the args array is also an associative array. Each key of the
- * array is a parameter that your endpoint can accept.
+ * @return array Arguments.
  */
 function wappus_api_comment_post_args() {
 
-	$args = array( // A declaração dos argumentos que esse endpoint aceita.
-		'id' => array( // Cada argumento descrito em JSON Schema.
+	$args = array(
+		'id'      => array(
 			'description' => 'The ID of the image object that will receive the comment.',
 			'type'        => 'integer',
-			//'default'     => 0,
 			'required'    => true,
-			// 'validate_callback' => 'my_custom_validate_callback', // IMPORTANT: if you specify a custom validate_callback for your argument definition, the built-in JSON Schema validation will not apply.
-			// 'sanitize_callback' => 'my_custom_sanitize_callback', // IMPORTANT: if you specify a custom sanitize_callback for your argument definition, the built-in JSON Schema validation will not apply.
 		),
-		'comment' => array( // Cada argumento descrito em JSON Schema.
+		'comment' => array(
 			'description' => 'The content of the comment.',
 			'type'        => 'string',
 			'required'    => true,

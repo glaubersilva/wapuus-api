@@ -40,11 +40,11 @@ if ( ! class_exists( 'Comments_Resource' ) ) {
 						'type'        => 'string',
 						'context'     => array( 'view', 'edit', 'embed' ),
 					),					
-					/*'parent_id' => array( //comment_post_ID
-						'description' => __( 'Unique identifier for the parent object of the comment.' ),
+					'parent_id' => array( //comment_post_ID
+						'description' => __( 'Unique identifier for the parent image object of the comment.' ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
-					),*/
+					),
 				),
 			);
 

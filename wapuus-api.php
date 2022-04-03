@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Wapuus API
  * Plugin URI: https://glaubersilva.me/
- * Description: A simple plugin that implements the API used by the https://github.com/glaubersilva/wapuus project - Just an app built for study purposes with React as frontend and WordPress as backend.
+ * Description: A simple plugin that implements the API used by the wapuus.org project - you can access the api.wapuus.org address to check the REST API docs.
  * Version: 1.0.0
  * Author: Glauber Silva
  * Author URI: https://glaubersilva.me/
