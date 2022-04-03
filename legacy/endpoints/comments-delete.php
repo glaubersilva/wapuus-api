@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the "comment delete" endpoint.
  */
-function wappus_register_api_comment_delete() {
+function wapuus_register_api_comment_delete() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -21,15 +21,15 @@ function wappus_register_api_comment_delete() {
 			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::DELETABLE,
-				'args'                => wappus_api_comment_delete_args(),
-				'permission_callback' => 'wappus_api_comment_delete_permissions_check',
-				'callback'            => 'wappus_api_comment_delete',
+				'args'                => wapuus_api_comment_delete_args(),
+				'permission_callback' => 'wapuus_api_comment_delete_permissions_check',
+				'callback'            => 'wapuus_api_comment_delete',
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
 	);
 }
-add_action( 'rest_api_init', 'wappus_register_api_comment_delete' );
+add_action( 'rest_api_init', 'wapuus_register_api_comment_delete' );
 
 /**
  * Schema of the expected arguments for the "comment delete" endpoint.
@@ -38,7 +38,7 @@ add_action( 'rest_api_init', 'wappus_register_api_comment_delete' );
  *
  * @return array Arguments.
  */
-function wappus_api_comment_delete_args() {
+function wapuus_api_comment_delete_args() {
 
 	$args = array(
 		'id' => array(
@@ -58,7 +58,7 @@ function wappus_api_comment_delete_args() {
  *
  * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
  */
-function wappus_api_comment_delete_permissions_check( $request ) {
+function wapuus_api_comment_delete_permissions_check( $request ) {
 
 	$user       = wp_get_current_user();
 	$comment_id = sanitize_key( $request['id'] );
@@ -98,7 +98,7 @@ function wappus_api_comment_delete_permissions_check( $request ) {
  *                                   is already an instance, WP_REST_Response, otherwise
  *                                   returns a new WP_REST_Response instance.
  */
-function wappus_api_comment_delete( $request ) {
+function wapuus_api_comment_delete( $request ) {
 
 	$comment_id = sanitize_key( $request['id'] );
 	$response   = wp_delete_comment( $comment_id, true );

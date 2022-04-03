@@ -4,7 +4,7 @@
  * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
  */
 
-function wappus_api_stats_get( $request ) {
+function wapuus_api_stats_get( $request ) {
 
 	$user = wp_get_current_user();
 
@@ -33,7 +33,7 @@ function wappus_api_stats_get( $request ) {
 	return rest_ensure_response( $stats );
 }
 
-function wappus_api_stats_get_permission_callback(){
+function wapuus_api_stats_get_permission_callback(){
 
 	if ( ! is_user_logged_in() ) {
 
@@ -45,7 +45,7 @@ function wappus_api_stats_get_permission_callback(){
 	return true;
 }
 
-function wappus_register_api_stats_get() {
+function wapuus_register_api_stats_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -54,17 +54,17 @@ function wappus_register_api_stats_get() {
 			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Stats_Resource::get_instance(), 'schema' ),
 			array(
 				'methods'  => WP_REST_Server::READABLE, // GET
-				'callback' => 'wappus_api_stats_get',
-				'permission_callback' => 'wappus_api_stats_get_permission_callback',
-				'args' => wappus_api_stats_get_args(),
+				'callback' => 'wapuus_api_stats_get',
+				'permission_callback' => 'wapuus_api_stats_get_permission_callback',
+				'args' => wapuus_api_stats_get_args(),
 			),
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'wappus_register_api_stats_get' );
+add_action( 'rest_api_init', 'wapuus_register_api_stats_get' );
 
-function wappus_api_stats_get_args(){
+function wapuus_api_stats_get_args(){
 	$args = array(
 		/*'none' => array(
 			'description' => 'If logged, return the current user stats.',

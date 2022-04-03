@@ -14,7 +14,7 @@
  *
  * @return array Post Data.
  */
-function wappus_api_get_post_data( $post ) {
+function wapuus_api_get_post_data( $post ) {
 
 	if ( ! $post instanceof WP_Post && ! is_numeric( $post ) ) {
 		return false;
@@ -52,7 +52,7 @@ function wappus_api_get_post_data( $post ) {
  *
  * @return array Comment Data.
  */
-function wappus_api_get_comment_data( $comment ) {
+function wapuus_api_get_comment_data( $comment ) {
 
 	if ( ! $comment instanceof WP_Comment && ! is_numeric( $comment ) ) {
 		return false;

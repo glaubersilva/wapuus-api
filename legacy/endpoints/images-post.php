@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the "image post" endpoint.
  */
-function wappus_register_api_image_post() {
+function wapuus_register_api_image_post() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -21,16 +21,16 @@ function wappus_register_api_image_post() {
 			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
-				'args'                => wappus_api_image_post_args(),
-				'permission_callback' => 'wappus_api_image_post_permissions_check',
-				'callback'            => 'wappus_api_image_post',
+				'args'                => wapuus_api_image_post_args(),
+				'permission_callback' => 'wapuus_api_image_post_permissions_check',
+				'callback'            => 'wapuus_api_image_post',
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'wappus_register_api_image_post' );
+add_action( 'rest_api_init', 'wapuus_register_api_image_post' );
 
 /**
  * Schema of the expected arguments for the "image post" endpoint.
@@ -39,7 +39,7 @@ add_action( 'rest_api_init', 'wappus_register_api_image_post' );
  *
  * @return array Arguments.
  */
-function wappus_api_image_post_args() {
+function wapuus_api_image_post_args() {
 	$args = array(
 		'name'     => array(
 			'description' => __( 'The name of the image.', 'wapuus-api' ),
@@ -78,7 +78,7 @@ function wappus_api_image_post_args() {
  *
  * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
  */
-function wappus_api_image_post_permissions_check( $request ) {
+function wapuus_api_image_post_permissions_check( $request ) {
 
 	$user  = wp_get_current_user();
 	$files = $request->get_file_params();
@@ -165,7 +165,7 @@ function wappus_api_image_post_permissions_check( $request ) {
  *                                   is already an instance, WP_REST_Response, otherwise
  *                                   returns a new WP_REST_Response instance.
  */
-function wappus_api_image_post( $request ) {
+function wapuus_api_image_post( $request ) {
 
 	$user  = wp_get_current_user();
 	$files = $request->get_file_params();
@@ -230,7 +230,7 @@ function wappus_api_image_post( $request ) {
 	update_post_meta( $post_id, 'img', $image_id );
 	set_post_thumbnail( $post_id, $image_id );
 
-	$response = wappus_api_get_post_data( $post_id );
+	$response = wapuus_api_get_post_data( $post_id );
 
 	return rest_ensure_response( $response );
 }

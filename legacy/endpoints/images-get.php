@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the "image get" endpoint.
  */
-function wappus_register_api_image_get() {
+function wapuus_register_api_image_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -21,16 +21,16 @@ function wappus_register_api_image_get() {
 			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'args'                => wappus_api_image_get_args(),
-				'permission_callback' => 'wappus_api_image_get_permissions_check',
-				'callback'            => 'wappus_api_image_get',
+				'args'                => wapuus_api_image_get_args(),
+				'permission_callback' => 'wapuus_api_image_get_permissions_check',
+				'callback'            => 'wapuus_api_image_get',
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'wappus_register_api_image_get' );
+add_action( 'rest_api_init', 'wapuus_register_api_image_get' );
 
 /**
  * Schema of the expected arguments for the "image get" endpoint.
@@ -39,7 +39,7 @@ add_action( 'rest_api_init', 'wappus_register_api_image_get' );
  *
  * @return array Arguments.
  */
-function wappus_api_image_get_args() {
+function wapuus_api_image_get_args() {
 
 	$args = array(
 		'id' => array(
@@ -59,7 +59,7 @@ function wappus_api_image_get_args() {
  *
  * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
  */
-function wappus_api_image_get_permissions_check( $request ) {
+function wapuus_api_image_get_permissions_check( $request ) {
 
 	$post_id = sanitize_key( $request['id'] );
 	$post    = get_post( $post_id );
@@ -88,11 +88,11 @@ function wappus_api_image_get_permissions_check( $request ) {
  *                                   is already an instance, WP_REST_Response, otherwise
  *                                   returns a new WP_REST_Response instance.
  */
-function wappus_api_image_get( $request ) {
+function wapuus_api_image_get( $request ) {
 
 	$post_id        = sanitize_key( $request['id'] );
 	$post           = get_post( $post_id );
-	$image          = wappus_api_get_post_data( $post );
+	$image          = wapuus_api_get_post_data( $post );
 	$image['views'] = (int) $image['views'] + 1;
 
 	update_post_meta( $post_id, 'views', $image['views'] );
@@ -105,7 +105,7 @@ function wappus_api_image_get( $request ) {
 	);
 
 	foreach ( $comments as $key => $comment ) {
-		$comments[ $key ] = wappus_api_get_comment_data( $comment );
+		$comments[ $key ] = wapuus_api_get_comment_data( $comment );
 	}
 
 	$response = array(
@@ -119,7 +119,7 @@ function wappus_api_image_get( $request ) {
 /**
  * Register the "images get" endpoint.
  */
-function wappus_register_api_images_get() {
+function wapuus_register_api_images_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -128,16 +128,16 @@ function wappus_register_api_images_get() {
 			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'args'                => wappus_api_images_get_args(),
-				'permission_callback' => 'wappus_api_images_get_permissions_check',
-				'callback'            => 'wappus_api_images_get',
+				'args'                => wapuus_api_images_get_args(),
+				'permission_callback' => 'wapuus_api_images_get_permissions_check',
+				'callback'            => 'wapuus_api_images_get',
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'wappus_register_api_images_get' );
+add_action( 'rest_api_init', 'wapuus_register_api_images_get' );
 
 /**
  * Schema of the expected arguments for the "images get" endpoint.
@@ -146,7 +146,7 @@ add_action( 'rest_api_init', 'wappus_register_api_images_get' );
  *
  * @return array Arguments.
  */
-function wappus_api_images_get_args() {
+function wapuus_api_images_get_args() {
 
 	$args = array(
 		'_total' => array(
@@ -173,7 +173,7 @@ function wappus_api_images_get_args() {
  *
  * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
  */
-function wappus_api_images_get_permissions_check( $request ) {
+function wapuus_api_images_get_permissions_check( $request ) {
 
 	if ( isset( $request['_user'] ) && ! is_numeric( $request['_user'] ) ) {
 
@@ -205,7 +205,7 @@ function wappus_api_images_get_permissions_check( $request ) {
  *                                   is already an instance, WP_REST_Response, otherwise
  *                                   returns a new WP_REST_Response instance.
  */
-function wappus_api_images_get( $request ) {
+function wapuus_api_images_get( $request ) {
 
 	$_total = isset( $request['_total'] ) ? sanitize_text_field( $request['_total'] ) : 6;
 	$_page  = isset( $request['_page'] ) ? sanitize_text_field( $request['_page'] ) : 1;
@@ -230,7 +230,7 @@ function wappus_api_images_get( $request ) {
 
 	if ( $posts ) {
 		foreach ( $posts as $post ) {
-			$images[] = wappus_api_get_post_data( $post );
+			$images[] = wapuus_api_get_post_data( $post );
 		}
 	}
 

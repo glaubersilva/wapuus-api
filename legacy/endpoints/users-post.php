@@ -4,7 +4,7 @@
  * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
  */
 
-function wappus_api_user_post( $request ) {
+function wapuus_api_user_post( $request ) {
 
 	$email    = sanitize_email( $request['email'] );
 	$username = sanitize_text_field( $request['username'] );
@@ -55,12 +55,12 @@ function wappus_api_user_post( $request ) {
 	return rest_ensure_response( $response );
 }
 
-function wappus_register_api_user_post_permission_callback(){
+function wapuus_register_api_user_post_permission_callback(){
 
 	return true;
 }
 
-function wappus_register_api_user_post() {
+function wapuus_register_api_user_post() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -69,17 +69,17 @@ function wappus_register_api_user_post() {
 			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Users_Resource::get_instance(), 'schema' ),
 			array(
 				'methods'  => WP_REST_Server::CREATABLE, // POST
-				'callback' => 'wappus_api_user_post',
-				'permission_callback' => 'wappus_register_api_user_post_permission_callback',
-				'args' => wappus_api_user_post_args(),
+				'callback' => 'wapuus_api_user_post',
+				'permission_callback' => 'wapuus_register_api_user_post_permission_callback',
+				'args' => wapuus_api_user_post_args(),
 			),
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'wappus_register_api_user_post' );
+add_action( 'rest_api_init', 'wapuus_register_api_user_post' );
 
-function wappus_api_user_post_args() {
+function wapuus_api_user_post_args() {
 
 	$args = array(
 		'username' => array(

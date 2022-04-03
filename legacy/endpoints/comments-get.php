@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the "comments get" endpoint.
  */
-function wappus_register_api_comments_get() {
+function wapuus_register_api_comments_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -21,15 +21,15 @@ function wappus_register_api_comments_get() {
 			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'args'                => wappus_api_comments_get_args(),
-				'permission_callback' => 'wappus_api_comments_get_permissions_check',
-				'callback'            => 'wappus_api_comments_get',
+				'args'                => wapuus_api_comments_get_args(),
+				'permission_callback' => 'wapuus_api_comments_get_permissions_check',
+				'callback'            => 'wapuus_api_comments_get',
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
 	);
 }
-add_action( 'rest_api_init', 'wappus_register_api_comments_get' );
+add_action( 'rest_api_init', 'wapuus_register_api_comments_get' );
 
 /**
  * Schema of the expected arguments for the "comments get" endpoint.
@@ -38,7 +38,7 @@ add_action( 'rest_api_init', 'wappus_register_api_comments_get' );
  *
  * @return array Arguments.
  */
-function wappus_api_comments_get_args() {
+function wapuus_api_comments_get_args() {
 
 	$args = array(
 		'id' => array(
@@ -58,7 +58,7 @@ function wappus_api_comments_get_args() {
  *
  * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
  */
-function wappus_api_comments_get_permissions_check( $request ) {
+function wapuus_api_comments_get_permissions_check( $request ) {
 
 	return true;
 }
@@ -72,7 +72,7 @@ function wappus_api_comments_get_permissions_check( $request ) {
  *                                   is already an instance, WP_REST_Response, otherwise
  *                                   returns a new WP_REST_Response instance.
  */
-function wappus_api_comments_get( $request ) {
+function wapuus_api_comments_get( $request ) {
 
 	$post_id = sanitize_key( $request['id'] );
 
@@ -83,7 +83,7 @@ function wappus_api_comments_get( $request ) {
 	);
 
 	foreach ( $comments as $key => $comment ) {
-		$comments[ $key ] = wappus_api_get_comment_data( $comment );
+		$comments[ $key ] = wapuus_api_get_comment_data( $comment );
 	}
 
 	return rest_ensure_response( $comments );

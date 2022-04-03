@@ -4,12 +4,12 @@
  * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
  */
 
-function wappus_api_password_permission_callback(){
+function wapuus_api_password_permission_callback(){
 
 	return true;
 }
 
-function wappus_api_password_lost( $request ) {
+function wapuus_api_password_lost( $request ) {
 
 	$login = $request['login'];
 	$url   = $request['url'];
@@ -51,24 +51,24 @@ function wappus_api_password_lost( $request ) {
 	return rest_ensure_response( 'Email sent.' );
 }
 
-function wappus_register_api_password_lost() {
+function wapuus_register_api_password_lost() {
 
 	register_rest_route(
 		'wapuus-api/v1',
 		'/password/lost',
 		array(
 			'methods'  => WP_REST_Server::CREATABLE, // POST
-			'callback' => 'wappus_api_password_lost',
-			'permission_callback' => 'wappus_api_password_permission_callback',
-			'args' => wappus_api_password_lost_args(),
+			'callback' => 'wapuus_api_password_lost',
+			'permission_callback' => 'wapuus_api_password_permission_callback',
+			'args' => wapuus_api_password_lost_args(),
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'wappus_register_api_password_lost' );
+add_action( 'rest_api_init', 'wapuus_register_api_password_lost' );
 
 
-function wappus_api_password_lost_args() {
+function wapuus_api_password_lost_args() {
 
 	$args = array(
 		'login' => array(
@@ -89,7 +89,7 @@ function wappus_api_password_lost_args() {
 
 
 
-function wappus_api_password_reset( $request ) {
+function wapuus_api_password_reset( $request ) {
 
 	//return rest_ensure_response( 'Senha Alterada TESTE.' );
 	$login = $request['login'];
@@ -126,24 +126,24 @@ function wappus_api_password_reset( $request ) {
 	return rest_ensure_response( 'Password has been changed.' );
 }
 
-function wappus_register_api_password_reset() {
+function wapuus_register_api_password_reset() {
 
 	register_rest_route(
 		'wapuus-api/v1',
 		'/password/reset',
 		array(
 			'methods'  => WP_REST_Server::CREATABLE, // POST
-			'callback' => 'wappus_api_password_reset',
-			'callback' => 'wappus_api_password_reset',
-			'permission_callback' => 'wappus_api_password_permission_callback',
-			'args' => wappus_api_password_reset_args(),
+			'callback' => 'wapuus_api_password_reset',
+			'callback' => 'wapuus_api_password_reset',
+			'permission_callback' => 'wapuus_api_password_permission_callback',
+			'args' => wapuus_api_password_reset_args(),
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'wappus_register_api_password_reset' );
+add_action( 'rest_api_init', 'wapuus_register_api_password_reset' );
 
-function wappus_api_password_reset_args() {
+function wapuus_api_password_reset_args() {
 
 	$args = array(
 		'login' => array(
