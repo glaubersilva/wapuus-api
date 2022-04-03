@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the "comment delete" endpoint.
  */
-function wapuus_register_api_comment_delete() {
+function wapuus_api_register_comment_delete() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -29,7 +29,7 @@ function wapuus_register_api_comment_delete() {
 		)
 	);
 }
-add_action( 'rest_api_init', 'wapuus_register_api_comment_delete' );
+add_action( 'rest_api_init', 'wapuus_api_register_comment_delete' );
 
 /**
  * Schema of the expected arguments for the "comment delete" endpoint.

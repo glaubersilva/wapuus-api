@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the "image post" endpoint.
  */
-function wapuus_register_api_image_post() {
+function wapuus_api_register_image_post() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -30,7 +30,7 @@ function wapuus_register_api_image_post() {
 	);
 
 }
-add_action( 'rest_api_init', 'wapuus_register_api_image_post' );
+add_action( 'rest_api_init', 'wapuus_api_register_image_post' );
 
 /**
  * Schema of the expected arguments for the "image post" endpoint.

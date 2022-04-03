@@ -45,7 +45,7 @@ function wapuus_api_stats_get_permission_callback(){
 	return true;
 }
 
-function wapuus_register_api_stats_get() {
+function wapuus_api_register_stats_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -62,7 +62,7 @@ function wapuus_register_api_stats_get() {
 	);
 
 }
-add_action( 'rest_api_init', 'wapuus_register_api_stats_get' );
+add_action( 'rest_api_init', 'wapuus_api_register_stats_get' );
 
 function wapuus_api_stats_get_args(){
 	$args = array(

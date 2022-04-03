@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the "image delete" endpoint.
  */
-function wapuus_register_api_image_delete() {
+function wapuus_api_register_image_delete() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -29,7 +29,7 @@ function wapuus_register_api_image_delete() {
 		)
 	);
 }
-add_action( 'rest_api_init', 'wapuus_register_api_image_delete' );
+add_action( 'rest_api_init', 'wapuus_api_register_image_delete' );
 
 /**
  * Schema of the expected arguments for the "image delete" endpoint.

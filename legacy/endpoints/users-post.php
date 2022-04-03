@@ -55,12 +55,12 @@ function wapuus_api_user_post( $request ) {
 	return rest_ensure_response( $response );
 }
 
-function wapuus_register_api_user_post_permission_callback(){
+function wapuus_api_register_user_post_permission_callback(){
 
 	return true;
 }
 
-function wapuus_register_api_user_post() {
+function wapuus_api_register_user_post() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -70,14 +70,14 @@ function wapuus_register_api_user_post() {
 			array(
 				'methods'  => WP_REST_Server::CREATABLE, // POST
 				'callback' => 'wapuus_api_user_post',
-				'permission_callback' => 'wapuus_register_api_user_post_permission_callback',
+				'permission_callback' => 'wapuus_api_register_user_post_permission_callback',
 				'args' => wapuus_api_user_post_args(),
 			),
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'wapuus_register_api_user_post' );
+add_action( 'rest_api_init', 'wapuus_api_register_user_post' );
 
 function wapuus_api_user_post_args() {
 

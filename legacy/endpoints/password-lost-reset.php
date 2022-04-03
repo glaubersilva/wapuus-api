@@ -51,7 +51,7 @@ function wapuus_api_password_lost( $request ) {
 	return rest_ensure_response( 'Email sent.' );
 }
 
-function wapuus_register_api_password_lost() {
+function wapuus_api_register_password_lost() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -65,7 +65,7 @@ function wapuus_register_api_password_lost() {
 	);
 
 }
-add_action( 'rest_api_init', 'wapuus_register_api_password_lost' );
+add_action( 'rest_api_init', 'wapuus_api_register_password_lost' );
 
 
 function wapuus_api_password_lost_args() {
@@ -126,7 +126,7 @@ function wapuus_api_password_reset( $request ) {
 	return rest_ensure_response( 'Password has been changed.' );
 }
 
-function wapuus_register_api_password_reset() {
+function wapuus_api_register_password_reset() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -141,7 +141,7 @@ function wapuus_register_api_password_reset() {
 	);
 
 }
-add_action( 'rest_api_init', 'wapuus_register_api_password_reset' );
+add_action( 'rest_api_init', 'wapuus_api_register_password_reset' );
 
 function wapuus_api_password_reset_args() {
 

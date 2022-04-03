@@ -4,7 +4,7 @@
  * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
  */
 
-function wapuus_api_user_get( $request ) {
+function wappus_api_user_get( $request ) {
 
 	$user = wp_get_current_user();
 
@@ -23,12 +23,12 @@ function wapuus_api_user_get( $request ) {
 	return rest_ensure_response( $response );
 }
 
-function wapuus_api_user_get_permission_callback(){
+function wappus_api_user_get_permission_callback() {
 
 	return true;
 }
 
-function wapuus_register_api_user_get() {
+function wappus_api_register_user_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -37,17 +37,17 @@ function wapuus_register_api_user_get() {
 			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Users_Resource::get_instance(), 'schema' ),
 			array(
 				'methods'  => WP_REST_Server::READABLE, // GET
-				'callback' => 'wapuus_api_user_get',
-				'permission_callback' => 'wapuus_api_user_get_permission_callback',
-				'args' => wapuus_api_user_get_args(),
+				'callback' => 'wappus_api_user_get',
+				'permission_callback' => 'wappus_api_user_get_permission_callback',
+				'args' => wappus_api_user_get_args(),
 			),
 		)
 	);
 
 }
-add_action( 'rest_api_init', 'wapuus_register_api_user_get' );
+add_action( 'rest_api_init', 'wappus_api_register_user_get' );
 
-function wapuus_api_user_get_args() {
+function wappus_api_user_get_args() {
 
 	$args = array(
 		/*'none' => array(

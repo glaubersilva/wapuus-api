@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the "comment post" endpoint.
  */
-function wapuus_register_api_comment_post() {
+function wapuus_api_register_comment_post() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -29,7 +29,7 @@ function wapuus_register_api_comment_post() {
 		)
 	);
 }
-add_action( 'rest_api_init', 'wapuus_register_api_comment_post' );
+add_action( 'rest_api_init', 'wapuus_api_register_comment_post' );
 
 /**
  * Schema of the expected arguments for the "comment post" endpoint.

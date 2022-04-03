@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the "image get" endpoint.
  */
-function wapuus_register_api_image_get() {
+function wapuus_api_register_image_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -30,7 +30,7 @@ function wapuus_register_api_image_get() {
 	);
 
 }
-add_action( 'rest_api_init', 'wapuus_register_api_image_get' );
+add_action( 'rest_api_init', 'wapuus_api_register_image_get' );
 
 /**
  * Schema of the expected arguments for the "image get" endpoint.
@@ -119,7 +119,7 @@ function wapuus_api_image_get( $request ) {
 /**
  * Register the "images get" endpoint.
  */
-function wapuus_register_api_images_get() {
+function wapuus_api_register_images_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -137,7 +137,7 @@ function wapuus_register_api_images_get() {
 	);
 
 }
-add_action( 'rest_api_init', 'wapuus_register_api_images_get' );
+add_action( 'rest_api_init', 'wapuus_api_register_images_get' );
 
 /**
  * Schema of the expected arguments for the "images get" endpoint.
