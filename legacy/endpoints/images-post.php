@@ -1,64 +1,49 @@
 <?php
-
 /**
- * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
+ * The legacy API V1 endpoint for "image post".
+ *
+ * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
  */
 
-function wappus_api_image_post( $request ) {
+/**
+ * Register the "image post" endpoint.
+ */
+function wappus_register_api_image_post() {
 
-	$user = wp_get_current_user();
-
-	if ( 0 === $user->ID ) {
-		$response = new WP_Error( 'error', 'User does not have permission.', array( 'status' => 401 ) );
-		return rest_ensure_response( $response );
-	}
-
-	if ( wapuus_api_is_demo_user( $user ) ) {
-		$response = new WP_Error( 'error', 'Demo user does not have permission.', array( 'status' => 401 ) );
-		return rest_ensure_response( $response );
-	}
-
-	$files = $request->get_file_params();
-
-	$name = sanitize_text_field( $request['name'] );
-
-	if ( empty( $name ) || empty( $files ) ) {
-		$response = new WP_Error( 'error', 'Image and name are required.', array( 'status' => 422 ) );
-		return rest_ensure_response( $response );
-	}
-
-	$allowed_image_types = array(
-		'jpg'  => 'image/jpg',
-		'jpeg' => 'image/jpeg',
-		'png'  => 'image/png',
+	register_rest_route(
+		'wapuus-api/v1',
+		'/images',
+		array( // The callback to the endpoint resource schema - note that the resource schema is the same for all methods that the endpoint accepts.
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ),
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => 'wappus_api_image_post',
+				'permission_callback' => 'wappus_api_image_post_permissions_check',
+				'args'                => wappus_api_image_post_args(),
+			),
+			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
+		)
 	);
 
-	if ( ! in_array( strtolower( $files['img']['type'] ), $allowed_image_types, true ) ) {
-		$response = new WP_Error( 'error', 'Invalide Image.', array( 'status' => 422 ) );
-		return rest_ensure_response( $response );
-	}
+}
+add_action( 'rest_api_init', 'wappus_register_api_image_post' );
 
-	$file_size = $files['img']['size']; // In bytes.
+/**
+ * The callback to post an image.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
+ *                                   is already an instance, WP_REST_Response, otherwise
+ *                                   returns a new WP_REST_Response instance.
+ */
+function wappus_api_image_post( $request ) {
 
-	/**
-	 * Convert Bytes to Megabytes
-	 * https://www.php.net/manual/pt_BR/function.filesize.php#112996
-	 */
-	$file_size = round( $file_size / pow( 1024, 2 ), 2 );
-
-	if ( $file_size > 1 ) {
-		$response = new WP_Error( 'error', 'The image is greater than 1MB - the maximum size allowed.', array( 'status' => 422 ) );
-		return rest_ensure_response( $response );
-	}
-
-	$img_size   = getimagesize( $files['img']['tmp_name'] );
-	$img_width  = $img_size[0];
-	$img_height = $img_size[1];
-
-	if ( $img_width < 1000 || $img_height < 1000 ) {
-		$response = new WP_Error( 'error', 'The image should have at least 1000px X 1000px of dimensions.', array( 'status' => 422 ) );
-		return rest_ensure_response( $response );
-	}
+	$user  = wp_get_current_user();
+	$files = $request->get_file_params();
+	$name  = sanitize_text_field( $request['name'] );
 
 	$from     = sanitize_text_field( $request['from'] );
 	$from_url = esc_url_raw( $request['from_url'] );
@@ -94,13 +79,16 @@ function wappus_api_image_post( $request ) {
 	require_once ABSPATH . 'wp-admin/includes/media.php';
 
 	if ( ! empty( $_FILES ) ) {
+
 		/**
 		 * If $_FILES is not empty it means that the data from $files['img'] come by an "input file field" from a form.
 		 *
 		 * So we need to use the media_handle_upload() function because it will use the PHP is_uploaded_file() method to check if the file on the $_FILES is valid.
 		 */
 		$image_id = media_handle_upload( 'img', $post_id ); // Should be used for file uploads (input file field).
+
 	} else {
+
 		/**
 		 * Handle sideloads, which is the process of retrieving a media item from another server instead of a traditional media upload.
 		 *
@@ -110,6 +98,7 @@ function wappus_api_image_post( $request ) {
 		 * This is necessary to get the upload done - escaping the is_uploaded_file() verification - in cases where we are testing our endpoint via PHPUnit.
 		 */
 		$image_id = media_handle_sideload( $files['img'], $post_id ); // Should be used for remote file uploads (input text field).
+
 	}
 
 	update_post_meta( $post_id, 'img', $image_id );
@@ -120,58 +109,122 @@ function wappus_api_image_post( $request ) {
 	return rest_ensure_response( $response );
 }
 
-function wappus_register_api_image_post_permission_callback() {
+/**
+ * The permission callback to post an image.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
+ */
+function wappus_api_image_post_permissions_check( $request ) {
+
+	$user  = wp_get_current_user();
+	$files = $request->get_file_params();
+	$name  = sanitize_text_field( $request['name'] );
+
+	/**
+	 * To better understand the "client error responses", check the link below:
+	 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
+	 */
+	if ( is_user_logged_in() ) {
+		$no_permission_status = 403;
+		$no_permission_code   = 'Forbidden';
+	} else {
+		$no_permission_status = 401;
+		$no_permission_code   = 'Unauthorized';
+	}
+
+	$not_acceptable_status = 406;
+	$not_acceptable_code   = 'Not Acceptable';
+
+	$incomplete_data_status = 422;
+	$incomplete_data_code   = 'Unprocessable Entity';
+
+	$unsupported_media_type_status = 415;
+	$unsupported_media_type_code   = 'Unsupported Media Type';
+
+	if ( 0 === $user->ID ) {
+		$response = new WP_Error( $no_permission_code, __( 'User does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
+		return rest_ensure_response( $response );
+	}
+
+	if ( wapuus_api_is_demo_user( $user ) ) {
+		$response = new WP_Error( $no_permission_code, __( 'Demo user does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
+		return rest_ensure_response( $response );
+	}
+
+	if ( empty( $name ) || empty( $files ) ) {
+		$response = new WP_Error( $incomplete_data_code, __( 'Image and name are required.', 'wapuus-api' ), array( 'status' => $incomplete_data_status ) );
+		return rest_ensure_response( $response );
+	}
+
+	$allowed_image_types = array(
+		'jpg'  => 'image/jpg',
+		'jpeg' => 'image/jpeg',
+		'png'  => 'image/png',
+	);
+
+	if ( ! in_array( strtolower( $files['img']['type'] ), $allowed_image_types, true ) ) {
+		$response = new WP_Error( $unsupported_media_type_code, __( 'Invalide Image.', 'wapuus-api' ), array( 'status' => $unsupported_media_type_status ) );
+		return rest_ensure_response( $response );
+	}
+
+	$file_size = $files['img']['size']; // In bytes.
+
+	/**
+	 * Convert Bytes to Megabytes
+	 * https://www.php.net/manual/pt_BR/function.filesize.php#112996
+	 */
+	$file_size = round( $file_size / pow( 1024, 2 ), 2 );
+
+	if ( $file_size > 1 ) {
+		$response = new WP_Error( $not_acceptable_code, __( 'The image is greater than 1MB - the maximum size allowed.', 'wapuus-api' ), array( 'status' => $not_acceptable_status ) );
+		return rest_ensure_response( $response );
+	}
+
+	$img_size   = getimagesize( $files['img']['tmp_name'] );
+	$img_width  = $img_size[0];
+	$img_height = $img_size[1];
+
+	if ( $img_width < 1000 || $img_height < 1000 ) {
+		$response = new WP_Error( $not_acceptable_code, __( 'The image should have at least 1000px X 1000px of dimensions.', 'wapuus-api' ), array( 'status' => $not_acceptable_status ) );
+		return rest_ensure_response( $response );
+	}
 
 	return true;
 }
 
-function wappus_register_api_image_post() {
-
-	register_rest_route(
-		'wapuus-api/v1',
-		'/images',
-		array( // Isso declara o Schema do endpoint. Note que o schema é o mesmo para todos os métodos que o endpoint aceita.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ),
-			array(
-				'methods'             => WP_REST_Server::CREATABLE, // POST
-				'callback'            => 'wappus_api_image_post',
-				'permission_callback' => 'wappus_register_api_image_post_permission_callback',
-				'args'                => wappus_api_image_post_args(),
-			),
-		)
-	);
-
-}
-add_action( 'rest_api_init', 'wappus_register_api_image_post' );
-
+/**
+ * Get the expected arguments for the REST API endpoint.
+ *
+ * @return array Arguments.
+ */
 function wappus_api_image_post_args() {
 	$args = array(
 		'name'     => array(
-			'description' => __( 'The name of the image.' ),
+			'description' => __( 'The name of the image.', 'wapuus-api' ),
 			'type'        => 'string',
 			'required'    => true,
 		),
 		'img'      => array(
-			'description' => __( 'The image file - it should be sent to the API through an input file field in your form' ),
+			'description' => __( 'The image file - it should be sent to the API through an input file field in your form', 'wapuus-api' ),
 			'type'        => 'string',
-			'media'       => array( // https://datatracker.ietf.org/doc/html/draft-luff-json-hyper-schema-00#section-4.3
-				'required'       => true,
-				//'binaryEncoding' => 'binary', // https://datatracker.ietf.org/doc/html/rfc2045#section-6.1
-				//'type'           => 'image/png',
-			),			
+			'media'       => array( // https://datatracker.ietf.org/doc/html/draft-luff-json-hyper-schema-00#section-4.3 <<< Reference.
+				'required' => true,
+			),
 			'required'    => false,
 		),
 		'from'     => array(
-			'description' => __( 'The source of the image.' ),
+			'description' => __( 'The source of the image.', 'wapuus-api' ),
 			'type'        => 'string',
 		),
 		'from_url' => array(
-			'description' => __( 'URL to the source of the image.' ),
+			'description' => __( 'URL to the source of the image.', 'wapuus-api' ),
 			'type'        => 'string',
 			'format'      => 'uri',
 		),
 		'caption'  => array(
-			'description' => __( 'The caption of the image.' ),
+			'description' => __( 'The caption of the image.', 'wapuus-api' ),
 			'type'        => 'string',
 		),
 	);

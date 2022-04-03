@@ -3,6 +3,8 @@
  * Helper functions that are used on the endpoint callbacks.
  *
  * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
  */
 
 /**

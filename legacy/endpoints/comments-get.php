@@ -1,14 +1,16 @@
 <?php
 /**
- * The legacy API V1 endpoint for comment delete.
+ * The legacy API V1 endpoint for "comments get".
  *
  * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
  */
 
 /**
- * Register the "comment get" endpoint.
+ * Register the "comments get" endpoint.
  */
-function wappus_register_api_comment_get() {
+function wappus_register_api_comments_get() {
 
 	register_rest_route(
 		'wapuus-api/v1',
@@ -17,18 +19,18 @@ function wappus_register_api_comment_get() {
 			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ),
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => 'wappus_api_comment_get',
-				'permission_callback' => 'wappus_api_comment_get_permissions_check',
-				'args'                => wappus_api_comment_get_args(),
+				'callback'            => 'wappus_api_comments_get',
+				'permission_callback' => 'wappus_api_comments_get_permissions_check',
+				'args'                => wappus_api_comments_get_args(),
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
 	);
 }
-add_action( 'rest_api_init', 'wappus_register_api_comment_get' );
+add_action( 'rest_api_init', 'wappus_register_api_comments_get' );
 
 /**
- * The callback to get an image comment.
+ * The callback to get the image comments.
  *
  * @param WP_REST_Request $request The current request object.
  *
@@ -36,7 +38,7 @@ add_action( 'rest_api_init', 'wappus_register_api_comment_get' );
  *                                   is already an instance, WP_REST_Response, otherwise
  *                                   returns a new WP_REST_Response instance.
  */
-function wappus_api_comment_get( $request ) {
+function wappus_api_comments_get( $request ) {
 
 	$post_id = sanitize_key( $request['id'] );
 
@@ -54,13 +56,13 @@ function wappus_api_comment_get( $request ) {
 }
 
 /**
- * The permission callback to delete an image comment.
+ * The permission callback to get the image comments.
  *
- * @param object|\WP_REST_Request $request The current request object.
+ * @param WP_REST_Request $request The current request object.
  *
  * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
  */
-function wappus_api_comment_get_permissions_check( $request ) {
+function wappus_api_comments_get_permissions_check( $request ) {
 
 	return true;
 }
@@ -70,11 +72,11 @@ function wappus_api_comment_get_permissions_check( $request ) {
  *
  * @return array Arguments.
  */
-function wappus_api_comment_get_args() {
+function wappus_api_comments_get_args() {
 
 	$args = array(
 		'id' => array(
-			'description' => 'The ID of the image object to retrieve the comments.',
+			'description' => __( 'The ID of the image object to retrieve the comments.', 'wapuus-api' ),
 			'type'        => 'integer',
 			'required'    => true,
 		),

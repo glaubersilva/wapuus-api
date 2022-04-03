@@ -1,8 +1,10 @@
 <?php
 /**
- * The legacy API V1 endpoint for comment delete.
+ * The legacy API V1 endpoint for "comment post".
  *
  * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
  */
 
 /**
@@ -59,9 +61,9 @@ function wappus_api_comment_post( $request ) {
 }
 
 /**
- * The permission callback to delete an image comment.
+ * The permission callback to post an image comment.
  *
- * @param object|\WP_REST_Request $request The current request object.
+ * @param WP_REST_Request $request The current request object.
  *
  * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
  */
@@ -113,12 +115,12 @@ function wappus_api_comment_post_args() {
 
 	$args = array(
 		'id'      => array(
-			'description' => 'The ID of the image object that will receive the comment.',
+			'description' => __( 'The ID of the image object that will receive the comment.', 'wapuus-api' ),
 			'type'        => 'integer',
 			'required'    => true,
 		),
 		'comment' => array(
-			'description' => 'The content of the comment.',
+			'description' => __( 'The content of the comment.', 'wapuus-api' ),
 			'type'        => 'string',
 			'required'    => true,
 		),

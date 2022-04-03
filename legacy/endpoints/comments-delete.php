@@ -1,8 +1,10 @@
 <?php
 /**
- * The legacy API V1 endpoint for comment delete.
+ * The legacy API V1 endpoint for "comment delete".
  *
  * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
  */
 
 /**
@@ -38,7 +40,8 @@ add_action( 'rest_api_init', 'wappus_register_api_comment_delete' );
  */
 function wappus_api_comment_delete( $request ) {
 
-	$response = wp_delete_comment( sanitize_key( $request['id'] ), true );
+	$comment_id = sanitize_key( $request['id'] );
+	$response   = wp_delete_comment( $comment_id, true );
 
 	return rest_ensure_response( $response );
 }
@@ -46,7 +49,7 @@ function wappus_api_comment_delete( $request ) {
 /**
  * The permission callback to delete an image comment.
  *
- * @param object|\WP_REST_Request $request The current request object.
+ * @param WP_REST_Request $request The current request object.
  *
  * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
  */
@@ -61,20 +64,20 @@ function wappus_api_comment_delete_permissions_check( $request ) {
 	 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
 	 */
 	if ( is_user_logged_in() ) {
-		$status = 403;
-		$code   = 'Forbidden';
+		$no_permission_status = 403;
+		$no_permission_code   = 'Forbidden';
 	} else {
-		$status = 401;
-		$code   = 'Unauthorized';
+		$no_permission_status = 401;
+		$no_permission_code   = 'Unauthorized';
 	}
 
 	if ( (int) $user->ID !== (int) $comment->user_id || ! isset( $comment ) ) {
-		$response = new WP_Error( $code, __( 'User does not have permission.', 'wapuus-api' ), array( 'status' => $status ) );
+		$response = new WP_Error( $no_permission_code, __( 'User does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( wapuus_api_is_demo_user( $user ) ) {
-		$response = new WP_Error( $code, __( 'Demo user does not have permission.', 'wapuus-api' ), array( 'status' => $status ) );
+		$response = new WP_Error( $no_permission_code, __( 'Demo user does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -90,7 +93,7 @@ function wappus_api_comment_delete_args() {
 
 	$args = array(
 		'id' => array(
-			'description' => 'The ID of the comment to delete.',
+			'description' => __( 'The ID of the comment to delete.', 'wapuus-api' ),
 			'type'        => 'integer',
 			'required'    => true,
 		),
