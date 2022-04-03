@@ -7,6 +7,8 @@
  * @link https://glaubersilva.me/
  */
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Register the "image get" endpoint.
  */
@@ -15,13 +17,13 @@ function wappus_register_api_image_get() {
 	register_rest_route(
 		'wapuus-api/v1',
 		'/images/(?P<id>[0-9]+)',
-		array( // The callback to the endpoint resource schema - note that the resource schema is the same for all methods that the endpoint accepts.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ),
+		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the endpoint accepts.
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => 'wappus_api_image_get',
-				'permission_callback' => 'wappus_api_image_get_permissions_check',
 				'args'                => wappus_api_image_get_args(),
+				'permission_callback' => 'wappus_api_image_get_permissions_check',
+				'callback'            => 'wappus_api_image_get',
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
@@ -31,7 +33,54 @@ function wappus_register_api_image_get() {
 add_action( 'rest_api_init', 'wappus_register_api_image_get' );
 
 /**
- * The callback to get the image.
+ * Schema of the expected arguments for the "image get" endpoint.
+ *
+ * Reference: https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema
+ *
+ * @return array Arguments.
+ */
+function wappus_api_image_get_args() {
+
+	$args = array(
+		'id' => array(
+			'description' => __( 'The ID of the image to retrieve.', 'wapuus-api' ),
+			'type'        => 'integer',
+			'required'    => true,
+		),
+	);
+
+	return $args;
+}
+
+/**
+ * Permission callback for the "image get" endpoint.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
+ */
+function wappus_api_image_get_permissions_check( $request ) {
+
+	$post_id = sanitize_key( $request['id'] );
+	$post    = get_post( $post_id );
+
+	/**
+	 * To better understand the "client error responses", check the link below:
+	 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
+	 */
+	$not_fond_status = 404;
+	$not_fond_code   = 'Not Found';
+
+	if ( ! isset( $post ) || empty( $post_id ) ) {
+		$response = new WP_Error( $not_fond_code, __( 'Image not found.', 'wapuus-api' ), array( 'status' => $not_fond_status ) );
+		return rest_ensure_response( $response );
+	}
+
+	return true;
+}
+
+/**
+ * Callback for the "image get" endpoint.
  *
  * @param WP_REST_Request $request The current request object.
  *
@@ -68,51 +117,6 @@ function wappus_api_image_get( $request ) {
 }
 
 /**
- * The permission callback to get the image.
- *
- * @param WP_REST_Request $request The current request object.
- *
- * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
- */
-function wappus_api_image_get_permissions_check( $request ) {
-
-	$post_id = sanitize_key( $request['id'] );
-	$post    = get_post( $post_id );
-
-	/**
-	 * To better understand the "client error responses", check the link below:
-	 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
-	 */
-	$not_fond_status = 404;
-	$not_fond_code   = 'Not Found';
-
-	if ( ! isset( $post ) || empty( $post_id ) ) {
-		$response = new WP_Error( $not_fond_code, __( 'Image not found.', 'wapuus-api' ), array( 'status' => $not_fond_status ) );
-		return rest_ensure_response( $response );
-	}
-
-	return true;
-}
-
-/**
- * Get the expected arguments for the REST API endpoint.
- *
- * @return array Arguments.
- */
-function wappus_api_image_get_args() {
-
-	$args = array(
-		'id' => array(
-			'description' => __( 'The ID of the image to retrieve.', 'wapuus-api' ),
-			'type'        => 'integer',
-			'required'    => true,
-		),
-	);
-
-	return $args;
-}
-
-/**
  * Register the "images get" endpoint.
  */
 function wappus_register_api_images_get() {
@@ -120,13 +124,13 @@ function wappus_register_api_images_get() {
 	register_rest_route(
 		'wapuus-api/v1',
 		'/images',
-		array( // The callback to the endpoint resource schema - note that the resource schema is the same for all methods that the endpoint accepts.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ),
+		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the endpoint accepts.
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => 'wappus_api_images_get',
-				'permission_callback' => 'wappus_api_images_get_permissions_check',
 				'args'                => wappus_api_images_get_args(),
+				'permission_callback' => 'wappus_api_images_get_permissions_check',
+				'callback'            => 'wappus_api_images_get',
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
@@ -136,7 +140,64 @@ function wappus_register_api_images_get() {
 add_action( 'rest_api_init', 'wappus_register_api_images_get' );
 
 /**
- * The callback to get the images.
+ * Schema of the expected arguments for the "images get" endpoint.
+ *
+ * Reference: https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema
+ *
+ * @return array Arguments.
+ */
+function wappus_api_images_get_args() {
+
+	$args = array(
+		'_total' => array(
+			'description' => __( 'Total number of images per page - if not set, the default value is 6.', 'wapuus-api' ),
+			'type'        => 'integer',
+		),
+		'_page'  => array(
+			'description' => __( 'The number of the page to retrieve - if not set, the default value is 1.', 'wapuus-api' ),
+			'type'        => 'integer',
+		),
+		'_user'  => array(
+			'description' => __( 'The ID or username of the user object to retrieve the images - if not set, returns images from all users.', 'wapuus-api' ),
+			'type'        => 'string',
+		),
+	);
+
+	return $args;
+}
+
+/**
+ * Permission callback for the "images get" endpoint.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
+ */
+function wappus_api_images_get_permissions_check( $request ) {
+
+	if ( isset( $request['_user'] ) && ! is_numeric( $request['_user'] ) ) {
+
+		$user = get_user_by( 'login', sanitize_text_field( $request['_user'] ) );
+
+		if ( ! $user ) {
+
+			/**
+			 * To better understand the "client error responses", check the link below:
+			 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
+			 */
+			$not_fond_status = 404;
+			$not_fond_code   = 'Not Found';
+
+			$response = new WP_Error( $not_fond_code, __( 'User not found.', 'wapuus-api' ), array( 'status' => $not_fond_status ) );
+			return rest_ensure_response( $response );
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Callback for the "images get" endpoint.
  *
  * @param WP_REST_Request $request The current request object.
  *
@@ -174,59 +235,4 @@ function wappus_api_images_get( $request ) {
 	}
 
 	return rest_ensure_response( $images );
-}
-
-/**
- * The permission callback to get the images.
- *
- * @param WP_REST_Request $request The current request object.
- *
- * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
- */
-function wappus_api_images_get_permissions_check( $request ) {
-
-	if ( isset( $request['_user'] ) && ! is_numeric( $request['_user'] ) ) {
-
-		$user = get_user_by( 'login', sanitize_text_field( $request['_user'] ) );
-
-		if ( ! $user ) {
-
-			/**
-			 * To better understand the "client error responses", check the link below:
-			 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
-			 */
-			$not_fond_status = 404;
-			$not_fond_code   = 'Not Found';
-
-			$response = new WP_Error( $not_fond_code, __( 'User not found.', 'wapuus-api' ), array( 'status' => $not_fond_status ) );
-			return rest_ensure_response( $response );
-		}
-	}
-
-	return true;
-}
-
-/**
- * Get the expected arguments for the REST API endpoint.
- *
- * @return array Arguments.
- */
-function wappus_api_images_get_args() {
-
-	$args = array(
-		'_total' => array(
-			'description' => __( 'Total number of images per page - if not set, the default value is 6.', 'wapuus-api' ),
-			'type'        => 'integer',
-		),
-		'_page'  => array(
-			'description' => __( 'The number of the page to retrieve - if not set, the default value is 1.', 'wapuus-api' ),
-			'type'        => 'integer',
-		),
-		'_user'  => array(
-			'description' => __( 'The ID or username of the user object to retrieve the images - if not set, returns images from all users.', 'wapuus-api' ),
-			'type'        => 'string',
-		),
-	);
-
-	return $args;
 }

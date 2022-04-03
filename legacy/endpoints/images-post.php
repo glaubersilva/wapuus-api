@@ -7,6 +7,8 @@
  * @link https://glaubersilva.me/
  */
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Register the "image post" endpoint.
  */
@@ -15,13 +17,13 @@ function wappus_register_api_image_post() {
 	register_rest_route(
 		'wapuus-api/v1',
 		'/images',
-		array( // The callback to the endpoint resource schema - note that the resource schema is the same for all methods that the endpoint accepts.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ),
+		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the endpoint accepts.
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => 'wappus_api_image_post',
-				'permission_callback' => 'wappus_api_image_post_permissions_check',
 				'args'                => wappus_api_image_post_args(),
+				'permission_callback' => 'wappus_api_image_post_permissions_check',
+				'callback'            => 'wappus_api_image_post',
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
@@ -31,86 +33,46 @@ function wappus_register_api_image_post() {
 add_action( 'rest_api_init', 'wappus_register_api_image_post' );
 
 /**
- * The callback to post an image.
+ * Schema of the expected arguments for the "image post" endpoint.
  *
- * @param WP_REST_Request $request The current request object.
+ * Reference: https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema
  *
- * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
- *                                   is already an instance, WP_REST_Response, otherwise
- *                                   returns a new WP_REST_Response instance.
+ * @return array Arguments.
  */
-function wappus_api_image_post( $request ) {
-
-	$user  = wp_get_current_user();
-	$files = $request->get_file_params();
-	$name  = sanitize_text_field( $request['name'] );
-
-	$from     = sanitize_text_field( $request['from'] );
-	$from_url = esc_url_raw( $request['from_url'] );
-	$caption  = sanitize_textarea_field( $request['caption'] );
-
-	if ( empty( $from ) ) {
-		$from = 'Unknown';
-	}
-
-	if ( empty( $from_url ) ) {
-		$from_url = '#';
-	}
-
-	$post = array(
-		'post_author' => $user->ID,
-		'post_type'   => 'wapuu',
-		'post_status' => 'publish',
-		'post_title'  => $name,
-		'files'       => $files,
-		'meta_input'  => array(
-			'from'     => $from,
-			'from_url' => $from_url,
-			'caption'  => substr( $caption, 0, 150 ),
-			'views'    => 0,
+function wappus_api_image_post_args() {
+	$args = array(
+		'name'     => array(
+			'description' => __( 'The name of the image.', 'wapuus-api' ),
+			'type'        => 'string',
+			'required'    => true,
+		),
+		'img'      => array(
+			'description' => __( 'The image file - it should be sent to the API through an input file field in your form', 'wapuus-api' ),
+			'type'        => 'string',
+			'media'       => array( // https://datatracker.ietf.org/doc/html/draft-luff-json-hyper-schema-00#section-4.3 <<< Reference.
+				'required' => true,
+			),
+		),
+		'from'     => array(
+			'description' => __( 'The source of the image.', 'wapuus-api' ),
+			'type'        => 'string',
+		),
+		'from_url' => array(
+			'description' => __( 'URL to the source of the image.', 'wapuus-api' ),
+			'type'        => 'string',
+			'format'      => 'uri',
+		),
+		'caption'  => array(
+			'description' => __( 'The caption of the image.', 'wapuus-api' ),
+			'type'        => 'string',
 		),
 	);
 
-	$post_id = wp_insert_post( $post );
-
-	// These files need to be included as dependencies when on the front end.
-	require_once ABSPATH . 'wp-admin/includes/image.php';
-	require_once ABSPATH . 'wp-admin/includes/file.php';
-	require_once ABSPATH . 'wp-admin/includes/media.php';
-
-	if ( ! empty( $_FILES ) ) {
-
-		/**
-		 * If $_FILES is not empty it means that the data from $files['img'] come by an "input file field" from a form.
-		 *
-		 * So we need to use the media_handle_upload() function because it will use the PHP is_uploaded_file() method to check if the file on the $_FILES is valid.
-		 */
-		$image_id = media_handle_upload( 'img', $post_id ); // Should be used for file uploads (input file field).
-
-	} else {
-
-		/**
-		 * Handle sideloads, which is the process of retrieving a media item from another server instead of a traditional media upload.
-		 *
-		 * Definition of sideload: (2) Copying a file from a site on the Internet to the user's account in an online storage service, rather than downloading it directly to the user's computer.
-		 * More details here: https://www.pcmag.com/encyclopedia/term/sideload
-		 *
-		 * This is necessary to get the upload done - escaping the is_uploaded_file() verification - in cases where we are testing our endpoint via PHPUnit.
-		 */
-		$image_id = media_handle_sideload( $files['img'], $post_id ); // Should be used for remote file uploads (input text field).
-
-	}
-
-	update_post_meta( $post_id, 'img', $image_id );
-	set_post_thumbnail( $post_id, $image_id );
-
-	$response = wappus_api_get_post_data( $post_id );
-
-	return rest_ensure_response( $response );
+	return $args;
 }
 
 /**
- * The permission callback to post an image.
+ * Permission callback for the "image post" endpoint.
  *
  * @param WP_REST_Request $request The current request object.
  *
@@ -195,39 +157,80 @@ function wappus_api_image_post_permissions_check( $request ) {
 }
 
 /**
- * Get the expected arguments for the REST API endpoint.
+ * Callback for the "image post" endpoint.
  *
- * @return array Arguments.
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
+ *                                   is already an instance, WP_REST_Response, otherwise
+ *                                   returns a new WP_REST_Response instance.
  */
-function wappus_api_image_post_args() {
-	$args = array(
-		'name'     => array(
-			'description' => __( 'The name of the image.', 'wapuus-api' ),
-			'type'        => 'string',
-			'required'    => true,
-		),
-		'img'      => array(
-			'description' => __( 'The image file - it should be sent to the API through an input file field in your form', 'wapuus-api' ),
-			'type'        => 'string',
-			'media'       => array( // https://datatracker.ietf.org/doc/html/draft-luff-json-hyper-schema-00#section-4.3 <<< Reference.
-				'required' => true,
-			),
-			'required'    => false,
-		),
-		'from'     => array(
-			'description' => __( 'The source of the image.', 'wapuus-api' ),
-			'type'        => 'string',
-		),
-		'from_url' => array(
-			'description' => __( 'URL to the source of the image.', 'wapuus-api' ),
-			'type'        => 'string',
-			'format'      => 'uri',
-		),
-		'caption'  => array(
-			'description' => __( 'The caption of the image.', 'wapuus-api' ),
-			'type'        => 'string',
+function wappus_api_image_post( $request ) {
+
+	$user  = wp_get_current_user();
+	$files = $request->get_file_params();
+	$name  = sanitize_text_field( $request['name'] );
+
+	$from     = sanitize_text_field( $request['from'] );
+	$from_url = esc_url_raw( $request['from_url'] );
+	$caption  = sanitize_textarea_field( $request['caption'] );
+
+	if ( empty( $from ) ) {
+		$from = 'Unknown';
+	}
+
+	if ( empty( $from_url ) ) {
+		$from_url = '#';
+	}
+
+	$post = array(
+		'post_author' => $user->ID,
+		'post_type'   => 'wapuu',
+		'post_status' => 'publish',
+		'post_title'  => $name,
+		'files'       => $files,
+		'meta_input'  => array(
+			'from'     => $from,
+			'from_url' => $from_url,
+			'caption'  => substr( $caption, 0, 150 ),
+			'views'    => 0,
 		),
 	);
 
-	return $args;
+	$post_id = wp_insert_post( $post );
+
+	// These files need to be included as dependencies when on the front end.
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/media.php';
+
+	if ( ! empty( $_FILES ) ) {
+
+		/**
+		 * If $_FILES is not empty it means that the data from $files['img'] come by an "input file field" from a form.
+		 *
+		 * So we need to use the media_handle_upload() function because it will use the PHP is_uploaded_file() method to check if the file on the $_FILES is valid.
+		 */
+		$image_id = media_handle_upload( 'img', $post_id ); // Should be used for file uploads (input file field).
+
+	} else {
+
+		/**
+		 * Handle sideloads, which is the process of retrieving a media item from another server instead of a traditional media upload.
+		 *
+		 * Definition of sideload: (2) Copying a file from a site on the Internet to the user's account in an online storage service, rather than downloading it directly to the user's computer.
+		 * More details here: https://www.pcmag.com/encyclopedia/term/sideload
+		 *
+		 * This is necessary to get the upload done - escaping the is_uploaded_file() verification - in cases where we are testing our endpoint via PHPUnit.
+		 */
+		$image_id = media_handle_sideload( $files['img'], $post_id ); // Should be used for remote file uploads (input text field).
+
+	}
+
+	update_post_meta( $post_id, 'img', $image_id );
+	set_post_thumbnail( $post_id, $image_id );
+
+	$response = wappus_api_get_post_data( $post_id );
+
+	return rest_ensure_response( $response );
 }

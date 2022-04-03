@@ -7,6 +7,8 @@
  * @link https://glaubersilva.me/
  */
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Register the "comment post" endpoint.
  */
@@ -15,53 +17,47 @@ function wappus_register_api_comment_post() {
 	register_rest_route(
 		'wapuus-api/v1',
 		'/comments/(?P<id>[0-9]+)',
-		array( // The callback to the endpoint resource schema - note that the resource schema is the same for all methods that the endpoint accepts.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ),
+		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the endpoint accepts.
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => 'wappus_api_comment_post',
-				'permission_callback' => 'wappus_api_comment_post_permissions_check',
 				'args'                => wappus_api_comment_post_args(),
+				'permission_callback' => 'wappus_api_comment_post_permissions_check',
+				'callback'            => 'wappus_api_comment_post',
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
 	);
-
 }
 add_action( 'rest_api_init', 'wappus_register_api_comment_post' );
 
 /**
- * The callback to post an image comment.
+ * Schema of the expected arguments for the "comment post" endpoint.
  *
- * @param WP_REST_Request $request The current request object.
+ * Reference: https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema
  *
- * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
- *                                   is already an instance, WP_REST_Response, otherwise
- *                                   returns a new WP_REST_Response instance.
+ * @return array Arguments.
  */
-function wappus_api_comment_post( $request ) {
+function wappus_api_comment_post_args() {
 
-	$user    = wp_get_current_user();
-	$comment = sanitize_textarea_field( $request['comment'] );
-	$post_id = sanitize_key( $request['id'] );
-
-	$new_wp_comment = array(
-		'user_id'         => $user->ID,
-		'comment_author'  => $user->user_login,
-		'comment_content' => $comment,
-		'comment_post_ID' => $post_id,
+	$args = array(
+		'id'      => array(
+			'description' => __( 'The ID of the image object that will receive the comment.', 'wapuus-api' ),
+			'type'        => 'integer',
+			'required'    => true,
+		),
+		'comment' => array(
+			'description' => __( 'The content of the comment.', 'wapuus-api' ),
+			'type'        => 'string',
+			'required'    => true,
+		),
 	);
 
-	$comment_id = wp_insert_comment( $new_wp_comment );
-	$comment    = get_comment( $comment_id );
-
-	$response = wappus_api_get_comment_data( $comment );
-
-	return rest_ensure_response( $response );
+	return $args;
 }
 
 /**
- * The permission callback to post an image comment.
+ * Permission callback for the "comment post" endpoint.
  *
  * @param WP_REST_Request $request The current request object.
  *
@@ -107,24 +103,31 @@ function wappus_api_comment_post_permissions_check( $request ) {
 }
 
 /**
- * Get the expected arguments for the REST API endpoint.
+ * Callback for the "comment post" endpoint.
  *
- * @return array Arguments.
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
+ *                                   is already an instance, WP_REST_Response, otherwise
+ *                                   returns a new WP_REST_Response instance.
  */
-function wappus_api_comment_post_args() {
+function wappus_api_comment_post( $request ) {
 
-	$args = array(
-		'id'      => array(
-			'description' => __( 'The ID of the image object that will receive the comment.', 'wapuus-api' ),
-			'type'        => 'integer',
-			'required'    => true,
-		),
-		'comment' => array(
-			'description' => __( 'The content of the comment.', 'wapuus-api' ),
-			'type'        => 'string',
-			'required'    => true,
-		),
+	$user    = wp_get_current_user();
+	$comment = sanitize_textarea_field( $request['comment'] );
+	$post_id = sanitize_key( $request['id'] );
+
+	$new_wp_comment = array(
+		'user_id'         => $user->ID,
+		'comment_author'  => $user->user_login,
+		'comment_content' => $comment,
+		'comment_post_ID' => $post_id,
 	);
 
-	return $args;
+	$comment_id = wp_insert_comment( $new_wp_comment );
+	$comment    = get_comment( $comment_id );
+
+	$response = wappus_api_get_comment_data( $comment );
+
+	return rest_ensure_response( $response );
 }

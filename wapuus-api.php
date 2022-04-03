@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Wapuus API
- * Plugin URI: https://glaubersilva.me/
- * Description: A simple plugin that implements the API used by the wapuus.org project - you can access the api.wapuus.org address to check the REST API docs.
+ * Plugin URI: https://api.wapuus.org/
+ * Description: A simple plugin that implements the API used by the wapuus.org project.
  * Version: 1.0.0
  * Author: Glauber Silva
  * Author URI: https://glaubersilva.me/
@@ -11,6 +11,8 @@
  * Domain Path: /languages
  *
  * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
  */
 
 defined( 'ABSPATH' ) || exit;

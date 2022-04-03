@@ -7,6 +7,8 @@
  * @link https://glaubersilva.me/
  */
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Register the "comments get" endpoint.
  */
@@ -15,13 +17,13 @@ function wappus_register_api_comments_get() {
 	register_rest_route(
 		'wapuus-api/v1',
 		'/comments/(?P<id>[0-9]+)',
-		array( // The callback to the endpoint resource schema - note that the resource schema is the same for all methods that the endpoint accepts.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ),
+		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the endpoint accepts.
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => 'wappus_api_comments_get',
-				'permission_callback' => 'wappus_api_comments_get_permissions_check',
 				'args'                => wappus_api_comments_get_args(),
+				'permission_callback' => 'wappus_api_comments_get_permissions_check',
+				'callback'            => 'wappus_api_comments_get',
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
@@ -30,7 +32,39 @@ function wappus_register_api_comments_get() {
 add_action( 'rest_api_init', 'wappus_register_api_comments_get' );
 
 /**
- * The callback to get the image comments.
+ * Schema of the expected arguments for the "comments get" endpoint.
+ *
+ * Reference: https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema
+ *
+ * @return array Arguments.
+ */
+function wappus_api_comments_get_args() {
+
+	$args = array(
+		'id' => array(
+			'description' => __( 'The ID of the image object to retrieve the comments.', 'wapuus-api' ),
+			'type'        => 'integer',
+			'required'    => true,
+		),
+	);
+
+	return $args;
+}
+
+/**
+ * Permission callback for the "comments get" endpoint.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
+ */
+function wappus_api_comments_get_permissions_check( $request ) {
+
+	return true;
+}
+
+/**
+ * Callback for the "comments get" endpoint.
  *
  * @param WP_REST_Request $request The current request object.
  *
@@ -53,34 +87,4 @@ function wappus_api_comments_get( $request ) {
 	}
 
 	return rest_ensure_response( $comments );
-}
-
-/**
- * The permission callback to get the image comments.
- *
- * @param WP_REST_Request $request The current request object.
- *
- * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
- */
-function wappus_api_comments_get_permissions_check( $request ) {
-
-	return true;
-}
-
-/**
- * Get the expected arguments for the REST API endpoint.
- *
- * @return array Arguments.
- */
-function wappus_api_comments_get_args() {
-
-	$args = array(
-		'id' => array(
-			'description' => __( 'The ID of the image object to retrieve the comments.', 'wapuus-api' ),
-			'type'        => 'integer',
-			'required'    => true,
-		),
-	);
-
-	return $args;
 }

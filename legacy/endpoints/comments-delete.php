@@ -7,6 +7,8 @@
  * @link https://glaubersilva.me/
  */
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Register the "comment delete" endpoint.
  */
@@ -15,13 +17,13 @@ function wappus_register_api_comment_delete() {
 	register_rest_route(
 		'wapuus-api/v1',
 		'/comments/(?P<id>[0-9]+)',
-		array( // The callback to the endpoint resource schema - note that the resource schema is the same for all methods that the endpoint accepts.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ),
+		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the endpoint accepts.
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::DELETABLE,
-				'callback'            => 'wappus_api_comment_delete',
-				'permission_callback' => 'wappus_api_comment_delete_permissions_check',
 				'args'                => wappus_api_comment_delete_args(),
+				'permission_callback' => 'wappus_api_comment_delete_permissions_check',
+				'callback'            => 'wappus_api_comment_delete',
 			),
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
@@ -30,24 +32,27 @@ function wappus_register_api_comment_delete() {
 add_action( 'rest_api_init', 'wappus_register_api_comment_delete' );
 
 /**
- * The callback to delete an image comment.
+ * Schema of the expected arguments for the "comment delete" endpoint.
  *
- * @param WP_REST_Request $request The current request object.
+ * Reference: https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema
  *
- * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
- *                                   is already an instance, WP_REST_Response, otherwise
- *                                   returns a new WP_REST_Response instance.
+ * @return array Arguments.
  */
-function wappus_api_comment_delete( $request ) {
+function wappus_api_comment_delete_args() {
 
-	$comment_id = sanitize_key( $request['id'] );
-	$response   = wp_delete_comment( $comment_id, true );
+	$args = array(
+		'id' => array(
+			'description' => __( 'The ID of the comment to delete.', 'wapuus-api' ),
+			'type'        => 'integer',
+			'required'    => true,
+		),
+	);
 
-	return rest_ensure_response( $response );
+	return $args;
 }
 
 /**
- * The permission callback to delete an image comment.
+ * Permission callback for the "comment delete" endpoint.
  *
  * @param WP_REST_Request $request The current request object.
  *
@@ -85,19 +90,18 @@ function wappus_api_comment_delete_permissions_check( $request ) {
 }
 
 /**
- * Get the expected arguments for the REST API endpoint.
+ * Callback for the "comment delete" endpoint.
  *
- * @return array Arguments.
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
+ *                                   is already an instance, WP_REST_Response, otherwise
+ *                                   returns a new WP_REST_Response instance.
  */
-function wappus_api_comment_delete_args() {
+function wappus_api_comment_delete( $request ) {
 
-	$args = array(
-		'id' => array(
-			'description' => __( 'The ID of the comment to delete.', 'wapuus-api' ),
-			'type'        => 'integer',
-			'required'    => true,
-		),
-	);
+	$comment_id = sanitize_key( $request['id'] );
+	$response   = wp_delete_comment( $comment_id, true );
 
-	return $args;
+	return rest_ensure_response( $response );
 }
