@@ -1,11 +1,13 @@
 <?php
 /**
- * Helper functions that are used on the endpoint callbacks.
+ * Helper functions that are used on the whole code base.
  *
  * @package Wapuus_API
  * @author Glauber Silva <info@glaubersilva.me>
  * @link https://glaubersilva.me/
  */
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Get data from Wapuus posts.
