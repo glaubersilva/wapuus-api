@@ -21,7 +21,6 @@ defined( 'ABSPATH' ) || exit;
  * Constants
  */
 define( 'WAPUUS_API_DIR', dirname( __FILE__ ) );
-define( 'WAPUUS_API_TEXT_DOMAIN', 'wapuus-api' );
 
 /**
  * Initial Setup

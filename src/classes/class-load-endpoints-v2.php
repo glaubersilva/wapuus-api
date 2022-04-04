@@ -1,11 +1,30 @@
 <?php
+/**
+ * Extends the default WordPress REST API endpoints through the use of classes.
+ *
+ * @link https://developer.wordpress.org/rest-api/
+ *
+ * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
+ */
 
 namespace Wapuus_API\Src\Classes;
 
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'Load_Endpoints_V2' ) ) {
 
+	/**
+	 * This class loads the API V2 endpoints.
+	 */
 	class Load_Endpoints_V2 {
 
+		/**
+		 * The list of implemented endpoint classes.
+		 *
+		 * @var array
+		 */
 		private $endpoints = array();
 
 		/**
@@ -66,14 +85,15 @@ if ( ! class_exists( 'Load_Endpoints_V2' ) ) {
 			register_rest_route(
 				'wapuus-api/v2',
 				$endpoint->get_path(),
-				array(
-					'schema' => $endpoint->get_schema(), // Here we add our PHP representation of JSON Schema for the resource >>> https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Check this link for more details!
+				array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the endpoint accepts.
+					'schema' => $endpoint->get_schema(), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 					array(
-						'args'                => $endpoint->get_arguments(), // Here we add our PHP representation of JSON Schema for the args >>> https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema <<< Check this link for more details!
-						'callback'            => $endpoint->get_callback(),
 						'methods'             => $endpoint->get_methods(),
+						'args'                => $endpoint->get_arguments(), // Schema of the expected arguments for the endpoint - https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema <<< Reference.
 						'permission_callback' => $endpoint->get_permission_callback(),
+						'callback'            => $endpoint->get_callback(),
 					),
+					// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 				)
 			);
 		}

@@ -28,7 +28,6 @@ function wapuus_api_register_image_post() {
 			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
 	);
-
 }
 add_action( 'rest_api_init', 'wapuus_api_register_image_post' );
 

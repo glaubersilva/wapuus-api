@@ -25,6 +25,7 @@ function wapuus_api_register_stats_get() {
 				'permission_callback' => 'wapuus_api_stats_get_permissions_check',
 				'callback'            => 'wapuus_api_stats_get',
 			),
+			// Here we could have another array with a declaration of another method - POST, GET, DELETE etc.
 		)
 	);
 }
