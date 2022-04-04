@@ -74,6 +74,10 @@ function wapuus_api_user_post_permissions_check( $request ) {
 	$email    = sanitize_email( $request['email'] );
 	$username = sanitize_text_field( $request['username'] );
 
+	/**
+	 * To better understand the "client error responses", check the link below:
+	 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
+	 */
 	$incomplete_data_status = 422;
 	$incomplete_data_code   = 'Unprocessable Entity';
 
