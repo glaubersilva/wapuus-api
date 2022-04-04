@@ -105,6 +105,6 @@ function wapuus_api_image_delete( $request ) {
 	wp_delete_attachment( $attachment_id, true );
 	wp_delete_post( $post_id, true );
 
-	$response = 'Deleted.';
+	$response = __( 'Deleted.', 'wapuus-api' );
 	return rest_ensure_response( $response );
 }
