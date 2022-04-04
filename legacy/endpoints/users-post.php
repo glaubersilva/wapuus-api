@@ -1,36 +1,123 @@
 <?php
-
 /**
- * API V1 files - Legacy Code was left in the project just to demonstrate how to extend the WP API without using classes.
+ * The legacy API V1 endpoint for "user post".
+ *
+ * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
  */
 
-function wapuus_api_user_post( $request ) {
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Register the "user post" endpoint.
+ */
+function wapuus_api_register_user_post() {
+
+	register_rest_route(
+		'wapuus-api/v1',
+		'/users',
+		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the endpoint accepts.
+			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Users_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'args'                => wapuus_api_user_post_args(),
+				'permission_callback' => 'wapuus_api_user_post_permissions_check',
+				'callback'            => 'wapuus_api_user_post',
+			),
+		)
+	);
+}
+add_action( 'rest_api_init', 'wapuus_api_register_user_post' );
+
+/**
+ * Schema of the expected arguments for the "user post" endpoint.
+ *
+ * Reference: https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema
+ *
+ * @return array Arguments.
+ */
+function wapuus_api_user_post_args() {
+
+	$args = array(
+		'username' => array(
+			'description' => __( 'Login name for the user.', 'wapuus-api' ),
+			'type'        => 'string',
+			'required'    => true,
+		),
+		'email'    => array(
+			'description' => __( 'The email address for the user.', 'wapuus-api' ),
+			'type'        => 'string',
+			'format'      => 'email',
+			'required'    => true,
+		),
+		'url'      => array(
+			'description' => __( 'Base URL used to create the "password creation" link that is sent by email.', 'wapuus-api' ),
+			'type'        => 'string',
+			'format'      => 'uri',
+			'required'    => true,
+		),
+	);
+
+	return $args;
+}
+
+/**
+ * Permission callback for the "user post" endpoint.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return true|WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
+ */
+function wapuus_api_user_post_permissions_check( $request ) {
 
 	$email    = sanitize_email( $request['email'] );
 	$username = sanitize_text_field( $request['username'] );
-	//$password = $request['password'];
-	$url      = $request['url']; // Needs impletation on the frontend
 
-	if ( empty( $email ) || empty( $username ) /*|| empty( $password )*/ ) {
-		$response = new WP_Error( 'error', 'Email and username are required.', array( 'status' => 406 ) );
+	$incomplete_data_status = 422;
+	$incomplete_data_code   = 'Unprocessable Entity';
+
+	$not_acceptable_status = 406;
+	$not_acceptable_code   = 'Not Acceptable';
+
+	if ( empty( $email ) || empty( $username ) ) {
+		$response = new WP_Error( $incomplete_data_code, __( 'Email and username are required.', 'wapuus-api' ), array( 'status' => $incomplete_data_status ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( username_exists( $username ) ) {
-		$response = new WP_Error( 'error', 'Username already in use.', array( 'status' => 403 ) );
+		$response = new WP_Error( $not_acceptable_code, __( 'Username already in use.', 'wapuus-api' ), array( 'status' => $not_acceptable_status ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( email_exists( $email ) ) {
-		$response = new WP_Error( 'error', 'Email already in use.', array( 'status' => 403 ) );
+		$response = new WP_Error( $not_acceptable_code, __( 'Email already in use.', 'wapuus-api' ), array( 'status' => $not_acceptable_status ) );
 		return rest_ensure_response( $response );
 	}
+
+	return true;
+}
+
+/**
+ * Callback for the "user post" endpoint.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
+ *                                   is already an instance, WP_REST_Response, otherwise
+ *                                   returns a new WP_REST_Response instance.
+ */
+function wapuus_api_user_post( $request ) {
+
+	$email    = sanitize_email( $request['email'] );
+	$username = sanitize_text_field( $request['username'] );
+	$url      = $request['url'];
 
 	$user_id = wp_insert_user(
 		array(
 			'user_login' => $username,
 			'user_email' => $email,
-			'user_pass'  => wp_generate_password(), //'user_pass'  => $password,
+			'user_pass'  => wp_generate_password(),
 			'role'       => 'subscriber',
 		)
 	);
@@ -39,11 +126,11 @@ function wapuus_api_user_post( $request ) {
 
 		$user    = get_user_by( 'ID', $user_id );
 		$key     = get_password_reset_key( $user );
-		$message = "Use the link below to create your password: \r\n";
+		$message = __( 'Use the link below to create your password:', 'wapuus-api' ) . "\r\n";
 		$url     = esc_url_raw( $url . "/?key=$key&login=" . rawurlencode( $username ) . "\r\n" );
 		$body    = $message . $url;
 
-		wp_mail( $email, 'Password Creation', $body );
+		wp_mail( $email, __( 'Password Creation', 'wapuus-api' ), $body );
 	}
 
 	$response = array(
@@ -54,53 +141,3 @@ function wapuus_api_user_post( $request ) {
 
 	return rest_ensure_response( $response );
 }
-
-function wapuus_api_register_user_post_permission_callback(){
-
-	return true;
-}
-
-function wapuus_api_register_user_post() {
-
-	register_rest_route(
-		'wapuus-api/v1',
-		'/users',
-		array( // Isso declara o Schema do endpoint. Note que o schema é o mesmo para todos os métodos que o endpoint aceita.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Users_Resource::get_instance(), 'schema' ),
-			array(
-				'methods'  => WP_REST_Server::CREATABLE, // POST
-				'callback' => 'wapuus_api_user_post',
-				'permission_callback' => 'wapuus_api_register_user_post_permission_callback',
-				'args' => wapuus_api_user_post_args(),
-			),
-		)
-	);
-
-}
-add_action( 'rest_api_init', 'wapuus_api_register_user_post' );
-
-function wapuus_api_user_post_args() {
-
-	$args = array(
-		'username' => array(
-			'description' => __( 'Login name for the user.' ),
-			'type'        => 'string',
-			'required'    => true,
-		),
-		'email'    => array(
-			'description' => __( 'The email address for the user.' ),
-			'type'        => 'string',
-			'format'      => 'email',
-			'required'    => true,
-		),
-		'url'    => array(
-			'description' => __( 'Base URL used to create the "password creation" link that is sent by email.' ),
-			'type'        => 'string',
-			'format'      => 'uri',
-			'required'    => true,
-		),
-	);
-
-	return $args;
-}
-

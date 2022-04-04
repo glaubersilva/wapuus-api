@@ -127,7 +127,7 @@ function wapuus_api_password_lost( $request ) {
 	$user_login = $user->user_login;
 	$user_email = $user->user_email;
 	$key        = get_password_reset_key( $user );
-	$message    = __( 'Use the link below to reset your password: ', 'wapuus-api' ) . '\r\n';
+	$message    = __( 'Use the link below to reset your password:', 'wapuus-api' ) . "\r\n";
 	$url        = esc_url_raw( $url . "/?key=$key&login=" . rawurlencode( $user_login ) . "\r\n" );
 	$body       = $message . $url;
 
