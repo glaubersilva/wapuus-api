@@ -12,16 +12,16 @@ class Stats_Get extends Abstract_Endpoint {
 		return '/' . Stats_Resource::get_instance()->name();
 	}
 
+	public function resource_schema() {
+		return Stats_Resource::get_instance()->schema();
+	}
+
 	public function get_methods() {
-		return \WP_REST_Server::READABLE; // GET method.
+		return \WP_REST_Server::READABLE;
 	}
 
 	public function get_arguments() {
 		return array();
-	}
-
-	public function resource_schema() {
-		return Stats_Resource::get_instance()->schema();
 	}
 
 	public function check_permissions() {

@@ -11,6 +11,8 @@
 
 namespace Wapuus_API\Src\Classes;
 
+defined( 'ABSPATH' ) || exit;
+
 if ( ! class_exists( 'General_Tweaks' ) ) {
 
 	/**
