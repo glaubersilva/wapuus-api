@@ -36,19 +36,19 @@ if ( ! class_exists( 'Users_Resource' ) ) {
 				'type'       => 'object',
 				'properties' => array(
 					'id'       => array(
-						'description' => __( 'Unique identifier for the user.' ),
+						'description' => __( 'Unique identifier for the user.', 'wapuus-api' ),
 						'type'        => 'integer',
 						'context'     => array( 'embed', 'view', 'edit' ),
 						'readonly'    => true,
 					),
 					'username' => array(
-						'description' => __( 'Login name for the user.' ),
+						'description' => __( 'Login name for the user.', 'wapuus-api' ),
 						'type'        => 'string',
 						'context'     => array( 'edit' ),
 						'required'    => true,
 					),
 					'email'    => array(
-						'description' => __( 'The email address for the user.' ),
+						'description' => __( 'The email address for the user.', 'wapuus-api' ),
 						'type'        => 'string',
 						'format'      => 'email',
 						'context'     => array( 'edit' ),

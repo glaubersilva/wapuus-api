@@ -65,7 +65,7 @@ if ( ! class_exists( 'Stats_Get' ) ) {
 		public function check_permissions( \WP_REST_Request $request ) {
 
 			if ( ! is_user_logged_in() ) {
-				$response = new Unauthorized( 'rest_forbidden', 'User does not have permission.' );
+				$response = new Unauthorized( 'rest_forbidden', __( 'User does not have permission.', 'wapuus-api' ) );
 				return rest_ensure_response( $response );
 			}
 

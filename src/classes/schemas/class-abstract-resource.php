@@ -67,7 +67,7 @@ if ( ! class_exists( 'Abstract_Resource' ) ) {
 		final public function name() {
 
 			if ( empty( $this->name ) ) {
-				$this->name = 'Undefined';
+				$this->name = __( 'Undefined', 'wapuus-api' );
 			}
 
 			return $this->name;

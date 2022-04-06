@@ -36,19 +36,19 @@ if ( ! class_exists( 'Stats_Resource' ) ) {
 				'type'       => 'object',
 				'properties' => array(
 					'id'    => array(
-						'description' => __( 'Unique identifier for the image object.' ),
+						'description' => __( 'Unique identifier for the image object.', 'wapuus-api' ),
 						'type'        => 'integer',
 						'context'     => array( 'view' ),
 						'readonly'    => true,
 					),
 					'title' => array(
-						'description' => __( 'The name of the image object.' ),
+						'description' => __( 'The name of the image object.', 'wapuus-api' ),
 						'type'        => 'string',
 						'context'     => array( 'view' ),
 						'readonly'    => true,
 					),
 					'views' => array(
-						'description' => __( 'The views counter of the image object.' ),
+						'description' => __( 'The views counter of the image object.', 'wapuus-api' ),
 						'type'        => 'integer',
 						'context'     => array( 'view' ),
 						'readonly'    => true,
