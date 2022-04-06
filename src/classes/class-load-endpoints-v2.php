@@ -85,7 +85,7 @@ if ( ! class_exists( 'Load_Endpoints_V2' ) ) {
 			register_rest_route(
 				'wapuus-api/v2',
 				$endpoint->get_path(),
-				array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the endpoint accepts.
+				array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the route accepts.
 					'schema' => $endpoint->get_schema(), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 					array(
 						'methods'             => $endpoint->get_methods(),

@@ -51,9 +51,11 @@ if ( ! class_exists( 'Abstract_Endpoint' ) ) {
 		 * The abstract keyword force extending classes to define this method that
 		 * is used as a callback on the get_permission_callback() method from this base class.
 		 *
+		 *  @param \WP_REST_Request $request The current request object.
+		 *
 		 * @return mixed
 		 */
-		abstract public function check_permissions();
+		abstract public function check_permissions( \WP_REST_Request $request );
 
 		/**
 		 * Get the permission callback used by the REST API endpoint.

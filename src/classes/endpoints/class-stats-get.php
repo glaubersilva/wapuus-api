@@ -1,64 +1,112 @@
 <?php
+/**
+ * The API V2 endpoint for "stats get".
+ *
+ * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
+ */
 
 namespace Wapuus_API\Src\Classes\Endpoints;
+
+defined( 'ABSPATH' ) || exit;
 
 use Wapuus_API\Src\Classes\Endpoints\Abstract_Endpoint;
 use Wapuus_API\Src\Classes\Responses\Error\Unauthorized;
 use Wapuus_API\Src\Classes\Schemas\Stats_Resource;
 
-class Stats_Get extends Abstract_Endpoint {
+if ( ! class_exists( 'Stats_Get' ) ) {
 
-	public function get_path() {
-		return '/' . Stats_Resource::get_instance()->name();
-	}
+	/**
+	 * The "stats get" endpoint class.
+	 */
+	class Stats_Get extends Abstract_Endpoint {
 
-	public function resource_schema() {
-		return Stats_Resource::get_instance()->schema();
-	}
-
-	public function get_methods() {
-		return \WP_REST_Server::READABLE;
-	}
-
-	public function get_arguments() {
-		return array();
-	}
-
-	public function check_permissions() {
-
-		if ( ! is_user_logged_in() ) {
-			$response = new Unauthorized( 'rest_forbidden', 'User does not have permission.' );
-			return rest_ensure_response( $response );
+		/**
+		 * Route for the "stats get" endpoint.
+		 */
+		public function get_path() {
+			return '/' . Stats_Resource::get_instance()->name();
 		}
 
-		return true;
-	}
+		/**
+		 * Resource schema callback for the "stats get" endpoint, which is the same
+		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
+		 */
+		public function resource_schema() {
+			return Stats_Resource::get_instance()->schema();
+		}
 
-	public function respond( \WP_REST_Request $request ) {
+		/**
+		 * Method (POST, GET, DELETE etc.) implemented for the "stats get" endpoint.
+		 */
+		public function get_methods() {
+			return \WP_REST_Server::READABLE;
+		}
 
-		$user = wp_get_current_user();
+		/**
+		 * Schema of the expected arguments for the "stats get" endpoint.
+		 *
+		 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema
+		 *
+		 * @return array Arguments.
+		 */
+		public function get_arguments() {
+			return array();
+		}
 
-		$args = array(
-			'post_type'     => 'wapuu',
-			'author'        => $user->ID,
-			'post_per_page' => -1,
-		);
+		/**
+		 * Permission callback for the "stats get" endpoint.
+		 *
+		 * @param \WP_REST_Request $request The current request object.
+		 *
+		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
+		 */
+		public function check_permissions( \WP_REST_Request $request ) {
 
-		$query = new \WP_Query( $args );
-		$posts = $query->posts;
-
-		$stats = array();
-
-		if ( $posts ) {
-			foreach ( $posts as $post ) {
-				$stats[] = array(
-					'id'    => $post->ID,
-					'title' => $post->post_title,
-					'views' => get_post_meta( $post->ID, 'views', true ),
-				);
+			if ( ! is_user_logged_in() ) {
+				$response = new Unauthorized( 'rest_forbidden', 'User does not have permission.' );
+				return rest_ensure_response( $response );
 			}
+
+			return true;
 		}
 
-		return rest_ensure_response( $stats );
+		/**
+		 * Callback for the "stats get" endpoint.
+		 *
+		 * @param \WP_REST_Request $request The current request object.
+		 *
+		 * @return \WP_REST_Response|\WP_Error If response generated an error, WP_Error, if response
+		 *                                   is already an instance, WP_REST_Response, otherwise
+		 *                                   returns a new WP_REST_Response instance.
+		 */
+		public function respond( \WP_REST_Request $request ) {
+
+			$user = wp_get_current_user();
+
+			$args = array(
+				'post_type'     => 'wapuu',
+				'author'        => $user->ID,
+				'post_per_page' => -1,
+			);
+
+			$query = new \WP_Query( $args );
+			$posts = $query->posts;
+
+			$stats = array();
+
+			if ( $posts ) {
+				foreach ( $posts as $post ) {
+					$stats[] = array(
+						'id'    => $post->ID,
+						'title' => $post->post_title,
+						'views' => get_post_meta( $post->ID, 'views', true ),
+					);
+				}
+			}
+
+			return rest_ensure_response( $stats );
+		}
 	}
 }
