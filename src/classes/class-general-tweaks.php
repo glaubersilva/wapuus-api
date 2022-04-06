@@ -1,8 +1,6 @@
 <?php
 /**
- * Implement general tweaks on WordPress and on the JWT plugin used by the API.
- *
- * @link https://wordpress.org/plugins/jwt-auth/
+ * Implement general tweaks on WordPress and on plugins used by the API.
  *
  * @package Wapuus_API
  * @author Glauber Silva <info@glaubersilva.me>
@@ -70,6 +68,8 @@ if ( ! class_exists( 'General_Tweaks' ) ) {
 
 		/**
 		 * Changes the default expiration time of the JWT token.
+		 *
+		 * @link https://wordpress.org/plugins/jwt-auth/
 		 *
 		 * @param int $expire The default expire timestamp.
 		 *

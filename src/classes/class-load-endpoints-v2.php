@@ -79,7 +79,7 @@ if ( ! class_exists( 'Load_Endpoints_V2' ) ) {
 		/**
 		 * Register an endpoint with the WordPress REST API.
 		 *
-		 * @param \Wapuus_API\Src\Interfaces\Endpoint $endpoint  Accept an implementation class of the "Endpoint" interface.
+		 * @param \Wapuus_API\Src\Interfaces\Endpoint $endpoint Accept a concrete class based on the "Endpoint" interface.
 		 */
 		private function register_endpoint( \Wapuus_API\Src\Interfaces\Endpoint $endpoint ) {
 			register_rest_route(
