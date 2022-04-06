@@ -2,20 +2,30 @@
 /**
  * Schema for the users resource.
  *
- * @package \Wapuus_API\Src\Classes\Schemas\Users_Resource
+ * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
  */
 
 namespace Wapuus_API\Src\Classes\Schemas;
+
+defined( 'ABSPATH' ) || exit;
 
 use \Wapuus_API\Src\Classes\Schemas\Abstract_Resource;
 use \Wapuus_API\Src\Traits\Singleton;
 
 if ( ! class_exists( 'Users_Resource' ) ) {
 
+	/**
+	 * Schema stats for the users resource.
+	 */
 	class Users_Resource extends Abstract_Resource {
 
 		use Singleton;
 
+		/**
+		 * Define the name and schema for the users resource.
+		 */
 		protected function init() {
 
 			$this->name = 'users';
@@ -36,18 +46,7 @@ if ( ! class_exists( 'Users_Resource' ) ) {
 						'type'        => 'string',
 						'context'     => array( 'edit' ),
 						'required'    => true,
-						/*'arg_options' => array(
-							'sanitize_callback' => array( $this, 'check_username' ),
-						),*/
 					),
-					/*'name'     => array(
-						'description' => __( 'Display name for the user.' ),
-						'type'        => 'string',
-						'context'     => array( 'embed', 'view', 'edit' ),
-						'arg_options' => array(
-							'sanitize_callback' => 'sanitize_text_field',
-						),
-					),*/
 					'email'    => array(
 						'description' => __( 'The email address for the user.' ),
 						'type'        => 'string',

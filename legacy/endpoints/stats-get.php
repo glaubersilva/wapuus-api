@@ -17,7 +17,7 @@ function wapuus_api_register_stats_get() {
 	register_rest_route(
 		'wapuus-api/v1',
 		'/stats',
-		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the endpoint accepts.
+		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the route accepts.
 			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Stats_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
