@@ -220,7 +220,7 @@ function wapuus_api_image_post( $request ) {
 		 * Definition of sideload: (2) Copying a file from a site on the Internet to the user's account in an online storage service, rather than downloading it directly to the user's computer.
 		 * More details here: https://www.pcmag.com/encyclopedia/term/sideload
 		 *
-		 * This is necessary to get the upload done - escaping the is_uploaded_file() verification - in cases where we are testing our endpoint via PHPUnit.
+		 * This is necessary to get the upload done - skipping the is_uploaded_file() verification - in cases where we are testing our endpoint via PHPUnit.
 		 */
 		$image_id = media_handle_sideload( $files['img'], $post_id ); // Should be used for remote file uploads (input text field).
 

@@ -47,7 +47,7 @@ if ( ! class_exists( 'Load_Endpoints_V2' ) ) {
 					if ( false !== strpos( strtolower( $file_info ), 'controller' ) ) {
 
 						/**
-						 * The "Rest Controller" class approach.
+						 * The "REST Controller" class approach.
 						 * https://developer.wordpress.org/rest-api/extending-the-rest-api/controller-classes/
 						 */
 						new $class_name();

@@ -1,10 +1,10 @@
 <?php
 /**
- * Implements the callbacks that our "Endpoint" interface defines, but as we can't explicitly
- * set these methods as "callable" values, we need to use this base class for that.
+ * Implements the callbacks that our "Endpoint" interface defines, but as we can't explicitly set
+ * these methods as "callable" values on the interface, we need to use this base class for that.
  *
- * The WordPress REST API expects a callback to be a "callable value" - that means a string
- * with the function name that we want the WordPress REST API to call.
+ * The WordPress REST API expects a callback to be a callable value, that means:
+ * >>> a string with the function name <<< that we want the WordPress REST API to call.
  *
  * @link https://www.php.net/manual/en/language.types.callable.php
  *

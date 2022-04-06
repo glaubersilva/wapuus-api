@@ -90,7 +90,7 @@ if ( ! trait_exists( 'Singleton' ) ) {
 		}
 
 		/**
-		 * The abastract keyword force extending class to define this method.
+		 * The abstract keyword force extending class to define this method.
 		 *
 		 * @link https://www.php.net/manual/en/language.oop5.abstract.php
 		 */

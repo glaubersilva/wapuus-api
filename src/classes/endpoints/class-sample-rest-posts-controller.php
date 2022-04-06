@@ -1,20 +1,44 @@
 <?php
+/**
+ * Implements some sample endpoints using the "controller" class approach.
+ *
+ * Despite this being recommended by the WordPress documentation, we don't use this approach for this project due to the fact
+ * that this kind of class can easily become too bloated. However, it was added to this project just as a sample and reference for studies.
+ *
+ * The core REST API endpoints within WordPress are all implemented using a controller class. A controller receives input
+ * (a WP_REST_Request object, in the case of the WordPress REST API) and generates response output as WP_REST_Response objects.
+ *
+ * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/controller-classes/
+ *
+ * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
+ */
 
 namespace Wapuus_API\Src\Classes\Endpoints;
 
-if ( ! class_exists( 'My_REST_Posts_Controller' ) ) {
+defined( 'ABSPATH' ) || exit;
 
-	class My_REST_Posts_Controller {
+if ( ! class_exists( 'Sample_REST_Posts_Controller' ) ) {
 
-		// Here initialize our namespace and resource name.
+	/**
+	 * The REST controller sample class.
+	 */
+	class Sample_REST_Posts_Controller {
+
+		/**
+		 * Register the REST routers and set the namespace and resource name directly on the class constructor.
+		 */
 		public function __construct() {
-			$this->namespace     = 'gs-posts/v1';
+			$this->namespace     = 'sample-rest-posts-controller/v1';
 			$this->resource_name = 'posts';
 
 			add_action( 'rest_api_init', array( $this, 'register_routes' ) );
 		}
 
-		// Register our routes.
+		/**
+		 * Register our routes.
+		 */
 		public function register_routes() {
 			register_rest_route(
 				$this->namespace,
@@ -53,7 +77,7 @@ if ( ! class_exists( 'My_REST_Posts_Controller' ) ) {
 		 */
 		public function get_items_permissions_check( $request ) {
 			if ( ! current_user_can( 'read' ) ) {
-				return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the post resource.' ), array( 'status' => $this->authorization_status_code() ) );
+				return new \WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the post resource.' ), array( 'status' => $this->authorization_status_code() ) );
 			}
 			return true;
 		}
@@ -91,7 +115,7 @@ if ( ! class_exists( 'My_REST_Posts_Controller' ) ) {
 		 */
 		public function get_item_permissions_check( $request ) {
 			if ( ! current_user_can( 'read' ) ) {
-				return new WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the post resource.' ), array( 'status' => $this->authorization_status_code() ) );
+				return new \WP_Error( 'rest_forbidden', esc_html__( 'You cannot view the post resource.' ), array( 'status' => $this->authorization_status_code() ) );
 			}
 			return true;
 		}
@@ -118,7 +142,9 @@ if ( ! class_exists( 'My_REST_Posts_Controller' ) ) {
 		/**
 		 * Matches the post data to the schema we want.
 		 *
-		 * @param WP_Post $post The comment object whose response is being prepared.
+		 * @param WP_Post          $post The comment object whose response is being prepared.
+		 *
+		 * @param \WP_REST_Request $request The current request object.
 		 */
 		public function prepare_item_for_response( $post, $request ) {
 			$post_data = array();
@@ -146,7 +172,7 @@ if ( ! class_exists( 'My_REST_Posts_Controller' ) ) {
 		 * @return array Response data, ready for insertion into collection data.
 		 */
 		public function prepare_response_for_collection( $response ) {
-			if ( ! ( $response instanceof WP_REST_Response ) ) {
+			if ( ! ( $response instanceof \WP_REST_Response ) ) {
 				return $response;
 			}
 
@@ -186,13 +212,13 @@ if ( ! class_exists( 'My_REST_Posts_Controller' ) ) {
 				// In JSON Schema you can specify object properties in the properties attribute.
 				'properties' => array(
 					'id'      => array(
-						'description' => esc_html__( 'Unique identifier for the object.', 'my-textdomain' ),
+						'description' => esc_html__( 'Unique identifier for the object.', 'sample-rest-posts-controller' ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 						'readonly'    => true,
 					),
 					'content' => array(
-						'description' => esc_html__( 'The content for the object.', 'my-textdomain' ),
+						'description' => esc_html__( 'The content for the object.', 'sample-rest-posts-controller' ),
 						'type'        => 'string',
 					),
 				),
@@ -201,7 +227,9 @@ if ( ! class_exists( 'My_REST_Posts_Controller' ) ) {
 			return $this->schema;
 		}
 
-		// Sets up the proper HTTP status code for authorization.
+		/**
+		 * Sets up the proper HTTP status code for authorization.
+		 */
 		public function authorization_status_code() {
 
 			$status = 401;
@@ -214,12 +242,3 @@ if ( ! class_exists( 'My_REST_Posts_Controller' ) ) {
 		}
 	}
 }
-
-// Function to register our new routes from the controller.
-/*
-function prefix_register_my_rest_routes() {
-	$controller = new My_REST_Posts_Controller();
-	$controller->register_routes();
-}
-
-add_action( 'rest_api_init', 'prefix_register_my_rest_routes' );*/
