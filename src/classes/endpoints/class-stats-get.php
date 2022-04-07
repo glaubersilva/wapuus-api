@@ -12,7 +12,7 @@ namespace Wapuus_API\Src\Classes\Endpoints;
 defined( 'ABSPATH' ) || exit;
 
 use Wapuus_API\Src\Classes\Endpoints\Abstract_Endpoint;
-use Wapuus_API\Src\Classes\Responses\Error\Unauthorized;
+use Wapuus_API\Src\Classes\Responses\Error\Unauthorized_401;
 use Wapuus_API\Src\Classes\Schemas\Stats_Resource;
 
 if ( ! class_exists( 'Stats_Get' ) ) {
@@ -65,7 +65,7 @@ if ( ! class_exists( 'Stats_Get' ) ) {
 		public function check_permissions( \WP_REST_Request $request ) {
 
 			if ( ! is_user_logged_in() ) {
-				$response = new Unauthorized( 'rest_forbidden', __( 'User does not have permission.', 'wapuus-api' ) );
+				$response = new Unauthorized_401( __( 'User does not have permission.', 'wapuus-api' ) );
 				return rest_ensure_response( $response );
 			}
 
