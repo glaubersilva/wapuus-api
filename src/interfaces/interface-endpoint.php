@@ -30,12 +30,18 @@ if ( ! interface_exists( 'Endpoint' ) ) {
 		 *
 		 * The schema for a resource indicates what fields are present for a particular object.
 		 *
-		 * Check this link for more details:
-		 * https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema
+		 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema
 		 *
 		 * @return callable
 		 */
 		public function get_schema();
+
+		/**
+		 * Get the HTTP methods that the REST API endpoint responds to.
+		 *
+		 * @return mixed
+		 */
+		public function get_methods();
 
 		/**
 		 * Get the expected arguments for the REST API endpoint.
@@ -43,19 +49,11 @@ if ( ! interface_exists( 'Endpoint' ) ) {
 		 * Here we add our PHP representation of JSON Schema for the endpoint. When we register request arguments
 		 * for an endpoint, we can also use JSON Schema to provide us data about what the arguments should be.
 		 *
-		 * Check this link for more details:
-		 * https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema
+		 * @link https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#argument-schema
 		 *
 		 * @return array
 		 */
 		public function get_arguments();
-
-		/**
-		 * Get the callback used by the REST API endpoint.
-		 *
-		 * @return callable
-		 */
-		public function get_callback();
 
 		/**
 		 * Get the callback used to validate a request to the REST API endpoint.
@@ -65,10 +63,10 @@ if ( ! interface_exists( 'Endpoint' ) ) {
 		public function get_permission_callback();
 
 		/**
-		 * Get the HTTP methods that the REST API endpoint responds to.
+		 * Get the callback used by the REST API endpoint.
 		 *
-		 * @return mixed
+		 * @return callable
 		 */
-		public function get_methods();
+		public function get_callback();
 	}
 }
