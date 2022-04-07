@@ -1,41 +1,51 @@
 <?php
+/**
+ * Base class for all WP REST API tests.
+ *
+ * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
+ */
 
 namespace Wapuus_API\Tests;
 
-/**
- * Basic test case for api calls
- *
- * @author medialab
- */
-class Unit_API_Test_Case extends Unit_Test_Case {
-	/**
-	 * Test REST Server
-	 *
-	 * @var \WP_REST_Server
-	 */
-	protected $server;
+defined( 'ABSPATH' ) || exit;
+
+if ( ! class_exists( 'Unit_API_Test_Case' ) ) {
 
 	/**
-	 * Initialize WP API rest.
+	 * Basic test case for api calls
 	 */
-	public function set_up() {
-		parent::set_up();
+	class Unit_API_Test_Case extends Unit_Test_Case {
+		/**
+		 * Test REST Server
+		 *
+		 * @var \WP_REST_Server
+		 */
+		protected $server;
 
-		global $wp_rest_server;
+		/**
+		 * Initialize WP API rest.
+		 */
+		public function set_up() {
+			parent::set_up();
 
-		$wp_rest_server = new \WP_REST_Server();
-		$this->server   = $wp_rest_server;
+			global $wp_rest_server;
 
-		do_action( 'rest_api_init' );
-	}
+			$wp_rest_server = new \WP_REST_Server();
+			$this->server   = $wp_rest_server;
 
-	/**
-	 * Destruction API WP rest server.
-	 */
-	public function tear_down() {
-		parent::tear_down();
+			do_action( 'rest_api_init' );
+		}
 
-		global $wp_rest_server;
-		$wp_rest_server = null;
+		/**
+		 * Destruction API WP rest server.
+		 */
+		public function tear_down() {
+			parent::tear_down();
+
+			global $wp_rest_server;
+			$wp_rest_server = null;
+		}
 	}
 }

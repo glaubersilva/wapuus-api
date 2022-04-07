@@ -2,13 +2,21 @@
 /**
  * PHPUnit bootstrap file.
  *
- * @package Wapuus_Api
+ * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
  */
 
+/**
+ * Set of polyfills for changed PHPUnit functionality to allow
+ * for creating PHPUnit cross-version compatible tests.
+ *
+ * @link https://github.com/Yoast/PHPUnit-Polyfills
+ */
 require dirname( dirname( __FILE__ ) ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
 
 if ( PHP_MAJOR_VERSION >= 8 ) {
-	echo "The scaffolded tests cannot currently be run on PHP 8.0+. See https://github.com/wp-cli/scaffold-command/issues/285" . PHP_EOL; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo 'The scaffolded tests cannot currently be run on PHP 8.0+. See https://github.com/wp-cli/scaffold-command/issues/285' . PHP_EOL; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	exit( 1 );
 }
 
