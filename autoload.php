@@ -1,6 +1,16 @@
 <?php
 /**
- * Autoloader for the plugin: Wapuus API
+ * The PSR-4 autoloader for the Wapuus API plugin.
+ *
+ * @package Wapuus_API
+ * @author Glauber Silva <info@glaubersilva.me>
+ * @link https://glaubersilva.me/
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Register autoload.
  *
  * Based in the PSR-4 autoloader example found here:
  * https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader-examples.md
@@ -8,20 +18,19 @@
  * @param string $class The fully-qualified class name.
  * @return void
  */
-
 spl_autoload_register(
 	function ( $class ) {
 
-		// project-specific namespace prefix
+		// The project-specific namespace prefix.
 		$prefix = 'Wapuus_API\\';
 
-		// base directory for the namespace prefix
+		// Base directory for the namespace prefix.
 		$base_dir = trailingslashit( dirname( __FILE__ ) );
 
-		// does the class use the namespace prefix?
+		// Does the class use the namespace prefix?
 		$len = strlen( $prefix );
 		if ( strncmp( $prefix, $class, $len ) !== 0 ) {
-			// no, move to the next registered autoloader
+			// No, move to the next registered autoloader.
 			return;
 		}
 
@@ -38,20 +47,9 @@ spl_autoload_register(
 			$file = 'class-' . $file;
 		}
 
-		/*
-		$reflection = new ReflectionClass( $class );
-
-		if ( $reflection->isInterface() ) {
-			$file = 'interface-' . $file;
-		} elseif ( $reflection->isTrait() ) {
-			$file = 'trait-' . $file;
-		} else {
-			$file = 'class-' . $file;
-		}*/
-
 		$file = $base_dir . implode( '/', $path ) . '/' . $file;
 
-		// if the file exists, require it
+		// if the file exists, require it.
 		if ( file_exists( $file ) ) {
 			require $file;
 		}
