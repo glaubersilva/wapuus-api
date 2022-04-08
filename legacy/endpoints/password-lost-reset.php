@@ -62,29 +62,6 @@ function wapuus_api_password_lost_args() {
  */
 function wapuus_api_password_lost_permissions_check( $request ) {
 
-	$login = $request['login'];
-
-	if ( empty( $login ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Email or username are required.', 'wapuus-api' ) );
-		return rest_ensure_response( $response );
-	}
-
-	$user = get_user_by( 'email', $login );
-
-	if ( empty( $user ) ) {
-		$user = get_user_by( 'login', $login );
-	}
-
-	if ( empty( $user ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not exist.', 'wapuus-api' ) );
-		return rest_ensure_response( $response );
-	}
-
-	if ( wapuus_api_is_demo_user( $user ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
-		return rest_ensure_response( $response );
-	}
-
 	return true;
 }
 
@@ -100,8 +77,30 @@ function wapuus_api_password_lost_permissions_check( $request ) {
 function wapuus_api_password_lost( $request ) {
 
 	$login = $request['login'];
-	$url   = $request['url'];
-	$user  = get_user_by( 'email', $login );
+
+	if ( empty( $login ) ) {
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Email or username are required.', 'wapuus-api' ) );
+		return rest_ensure_response( $response );
+	}
+
+	$user = get_user_by( 'email', $login );
+
+	if ( empty( $user ) ) {
+		$user = get_user_by( 'login', $login );
+	}
+
+	if ( empty( $user ) ) {
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'User does not exist.', 'wapuus-api' ) );
+		return rest_ensure_response( $response );
+	}
+
+	if ( wapuus_api_is_demo_user( $user ) ) {
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
+		return rest_ensure_response( $response );
+	}
+
+	$url  = $request['url'];
+	$user = get_user_by( 'email', $login );
 
 	if ( empty( $user ) ) {
 		$user = get_user_by( 'login', $login );
@@ -178,12 +177,26 @@ function wapuus_api_password_reset_args() {
  */
 function wapuus_api_password_reset_permissions_check( $request ) {
 
+	return true;
+}
+
+/**
+ * Callback for the "password reset" endpoint.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
+ *                                   is already an instance, WP_REST_Response, otherwise
+ *                                   returns a new WP_REST_Response instance.
+ */
+function wapuus_api_password_reset( $request ) {
+
 	$login = $request['login'];
 	$key   = $request['key'];
 	$user  = get_user_by( 'login', $login );
 
 	if ( empty( $user ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not exist.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'User does not exist.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -198,20 +211,6 @@ function wapuus_api_password_reset_permissions_check( $request ) {
 		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Acceptable( __( 'Expired token.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
-
-	return true;
-}
-
-/**
- * Callback for the "password reset" endpoint.
- *
- * @param WP_REST_Request $request The current request object.
- *
- * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
- *                                   is already an instance, WP_REST_Response, otherwise
- *                                   returns a new WP_REST_Response instance.
- */
-function wapuus_api_password_reset( $request ) {
 
 	$login    = $request['login'];
 	$password = $request['password'];

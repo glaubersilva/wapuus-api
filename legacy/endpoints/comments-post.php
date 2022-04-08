@@ -65,22 +65,13 @@ function wapuus_api_comment_post_args() {
  */
 function wapuus_api_comment_post_permissions_check( $request ) {
 
-	$user = wp_get_current_user();
-
-	if ( 0 === $user->ID ) {
+	if ( ! is_user_logged_in() ) {
 		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
-	if ( wapuus_api_is_demo_user( $user ) ) {
+	if ( wapuus_api_is_demo_user( get_current_user_id() ) ) {
 		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
-		return rest_ensure_response( $response );
-	}
-
-	$comment = sanitize_textarea_field( $request['comment'] );
-
-	if ( empty( $comment ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'The comment is required.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -98,8 +89,14 @@ function wapuus_api_comment_post_permissions_check( $request ) {
  */
 function wapuus_api_comment_post( $request ) {
 
-	$user    = wp_get_current_user();
 	$comment = sanitize_textarea_field( $request['comment'] );
+
+	if ( empty( $comment ) ) {
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'The comment is required.', 'wapuus-api' ) );
+		return rest_ensure_response( $response );
+	}
+
+	$user    = wp_get_current_user();
 	$post_id = sanitize_key( $request['id'] );
 
 	$new_wp_comment = array(

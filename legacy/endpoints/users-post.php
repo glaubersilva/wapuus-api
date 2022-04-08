@@ -72,6 +72,20 @@ function wapuus_api_user_post_args() {
  */
 function wapuus_api_user_post_permissions_check( $request ) {
 
+	return true;
+}
+
+/**
+ * Callback for the "user post" endpoint.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
+ *                                   is already an instance, WP_REST_Response, otherwise
+ *                                   returns a new WP_REST_Response instance.
+ */
+function wapuus_api_user_post( $request ) {
+
 	$email    = sanitize_email( $request['email'] );
 	$username = sanitize_text_field( $request['username'] );
 
@@ -90,23 +104,7 @@ function wapuus_api_user_post_permissions_check( $request ) {
 		return rest_ensure_response( $response );
 	}
 
-	return true;
-}
-
-/**
- * Callback for the "user post" endpoint.
- *
- * @param WP_REST_Request $request The current request object.
- *
- * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
- *                                   is already an instance, WP_REST_Response, otherwise
- *                                   returns a new WP_REST_Response instance.
- */
-function wapuus_api_user_post( $request ) {
-
-	$email    = sanitize_email( $request['email'] );
-	$username = sanitize_text_field( $request['username'] );
-	$url      = $request['url'];
+	$url = $request['url'];
 
 	$user_id = wp_insert_user(
 		array(

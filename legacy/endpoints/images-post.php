@@ -79,19 +79,32 @@ function wapuus_api_image_post_args() {
  */
 function wapuus_api_image_post_permissions_check( $request ) {
 
-	$user  = wp_get_current_user();
-	$files = $request->get_file_params();
-	$name  = sanitize_text_field( $request['name'] );
-
-	if ( 0 === $user->ID ) {
+	if ( ! is_user_logged_in() ) {
 		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
-	if ( wapuus_api_is_demo_user( $user ) ) {
+	if ( wapuus_api_is_demo_user( get_current_user_id() ) ) {
 		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
+
+	return true;
+}
+
+/**
+ * Callback for the "image post" endpoint.
+ *
+ * @param WP_REST_Request $request The current request object.
+ *
+ * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
+ *                                   is already an instance, WP_REST_Response, otherwise
+ *                                   returns a new WP_REST_Response instance.
+ */
+function wapuus_api_image_post( $request ) {
+
+	$files = $request->get_file_params();
+	$name  = sanitize_text_field( $request['name'] );
 
 	if ( empty( $name ) || empty( $files ) ) {
 		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Image and name are required.', 'wapuus-api' ) );
@@ -131,24 +144,7 @@ function wapuus_api_image_post_permissions_check( $request ) {
 		return rest_ensure_response( $response );
 	}
 
-	return true;
-}
-
-/**
- * Callback for the "image post" endpoint.
- *
- * @param WP_REST_Request $request The current request object.
- *
- * @return WP_REST_Response|WP_Error If response generated an error, WP_Error, if response
- *                                   is already an instance, WP_REST_Response, otherwise
- *                                   returns a new WP_REST_Response instance.
- */
-function wapuus_api_image_post( $request ) {
-
-	$user  = wp_get_current_user();
-	$files = $request->get_file_params();
-	$name  = sanitize_text_field( $request['name'] );
-
+	$user     = wp_get_current_user();
 	$from     = sanitize_text_field( $request['from'] );
 	$from_url = esc_url_raw( $request['from_url'] );
 	$caption  = sanitize_textarea_field( $request['caption'] );

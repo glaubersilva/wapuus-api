@@ -61,14 +61,6 @@ function wapuus_api_image_get_args() {
  */
 function wapuus_api_image_get_permissions_check( $request ) {
 
-	$post_id = sanitize_key( $request['id'] );
-	$post    = get_post( $post_id );
-
-	if ( ! isset( $post ) || empty( $post_id ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'Image not found.', 'wapuus-api' ) );
-		return rest_ensure_response( $response );
-	}
-
 	return true;
 }
 
@@ -83,8 +75,14 @@ function wapuus_api_image_get_permissions_check( $request ) {
  */
 function wapuus_api_image_get( $request ) {
 
-	$post_id        = sanitize_key( $request['id'] );
-	$post           = get_post( $post_id );
+	$post_id = sanitize_key( $request['id'] );
+	$post    = get_post( $post_id );
+
+	if ( ! isset( $post ) || empty( $post_id ) ) {
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'Image not found.', 'wapuus-api' ) );
+		return rest_ensure_response( $response );
+	}
+
 	$image          = wapuus_api_get_post_data( $post );
 	$image['views'] = (int) $image['views'] + 1;
 
@@ -170,17 +168,6 @@ function wapuus_api_images_get_args() {
  */
 function wapuus_api_images_get_permissions_check( $request ) {
 
-	if ( isset( $request['_user'] ) && ! is_numeric( $request['_user'] ) ) {
-
-		$user = get_user_by( 'login', sanitize_text_field( $request['_user'] ) );
-
-		if ( ! $user ) {
-
-			$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'User not found.', 'wapuus-api' ) );
-			return rest_ensure_response( $response );
-		}
-	}
-
 	return true;
 }
 
@@ -194,6 +181,17 @@ function wapuus_api_images_get_permissions_check( $request ) {
  *                                   returns a new WP_REST_Response instance.
  */
 function wapuus_api_images_get( $request ) {
+
+	if ( isset( $request['_user'] ) && ! is_numeric( $request['_user'] ) ) {
+
+		$user = get_user_by( 'login', sanitize_text_field( $request['_user'] ) );
+
+		if ( ! $user ) {
+
+			$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'User not found.', 'wapuus-api' ) );
+			return rest_ensure_response( $response );
+		}
+	}
 
 	$_total = isset( $request['_total'] ) ? sanitize_text_field( $request['_total'] ) : 6;
 	$_page  = isset( $request['_page'] ) ? sanitize_text_field( $request['_page'] ) : 1;
