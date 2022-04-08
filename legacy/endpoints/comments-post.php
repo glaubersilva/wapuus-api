@@ -67,9 +67,6 @@ function wapuus_api_comment_post_permissions_check( $request ) {
 
 	$user = wp_get_current_user();
 
-	$incomplete_data_status = 422;
-	$incomplete_data_code   = 'Unprocessable Entity';
-
 	if ( 0 === $user->ID ) {
 		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );

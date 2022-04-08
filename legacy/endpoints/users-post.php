@@ -75,16 +75,6 @@ function wapuus_api_user_post_permissions_check( $request ) {
 	$email    = sanitize_email( $request['email'] );
 	$username = sanitize_text_field( $request['username'] );
 
-	/**
-	 * To better understand the "client error responses", check the link below:
-	 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
-	 */
-	$incomplete_data_status = 422;
-	$incomplete_data_code   = 'Unprocessable Entity';
-
-	$not_acceptable_status = 406;
-	$not_acceptable_code   = 'Not Acceptable';
-
 	if ( empty( $email ) || empty( $username ) ) {
 		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Email and username are required.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
