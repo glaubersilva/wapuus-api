@@ -16,11 +16,11 @@ namespace Wapuus_API\Src\Classes\Responses\Error;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Not_Acceptable_406' ) ) {
+if ( ! class_exists( 'Not_Acceptable' ) ) {
 	/**
 	 * A WordPress error representing a "406 Not Acceptable" HTTP response.
 	 */
-	class Not_Acceptable_406 extends \WP_Error {
+	class Not_Acceptable extends \WP_Error {
 
 		/**
 		 * The HyperText Transfer Protocol (HTTP) 406 Not Acceptable client error response

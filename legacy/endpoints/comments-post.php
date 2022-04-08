@@ -67,35 +67,23 @@ function wapuus_api_comment_post_permissions_check( $request ) {
 
 	$user = wp_get_current_user();
 
-	/**
-	 * To better understand the "client error responses", check the link below:
-	 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
-	 */
-	if ( is_user_logged_in() ) {
-		$no_permission_status = 403;
-		$no_permission_code   = 'Forbidden';
-	} else {
-		$no_permission_status = 401;
-		$no_permission_code   = 'Unauthorized';
-	}
-
 	$incomplete_data_status = 422;
 	$incomplete_data_code   = 'Unprocessable Entity';
 
 	if ( 0 === $user->ID ) {
-		$response = new WP_Error( $no_permission_code, __( 'User does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( wapuus_api_is_demo_user( $user ) ) {
-		$response = new WP_Error( $no_permission_code, __( 'Demo user does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	$comment = sanitize_textarea_field( $request['comment'] );
 
 	if ( empty( $comment ) ) {
-		$response = new WP_Error( $incomplete_data_code, __( 'The comment is required.', 'wapuus-api' ), array( 'status' => $incomplete_data_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'The comment is required.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 

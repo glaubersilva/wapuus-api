@@ -86,17 +86,17 @@ function wapuus_api_user_post_permissions_check( $request ) {
 	$not_acceptable_code   = 'Not Acceptable';
 
 	if ( empty( $email ) || empty( $username ) ) {
-		$response = new WP_Error( $incomplete_data_code, __( 'Email and username are required.', 'wapuus-api' ), array( 'status' => $incomplete_data_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Email and username are required.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( username_exists( $username ) ) {
-		$response = new WP_Error( $not_acceptable_code, __( 'Username already in use.', 'wapuus-api' ), array( 'status' => $not_acceptable_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Acceptable( __( 'Username already in use.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( email_exists( $email ) ) {
-		$response = new WP_Error( $not_acceptable_code, __( 'Email already in use.', 'wapuus-api' ), array( 'status' => $not_acceptable_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Acceptable( __( 'Email already in use.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 

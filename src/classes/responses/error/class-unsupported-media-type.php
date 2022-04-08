@@ -15,11 +15,11 @@ namespace Wapuus_API\Src\Classes\Responses\Error;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Unsupported_Media_Type_415' ) ) {
+if ( ! class_exists( 'Unsupported_Media_Type' ) ) {
 	/**
 	 * A WordPress error representing a "415 Unsupported Media Type" HTTP response.
 	 */
-	class Unsupported_Media_Type_415 extends \WP_Error {
+	class Unsupported_Media_Type extends \WP_Error {
 
 		/**
 		 * The HTTP 415 Unsupported Media Type client error response code indicates that the server

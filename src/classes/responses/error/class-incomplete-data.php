@@ -15,11 +15,11 @@ namespace Wapuus_API\Src\Classes\Responses\Error;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Unprocessable_Entity_422' ) ) {
+if ( ! class_exists( 'Incomplete_Data' ) ) {
 	/**
 	 * A WordPress error representing a "422 Unprocessable Entity" HTTP response.
 	 */
-	class Unprocessable_Entity_422 extends \WP_Error {
+	class Incomplete_Data extends \WP_Error {
 
 		/**
 		 * The HyperText Transfer Protocol (HTTP) 422 Unprocessable Entity response status code

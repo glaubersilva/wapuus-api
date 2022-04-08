@@ -56,11 +56,7 @@ function wappus_api_user_get_args() {
 function wappus_api_user_get_permissions_check( $request ) {
 
 	if ( ! is_user_logged_in() ) {
-		/**
-		 * To better understand the "client error responses", check the link below:
-		 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
-		 */
-		$response = new WP_Error( 'Unauthorized', __( 'User does not have permission.', 'wapuus-api' ), array( 'status' => 401 ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 

@@ -63,25 +63,13 @@ function wapuus_api_image_delete_permissions_check( $request ) {
 	$post_id = sanitize_key( $request['id'] );
 	$post    = get_post( $post_id );
 
-	/**
-	 * To better understand the "client error responses", check the link below:
-	 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
-	 */
-	if ( is_user_logged_in() ) {
-		$no_permission_status = 403;
-		$no_permission_code   = 'Forbidden';
-	} else {
-		$no_permission_status = 401;
-		$no_permission_code   = 'Unauthorized';
-	}
-
 	if ( (int) $user->ID !== (int) $post->post_author || ! isset( $post ) ) {
-		$response = new WP_Error( $no_permission_code, __( 'User does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( wapuus_api_is_demo_user( $user ) ) {
-		$response = new WP_Error( $no_permission_code, __( 'Demo user does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 

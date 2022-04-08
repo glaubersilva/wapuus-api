@@ -83,39 +83,18 @@ function wapuus_api_image_post_permissions_check( $request ) {
 	$files = $request->get_file_params();
 	$name  = sanitize_text_field( $request['name'] );
 
-	/**
-	 * To better understand the "client error responses", check the link below:
-	 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
-	 */
-	if ( is_user_logged_in() ) {
-		$no_permission_status = 403;
-		$no_permission_code   = 'Forbidden';
-	} else {
-		$no_permission_status = 401;
-		$no_permission_code   = 'Unauthorized';
-	}
-
-	$not_acceptable_status = 406;
-	$not_acceptable_code   = 'Not Acceptable';
-
-	$incomplete_data_status = 422;
-	$incomplete_data_code   = 'Unprocessable Entity';
-
-	$unsupported_media_type_status = 415;
-	$unsupported_media_type_code   = 'Unsupported Media Type';
-
 	if ( 0 === $user->ID ) {
-		$response = new WP_Error( $no_permission_code, __( 'User does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( wapuus_api_is_demo_user( $user ) ) {
-		$response = new WP_Error( $no_permission_code, __( 'Demo user does not have permission.', 'wapuus-api' ), array( 'status' => $no_permission_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( empty( $name ) || empty( $files ) ) {
-		$response = new WP_Error( $incomplete_data_code, __( 'Image and name are required.', 'wapuus-api' ), array( 'status' => $incomplete_data_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Image and name are required.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -126,7 +105,7 @@ function wapuus_api_image_post_permissions_check( $request ) {
 	);
 
 	if ( ! in_array( strtolower( $files['img']['type'] ), $allowed_image_types, true ) ) {
-		$response = new WP_Error( $unsupported_media_type_code, __( 'Invalide Image.', 'wapuus-api' ), array( 'status' => $unsupported_media_type_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Unsupported_Media_Type( __( 'Invalide Image.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -139,7 +118,7 @@ function wapuus_api_image_post_permissions_check( $request ) {
 	$file_size = round( $file_size / pow( 1024, 2 ), 2 );
 
 	if ( $file_size > 1 ) {
-		$response = new WP_Error( $not_acceptable_code, __( 'The image is greater than 1MB - the maximum size allowed.', 'wapuus-api' ), array( 'status' => $not_acceptable_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Acceptable( __( 'The image is greater than 1MB - the maximum size allowed.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -148,7 +127,7 @@ function wapuus_api_image_post_permissions_check( $request ) {
 	$img_height = $img_size[1];
 
 	if ( $img_width < 1000 || $img_height < 1000 ) {
-		$response = new WP_Error( $not_acceptable_code, __( 'The image should have at least 1000px X 1000px of dimensions.', 'wapuus-api' ), array( 'status' => $not_acceptable_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Acceptable( __( 'The image should have at least 1000px X 1000px of dimensions.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 

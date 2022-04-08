@@ -19,12 +19,12 @@ namespace Wapuus_API\Src\Classes\Responses\Valid;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'OK_200' ) ) {
+if ( ! class_exists( 'OK' ) ) {
 
 	/**
 	 * A WordPress error representing a "200 OK" HTTP response.
 	 */
-	class OK_200 extends \WP_REST_Response {
+	class OK extends \WP_REST_Response {
 
 		/**
 		 * The HTTP 200 OK success status response code indicates that the request

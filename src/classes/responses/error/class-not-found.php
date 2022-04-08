@@ -15,16 +15,16 @@
  * @link https://glaubersilva.me/
  */
 
-namespace Wapuus_API\Src\Classes\Reponses\Error;
+namespace Wapuus_API\Src\Classes\Responses\Error;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Not_Found_404' ) ) {
+if ( ! class_exists( 'Not_Found' ) ) {
 
 	/**
 	 * A WordPress error representing a "404 Not Found" HTTP response.
 	 */
-	class Not_Found_404 extends \WP_Error {
+	class Not_Found extends \WP_Error {
 
 		/**
 		 * The HTTP 404 Not Found response status code indicates that the server

@@ -64,15 +64,8 @@ function wapuus_api_image_get_permissions_check( $request ) {
 	$post_id = sanitize_key( $request['id'] );
 	$post    = get_post( $post_id );
 
-	/**
-	 * To better understand the "client error responses", check the link below:
-	 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
-	 */
-	$not_fond_status = 404;
-	$not_fond_code   = 'Not Found';
-
 	if ( ! isset( $post ) || empty( $post_id ) ) {
-		$response = new WP_Error( $not_fond_code, __( 'Image not found.', 'wapuus-api' ), array( 'status' => $not_fond_status ) );
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'Image not found.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -181,14 +174,7 @@ function wapuus_api_images_get_permissions_check( $request ) {
 
 		if ( ! $user ) {
 
-			/**
-			 * To better understand the "client error responses", check the link below:
-			 * https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#client_error_responses
-			 */
-			$not_fond_status = 404;
-			$not_fond_code   = 'Not Found';
-
-			$response = new WP_Error( $not_fond_code, __( 'User not found.', 'wapuus-api' ), array( 'status' => $not_fond_status ) );
+			$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'User not found.', 'wapuus-api' ) );
 			return rest_ensure_response( $response );
 		}
 	}

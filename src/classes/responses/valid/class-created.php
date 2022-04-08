@@ -16,12 +16,12 @@ namespace Wapuus_API\Src\Classes\Responses\Valid;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Created_201' ) ) {
+if ( ! class_exists( 'Created' ) ) {
 
 	/**
 	 * A WordPress error representing a "201 Created" HTTP response.
 	 */
-	class Created_201 extends \WP_REST_Response {
+	class Created extends \WP_REST_Response {
 
 		/**
 		 * The HTTP 201 Created success status response code indicates that the request
