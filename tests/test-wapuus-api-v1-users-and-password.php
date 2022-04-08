@@ -35,7 +35,7 @@ if ( ! class_exists( 'Wapuus_API_V1_Users_And_Password_Tests' ) ) {
 
 			$response = $this->server->dispatch( $request );
 
-			$expected = 200;
+			$expected = 201;
 			$result   = $response->get_status();
 			$this->assertEquals( $expected, $result );
 

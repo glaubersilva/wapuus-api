@@ -101,10 +101,12 @@ function wapuus_api_image_get( $request ) {
 		$comments[ $key ] = wapuus_api_get_comment_data( $comment );
 	}
 
-	$response = array(
+	$image = array(
 		'image'    => $image,
 		'comments' => $comments,
 	);
+
+	$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( $image );
 
 	return rest_ensure_response( $response );
 }
@@ -220,5 +222,7 @@ function wapuus_api_images_get( $request ) {
 		}
 	}
 
-	return rest_ensure_response( $images );
+	$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( $images );
+
+	return rest_ensure_response( $response );
 }

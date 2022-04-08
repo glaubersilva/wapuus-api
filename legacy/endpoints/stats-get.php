@@ -97,5 +97,7 @@ function wapuus_api_stats_get( $request ) {
 		}
 	}
 
-	return rest_ensure_response( $stats );
+	$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( $stats );
+
+	return rest_ensure_response( $response );
 }

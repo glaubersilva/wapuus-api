@@ -116,7 +116,9 @@ function wapuus_api_password_lost( $request ) {
 
 	wp_mail( $user_email, __( 'Password Reset', 'wapuus-api' ), $body );
 
-	return rest_ensure_response( __( 'Email sent.', 'wapuus-api' ) );
+	$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( __( 'Email sent.', 'wapuus-api' ) );
+
+	return rest_ensure_response( $response );
 }
 
 /**
@@ -217,5 +219,7 @@ function wapuus_api_password_reset( $request ) {
 
 	reset_password( $user, $password );
 
-	return rest_ensure_response( __( 'Password has been changed.', 'wapuus-api' ) );
+	$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( __( 'Password has been changed.', 'wapuus-api' ) );
+
+	return rest_ensure_response( $response );
 }

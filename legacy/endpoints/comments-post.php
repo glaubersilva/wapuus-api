@@ -111,8 +111,9 @@ function wapuus_api_comment_post( $request ) {
 
 	$comment_id = wp_insert_comment( $new_wp_comment );
 	$comment    = get_comment( $comment_id );
+	$comment    = wapuus_api_get_comment_data( $comment );
 
-	$response = wapuus_api_get_comment_data( $comment );
+	$response = new \Wapuus_API\Src\Classes\Responses\Valid\Created( $comment );
 
 	return rest_ensure_response( $response );
 }

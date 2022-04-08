@@ -76,11 +76,13 @@ function wappus_api_user_get( $request ) {
 
 	$user = wp_get_current_user();
 
-	$response = array(
+	$user = array(
 		'id'       => $user->ID,
 		'username' => $user->user_login,
 		'email'    => $user->user_email,
 	);
+
+	$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( $user );
 
 	return rest_ensure_response( $response );
 }

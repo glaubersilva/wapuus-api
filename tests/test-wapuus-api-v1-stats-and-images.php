@@ -135,7 +135,7 @@ if ( ! class_exists( 'Wapuus_API_V1_Stats_And_Images_Tests' ) ) {
 
 			$response = $this->server->dispatch( $request );
 
-			$expected = 200;
+			$expected = 201;
 			$result   = $response->get_status();
 			$this->assertEquals( $expected, $result );
 		}
@@ -191,10 +191,8 @@ if ( ! class_exists( 'Wapuus_API_V1_Stats_And_Images_Tests' ) ) {
 			$result   = $response->get_status();
 			$this->assertEquals( $expected, $result );
 
-			$data     = $response->get_data();
-			$expected = 'Deleted.';
-			$result   = $data;
-			$this->assertEquals( $expected, $result );
+			$data     = $response->get_data();			
+			$this->assertIsBool( $data );
 
 			$headers  = $response->get_headers();
 			$expected = $headers;

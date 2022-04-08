@@ -86,5 +86,7 @@ function wapuus_api_comments_get( $request ) {
 		$comments[ $key ] = wapuus_api_get_comment_data( $comment );
 	}
 
-	return rest_ensure_response( $comments );
+	$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( $comments );
+
+	return rest_ensure_response( $response );
 }

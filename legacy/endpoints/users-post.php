@@ -128,11 +128,13 @@ function wapuus_api_user_post( $request ) {
 		wp_mail( $email, __( 'Password Creation', 'wapuus-api' ), $body );
 	}
 
-	$response = array(
+	$user = array(
 		'id'       => $user_id,
 		'username' => $username,
 		'email'    => $email,
 	);
+
+	$response = new \Wapuus_API\Src\Classes\Responses\Valid\Created( $user );
 
 	return rest_ensure_response( $response );
 }

@@ -89,7 +89,13 @@ function wapuus_api_comment_delete_permissions_check( $request ) {
 function wapuus_api_comment_delete( $request ) {
 
 	$comment_id = sanitize_key( $request['id'] );
-	$response   = wp_delete_comment( $comment_id, true );
+	$deleted    = wp_delete_comment( $comment_id, true );
+
+	if ( $deleted ) {
+		$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( true );
+	} else {
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Bad_Request( false );
+	}
 
 	return rest_ensure_response( $response );
 }

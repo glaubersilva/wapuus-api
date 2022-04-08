@@ -208,7 +208,9 @@ function wapuus_api_image_post( $request ) {
 	update_post_meta( $post_id, 'img', $image_id );
 	set_post_thumbnail( $post_id, $image_id );
 
-	$response = wapuus_api_get_post_data( $post_id );
+	$wapuu = wapuus_api_get_post_data( $post_id );
+
+	$response = new \Wapuus_API\Src\Classes\Responses\Valid\Created( $wapuu );
 
 	return rest_ensure_response( $response );
 }

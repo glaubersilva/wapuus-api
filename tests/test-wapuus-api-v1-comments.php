@@ -80,7 +80,7 @@ if ( ! class_exists( 'Wapuus_API_V1_Comments_Tests' ) ) {
 
 			$response = $this->server->dispatch( $request );
 
-			$expected = 200;
+			$expected = 201;
 			$result   = $response->get_status();
 			$this->assertEquals( $expected, $result );
 
@@ -137,9 +137,7 @@ if ( ! class_exists( 'Wapuus_API_V1_Comments_Tests' ) ) {
 			$this->assertEquals( $expected, $result );
 
 			$data     = $response->get_data();
-			$expected = true;
-			$result   = $data;
-			$this->assertEquals( $expected, $result );
+			$this->assertIsBool( $data );
 
 			$headers  = $response->get_headers();
 			$expected = $headers;

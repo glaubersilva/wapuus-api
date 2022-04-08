@@ -91,8 +91,14 @@ function wapuus_api_image_delete( $request ) {
 
 	$attachment_id = get_post_meta( $post_id, 'img', true );
 	wp_delete_attachment( $attachment_id, true );
-	wp_delete_post( $post_id, true );
 
-	$response = __( 'Deleted.', 'wapuus-api' );
+	$deleted = wp_delete_post( $post_id, true );
+
+	if ( $deleted ) {
+		$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( true );
+	} else {
+		$response = new \Wapuus_API\Src\Classes\Responses\Error\Bad_Request( false );
+	}
+
 	return rest_ensure_response( $response );
 }
