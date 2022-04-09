@@ -51,7 +51,23 @@ if ( ! class_exists( 'Password_Reset' ) ) {
 		 */
 		public function get_arguments() {
 
-			$args = array();
+			$args = array(
+				'login'    => array(
+					'description' => __( 'The username of the user object to reset the password.', 'wapuus-api' ),
+					'type'        => 'string',
+					'required'    => true,
+				),
+				'password' => array(
+					'description' => __( 'The new password of the user object.', 'wapuus-api' ),
+					'type'        => 'string',
+					'required'    => true,
+				),
+				'key'      => array(
+					'description' => __( 'The password reset key for the user object.', 'wapuus-api' ),
+					'type'        => 'string',
+					'required'    => true,
+				),
+			);
 
 			return $args;
 		}
@@ -79,7 +95,34 @@ if ( ! class_exists( 'Password_Reset' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK();
+			$login = $request['login'];
+			$key   = $request['key'];
+			$user  = get_user_by( 'login', $login );
+
+			if ( empty( $user ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'User does not exist.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			if ( wapuus_api_is_demo_user( $user ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			$check_key = check_password_reset_key( $key, $login );
+
+			if ( is_wp_error( $check_key ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Acceptable( __( 'Expired token.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			$login    = $request['login'];
+			$password = $request['password'];
+			$user     = get_user_by( 'login', $login );
+
+			reset_password( $user, $password );
+
+			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( __( 'Password has been changed.', 'wapuus-api' ) );
 
 			return rest_ensure_response( $response );
 		}

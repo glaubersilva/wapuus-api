@@ -52,7 +52,13 @@ if ( ! class_exists( 'Images_Delete' ) ) {
 		 */
 		public function get_arguments() {
 
-			$args = array();
+			$args = array(
+				'id' => array(
+					'description' => __( 'The ID of the image to delete.', 'wapuus-api' ),
+					'type'        => 'integer',
+					'required'    => true,
+				),
+			);
 
 			return $args;
 		}
@@ -65,6 +71,20 @@ if ( ! class_exists( 'Images_Delete' ) ) {
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
 		public function check_permissions( \WP_REST_Request $request ) {
+
+			$user    = wp_get_current_user();
+			$post_id = sanitize_key( $request['id'] );
+			$post    = get_post( $post_id );
+
+			if ( (int) $user->ID !== (int) $post->post_author || ! isset( $post ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			if ( wapuus_api_is_demo_user( $user ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
 
 			return true;
 		}
@@ -80,7 +100,18 @@ if ( ! class_exists( 'Images_Delete' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK();
+			$post_id = sanitize_key( $request['id'] );
+
+			$attachment_id = get_post_meta( $post_id, 'img', true );
+			wp_delete_attachment( $attachment_id, true );
+
+			$deleted = wp_delete_post( $post_id, true );
+
+			if ( $deleted ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( true );
+			} else {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\Bad_Request( false );
+			}
 
 			return rest_ensure_response( $response );
 		}

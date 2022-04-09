@@ -52,7 +52,25 @@ if ( ! class_exists( 'Users_Post' ) ) {
 		 */
 		public function get_arguments() {
 
-			$args = array();
+			$args = array(
+				'username' => array(
+					'description' => __( 'Login name for the user.', 'wapuus-api' ),
+					'type'        => 'string',
+					'required'    => true,
+				),
+				'email'    => array(
+					'description' => __( 'The email address for the user.', 'wapuus-api' ),
+					'type'        => 'string',
+					'format'      => 'email',
+					'required'    => true,
+				),
+				'url'      => array(
+					'description' => __( 'Base URL used to create the "password creation" link that is sent by email.', 'wapuus-api' ),
+					'type'        => 'string',
+					'format'      => 'uri',
+					'required'    => true,
+				),
+			);
 
 			return $args;
 		}
@@ -80,7 +98,53 @@ if ( ! class_exists( 'Users_Post' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK();
+			$email    = sanitize_email( $request['email'] );
+			$username = sanitize_text_field( $request['username'] );
+
+			if ( empty( $email ) || empty( $username ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Email and username are required.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			if ( username_exists( $username ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Acceptable( __( 'Username already in use.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			if ( email_exists( $email ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Acceptable( __( 'Email already in use.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			$url = $request['url'];
+
+			$user_id = wp_insert_user(
+				array(
+					'user_login' => $username,
+					'user_email' => $email,
+					'user_pass'  => wp_generate_password(),
+					'role'       => 'subscriber',
+				)
+			);
+
+			if ( $user_id && ! is_wp_error( $user_id ) ) {
+
+				$user    = get_user_by( 'ID', $user_id );
+				$key     = get_password_reset_key( $user );
+				$message = __( 'Use the link below to create your password:', 'wapuus-api' ) . "\r\n";
+				$url     = esc_url_raw( $url . "/?key=$key&login=" . rawurlencode( $username ) . "\r\n" );
+				$body    = $message . $url;
+
+				wp_mail( $email, __( 'Password Creation', 'wapuus-api' ), $body );
+			}
+
+			$user = array(
+				'id'       => $user_id,
+				'username' => $username,
+				'email'    => $email,
+			);
+
+			$response = new \Wapuus_API\Src\Classes\Responses\Valid\Created( $user );
 
 			return rest_ensure_response( $response );
 		}

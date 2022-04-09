@@ -52,7 +52,20 @@ if ( ! class_exists( 'Images_Get' ) ) {
 		 */
 		public function get_arguments() {
 
-			$args = array();
+			$args = array(
+				'_total' => array(
+					'description' => __( 'Total number of images per page - if not set, the default value is 6.', 'wapuus-api' ),
+					'type'        => 'integer',
+				),
+				'_page'  => array(
+					'description' => __( 'The number of the page to retrieve - if not set, the default value is 1.', 'wapuus-api' ),
+					'type'        => 'integer',
+				),
+				'_user'  => array(
+					'description' => __( 'The ID or username of the user object to retrieve the images - if not set, returns images from all users.', 'wapuus-api' ),
+					'type'        => 'string',
+				),
+			);
 
 			return $args;
 		}
@@ -80,7 +93,45 @@ if ( ! class_exists( 'Images_Get' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK();
+			if ( isset( $request['_user'] ) && ! is_numeric( $request['_user'] ) ) {
+
+				$user = get_user_by( 'login', sanitize_text_field( $request['_user'] ) );
+
+				if ( ! $user ) {
+
+					$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'User not found.', 'wapuus-api' ) );
+					return rest_ensure_response( $response );
+				}
+			}
+
+			$_total = isset( $request['_total'] ) ? sanitize_text_field( $request['_total'] ) : 6;
+			$_page  = isset( $request['_page'] ) ? sanitize_text_field( $request['_page'] ) : 1;
+			$_user  = isset( $request['_user'] ) ? sanitize_text_field( $request['_user'] ) : 0;
+
+			if ( ! is_numeric( $_user ) ) {
+				$user  = get_user_by( 'login', $_user );
+				$_user = $user->ID;
+			}
+
+			$args = array(
+				'post_type'      => 'wapuu',
+				'author'         => $_user,
+				'posts_per_page' => $_total,
+				'paged'          => $_page,
+			);
+
+			$query = new \WP_Query( $args );
+			$posts = $query->posts;
+
+			$images = array();
+
+			if ( $posts ) {
+				foreach ( $posts as $post ) {
+					$images[] = wapuus_api_get_post_data( $post );
+				}
+			}
+
+			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( $images );
 
 			return rest_ensure_response( $response );
 		}

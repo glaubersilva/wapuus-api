@@ -66,6 +66,11 @@ if ( ! class_exists( 'Users_Get' ) ) {
 		 */
 		public function check_permissions( \WP_REST_Request $request ) {
 
+			if ( ! is_user_logged_in() ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
 			return true;
 		}
 
@@ -80,7 +85,15 @@ if ( ! class_exists( 'Users_Get' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK();
+			$user = wp_get_current_user();
+
+			$user = array(
+				'id'       => $user->ID,
+				'username' => $user->user_login,
+				'email'    => $user->user_email,
+			);
+
+			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( $user );
 
 			return rest_ensure_response( $response );
 		}

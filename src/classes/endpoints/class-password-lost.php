@@ -51,7 +51,19 @@ if ( ! class_exists( 'Password_Lost' ) ) {
 		 */
 		public function get_arguments() {
 
-			$args = array();
+			$args = array(
+				'login' => array(
+					'description' => __( 'The username of the user object to reset the password.', 'wapuus-api' ),
+					'type'        => 'string',
+					'required'    => true,
+				),
+				'url'   => array(
+					'description' => __( 'Base URL used to create the "reset password" link that is sent by email.', 'wapuus-api' ),
+					'type'        => 'string',
+					'format'      => 'uri',
+					'required'    => true,
+				),
+			);
 
 			return $args;
 		}
@@ -79,7 +91,46 @@ if ( ! class_exists( 'Password_Lost' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK();
+			$login = $request['login'];
+
+			if ( empty( $login ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Email or username are required.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			$user = get_user_by( 'email', $login );
+
+			if ( empty( $user ) ) {
+				$user = get_user_by( 'login', $login );
+			}
+
+			if ( empty( $user ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'User does not exist.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			if ( wapuus_api_is_demo_user( $user ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			$url  = $request['url'];
+			$user = get_user_by( 'email', $login );
+
+			if ( empty( $user ) ) {
+				$user = get_user_by( 'login', $login );
+			}
+
+			$user_login = $user->user_login;
+			$user_email = $user->user_email;
+			$key        = get_password_reset_key( $user );
+			$message    = __( 'Use the link below to reset your password:', 'wapuus-api' ) . "\r\n";
+			$url        = esc_url_raw( $url . "/?key=$key&login=" . rawurlencode( $user_login ) . "\r\n" );
+			$body       = $message . $url;
+
+			wp_mail( $user_email, __( 'Password Reset', 'wapuus-api' ), $body );
+
+			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( __( 'Email sent.', 'wapuus-api' ) );
 
 			return rest_ensure_response( $response );
 		}

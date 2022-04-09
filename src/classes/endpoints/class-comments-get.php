@@ -52,7 +52,13 @@ if ( ! class_exists( 'Comments_Get' ) ) {
 		 */
 		public function get_arguments() {
 
-			$args = array();
+			$args = array(
+				'id' => array(
+					'description' => __( 'The ID of the image object to retrieve the comments.', 'wapuus-api' ),
+					'type'        => 'integer',
+					'required'    => true,
+				),
+			);
 
 			return $args;
 		}
@@ -80,7 +86,19 @@ if ( ! class_exists( 'Comments_Get' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK();
+			$post_id = sanitize_key( $request['id'] );
+
+			$comments = get_comments(
+				array(
+					'post_id' => $post_id,
+				)
+			);
+
+			foreach ( $comments as $key => $comment ) {
+				$comments[ $key ] = wapuus_api_get_comment_data( $comment );
+			}
+
+			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( $comments );
 
 			return rest_ensure_response( $response );
 		}

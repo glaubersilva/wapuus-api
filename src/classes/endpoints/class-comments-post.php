@@ -52,7 +52,18 @@ if ( ! class_exists( 'Comments_Post' ) ) {
 		 */
 		public function get_arguments() {
 
-			$args = array();
+			$args = array(
+				'id'      => array(
+					'description' => __( 'The ID of the image object that will receive the comment.', 'wapuus-api' ),
+					'type'        => 'integer',
+					'required'    => true,
+				),
+				'comment' => array(
+					'description' => __( 'The content of the comment.', 'wapuus-api' ),
+					'type'        => 'string',
+					'required'    => true,
+				),
+			);
 
 			return $args;
 		}
@@ -65,6 +76,16 @@ if ( ! class_exists( 'Comments_Post' ) ) {
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
 		public function check_permissions( \WP_REST_Request $request ) {
+
+			if ( ! is_user_logged_in() ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			if ( wapuus_api_is_demo_user( get_current_user_id() ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
 
 			return true;
 		}
@@ -80,7 +101,28 @@ if ( ! class_exists( 'Comments_Post' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK();
+				$comment = sanitize_textarea_field( $request['comment'] );
+
+			if ( empty( $comment ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'The comment is required.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			$user    = wp_get_current_user();
+			$post_id = sanitize_key( $request['id'] );
+
+			$new_wp_comment = array(
+				'user_id'         => $user->ID,
+				'comment_author'  => $user->user_login,
+				'comment_content' => $comment,
+				'comment_post_ID' => $post_id,
+			);
+
+			$comment_id = wp_insert_comment( $new_wp_comment );
+			$comment    = get_comment( $comment_id );
+			$comment    = wapuus_api_get_comment_data( $comment );
+
+			$response = new \Wapuus_API\Src\Classes\Responses\Valid\Created( $comment );
 
 			return rest_ensure_response( $response );
 		}

@@ -52,7 +52,13 @@ if ( ! class_exists( 'Images_Get_One' ) ) {
 		 */
 		public function get_arguments() {
 
-			$args = array();
+			$args = array(
+				'id' => array(
+					'description' => __( 'The ID of the image to retrieve.', 'wapuus-api' ),
+					'type'        => 'integer',
+					'required'    => true,
+				),
+			);
 
 			return $args;
 		}
@@ -80,7 +86,36 @@ if ( ! class_exists( 'Images_Get_One' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK();
+			$post_id = sanitize_key( $request['id'] );
+			$post    = get_post( $post_id );
+
+			if ( ! isset( $post ) || empty( $post_id ) ) {
+				$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'Image not found.', 'wapuus-api' ) );
+				return rest_ensure_response( $response );
+			}
+
+			$image          = wapuus_api_get_post_data( $post );
+			$image['views'] = (int) $image['views'] + 1;
+
+			update_post_meta( $post_id, 'views', $image['views'] );
+
+			$comments = get_comments(
+				array(
+					'post_id' => $post_id,
+					'order'   => 'ASC',
+				)
+			);
+
+			foreach ( $comments as $key => $comment ) {
+				$comments[ $key ] = wapuus_api_get_comment_data( $comment );
+			}
+
+			$image = array(
+				'image'    => $image,
+				'comments' => $comments,
+			);
+
+			$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( $image );
 
 			return rest_ensure_response( $response );
 		}
