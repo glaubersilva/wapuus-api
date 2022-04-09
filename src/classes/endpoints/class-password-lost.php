@@ -39,7 +39,7 @@ if ( ! class_exists( 'Password_Lost' ) ) {
 		 * Method (POST, GET, DELETE etc.) implemented for the "password lost" endpoint.
 		 */
 		public function get_methods() {
-			return \WP_REST_Server::READABLE;
+			return \WP_REST_Server::CREATABLE;
 		}
 
 		/**

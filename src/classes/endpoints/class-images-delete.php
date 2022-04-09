@@ -25,7 +25,7 @@ if ( ! class_exists( 'Images_Delete' ) ) {
 		 * Route for the "image delete" endpoint.
 		 */
 		public function get_path() {
-			return '/' . Images_Resource::get_instance()->name();
+			return '/' . Images_Resource::get_instance()->name() . '/(?P<id>[0-9]+)';
 		}
 
 		/**
@@ -40,7 +40,7 @@ if ( ! class_exists( 'Images_Delete' ) ) {
 		 * Method (POST, GET, DELETE etc.) implemented for the "image delete" endpoint.
 		 */
 		public function get_methods() {
-			return \WP_REST_Server::READABLE;
+			return \WP_REST_Server::DELETABLE;
 		}
 
 		/**

@@ -40,7 +40,7 @@ if ( ! class_exists( 'Images_Post' ) ) {
 		 * Method (POST, GET, DELETE etc.) implemented for the "image post" endpoint.
 		 */
 		public function get_methods() {
-			return \WP_REST_Server::READABLE;
+			return \WP_REST_Server::CREATABLE;
 		}
 
 		/**

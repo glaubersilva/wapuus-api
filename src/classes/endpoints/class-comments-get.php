@@ -25,7 +25,7 @@ if ( ! class_exists( 'Comments_Get' ) ) {
 		 * Route for the "comment get" endpoint.
 		 */
 		public function get_path() {
-			return '/' . Comments_Resource::get_instance()->name();
+			return '/' . Comments_Resource::get_instance()->name() . '/(?P<id>[0-9]+)';
 		}
 
 		/**

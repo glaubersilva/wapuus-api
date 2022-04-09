@@ -40,7 +40,7 @@ if ( ! class_exists( 'Users_Post' ) ) {
 		 * Method (POST, GET, DELETE etc.) implemented for the "user post" endpoint.
 		 */
 		public function get_methods() {
-			return \WP_REST_Server::READABLE;
+			return \WP_REST_Server::CREATABLE;
 		}
 
 		/**

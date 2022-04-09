@@ -25,7 +25,7 @@ if ( ! class_exists( 'Images_Get_One' ) ) {
 		 * Route for the "image get" endpoint.
 		 */
 		public function get_path() {
-			return '/' . Images_Resource::get_instance()->name();
+			return '/' . Images_Resource::get_instance()->name() . '/(?P<id>[0-9]+)';
 		}
 
 		/**

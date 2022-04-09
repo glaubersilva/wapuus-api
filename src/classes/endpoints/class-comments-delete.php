@@ -25,7 +25,7 @@ if ( ! class_exists( 'Comments_Delete' ) ) {
 		 * Route for the "comment delete" endpoint.
 		 */
 		public function get_path() {
-			return '/' . Comments_Resource::get_instance()->name();
+			return '/' . Comments_Resource::get_instance()->name() . '/(?P<id>[0-9]+)';
 		}
 
 		/**
@@ -40,7 +40,7 @@ if ( ! class_exists( 'Comments_Delete' ) ) {
 		 * Method (POST, GET, DELETE etc.) implemented for the "comment delete" endpoint.
 		 */
 		public function get_methods() {
-			return \WP_REST_Server::READABLE;
+			return \WP_REST_Server::DELETABLE;
 		}
 
 		/**
