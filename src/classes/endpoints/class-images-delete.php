@@ -14,12 +14,12 @@ defined( 'ABSPATH' ) || exit;
 use Wapuus_API\Src\Classes\Endpoints\Abstract_Endpoint;
 use Wapuus_API\Src\Classes\Schemas\Images_Resource;
 
-if ( ! class_exists( 'Images_Get' ) ) {
+if ( ! class_exists( 'Images_Delete' ) ) {
 
 	/**
 	 * The "image delete" endpoint class.
 	 */
-	class Images_Get extends Abstract_Endpoint {
+	class Images_Delete extends Abstract_Endpoint {
 
 		/**
 		 * Route for the "image delete" endpoint.
