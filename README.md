@@ -8,7 +8,8 @@ In the **wp-config.php** file you can set the following options:
 
 ```php
 /**
- * Values: true or your local development address as 'http://localhost:3000'
+ * BLock API access from non authorized domains.
+ * Acceptable values: true or your local development address as 'http://localhost:3000'
  */
 define( 'WAPUUS_API_RESTRICTED_MODE', 'http://localhost:3000' );
 
