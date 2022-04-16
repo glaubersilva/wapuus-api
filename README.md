@@ -1,4 +1,4 @@
-# Wapuus API (WP Plugin)
+# Wapuus API - WordPress Plugin
 
 For local development, install the [Local WP](https://localwp.com/ "Local WP Homepage") and create a local WordPress website with the following domain: **wapuus-api.local**
 
