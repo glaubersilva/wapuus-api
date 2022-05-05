@@ -73,7 +73,7 @@ if ( ! class_exists( 'Images_Delete' ) ) {
 		public function check_permissions( \WP_REST_Request $request ) {
 
 			$user    = wp_get_current_user();
-			$post_id = sanitize_key( $request['id'] );
+			$post_id = absint( $request['id'] );
 			$post    = get_post( $post_id );
 
 			if ( (int) $user->ID !== (int) $post->post_author || ! isset( $post ) ) {
@@ -100,7 +100,7 @@ if ( ! class_exists( 'Images_Delete' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$post_id = sanitize_key( $request['id'] );
+			$post_id = absint( $request['id'] );
 
 			$attachment_id = get_post_meta( $post_id, 'img', true );
 			wp_delete_attachment( $attachment_id, true );

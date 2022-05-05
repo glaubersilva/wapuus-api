@@ -99,7 +99,7 @@ if ( ! class_exists( 'Users_Post' ) ) {
 		public function respond( \WP_REST_Request $request ) {
 
 			$email    = sanitize_email( $request['email'] );
-			$username = sanitize_text_field( $request['username'] );
+			$username = sanitize_user( $request['username'] );
 
 			if ( empty( $email ) || empty( $username ) ) {
 				$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Email and username are required.', 'wapuus-api' ) );

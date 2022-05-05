@@ -75,7 +75,7 @@ function wapuus_api_image_get_permissions_check( $request ) {
  */
 function wapuus_api_image_get( $request ) {
 
-	$post_id = sanitize_key( $request['id'] );
+	$post_id = absint( $request['id'] );
 	$post    = get_post( $post_id );
 
 	if ( ! isset( $post ) || empty( $post_id ) ) {

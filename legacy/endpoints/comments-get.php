@@ -74,7 +74,7 @@ function wapuus_api_comments_get_permissions_check( $request ) {
  */
 function wapuus_api_comments_get( $request ) {
 
-	$post_id = sanitize_key( $request['id'] );
+	$post_id = absint( $request['id'] );
 
 	$comments = get_comments(
 		array(

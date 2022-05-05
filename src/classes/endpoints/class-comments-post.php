@@ -101,7 +101,7 @@ if ( ! class_exists( 'Comments_Post' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-				$comment = sanitize_textarea_field( $request['comment'] );
+			$comment = sanitize_textarea_field( $request['comment'] );
 
 			if ( empty( $comment ) ) {
 				$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'The comment is required.', 'wapuus-api' ) );
@@ -109,7 +109,7 @@ if ( ! class_exists( 'Comments_Post' ) ) {
 			}
 
 			$user    = wp_get_current_user();
-			$post_id = sanitize_key( $request['id'] );
+			$post_id = absint( $request['id'] );
 
 			$new_wp_comment = array(
 				'user_id'         => $user->ID,

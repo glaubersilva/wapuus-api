@@ -91,7 +91,7 @@ if ( ! class_exists( 'Password_Lost' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$login = $request['login'];
+			$login = sanitize_user( $request['login'] );
 
 			if ( empty( $login ) ) {
 				$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Email or username are required.', 'wapuus-api' ) );

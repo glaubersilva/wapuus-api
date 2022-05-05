@@ -95,8 +95,8 @@ if ( ! class_exists( 'Password_Reset' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$login = $request['login'];
-			$key   = $request['key'];
+			$login = sanitize_user( $request['login'] );
+			$key   = sanitize_text_field( $request['key'] );
 			$user  = get_user_by( 'login', $login );
 
 			if ( empty( $user ) ) {
@@ -116,8 +116,7 @@ if ( ! class_exists( 'Password_Reset' ) ) {
 				return rest_ensure_response( $response );
 			}
 
-			$login    = $request['login'];
-			$password = $request['password'];
+			$password = sanitize_text_field( $request['password'] );
 			$user     = get_user_by( 'login', $login );
 
 			reset_password( $user, $password );

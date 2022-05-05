@@ -73,7 +73,7 @@ if ( ! class_exists( 'Comments_Delete' ) ) {
 		public function check_permissions( \WP_REST_Request $request ) {
 
 			$user       = wp_get_current_user();
-			$comment_id = sanitize_key( $request['id'] );
+			$comment_id = absint( $request['id'] );
 			$comment    = get_comment( $comment_id );
 
 			if ( (int) $user->ID !== (int) $comment->user_id || ! isset( $comment ) ) {
@@ -100,7 +100,7 @@ if ( ! class_exists( 'Comments_Delete' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$comment_id = sanitize_key( $request['id'] );
+			$comment_id = absint( $request['id'] );
 			$deleted    = wp_delete_comment( $comment_id, true );
 
 			if ( $deleted ) {

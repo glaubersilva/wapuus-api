@@ -86,7 +86,7 @@ if ( ! class_exists( 'Comments_Get' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$post_id = sanitize_key( $request['id'] );
+			$post_id = absint( $request['id'] );
 
 			$comments = get_comments(
 				array(

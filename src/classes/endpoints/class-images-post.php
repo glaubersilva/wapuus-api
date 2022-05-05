@@ -119,10 +119,13 @@ if ( ! class_exists( 'Images_Post' ) ) {
 			$files = $request->get_file_params();
 			$name  = sanitize_text_field( $request['name'] );
 
-			if ( empty( $name ) || empty( $files ) ) {
+			if ( empty( $name ) || ! isset( $files['img'] ) ) {
 				$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Image and name are required.', 'wapuus-api' ) );
 				return rest_ensure_response( $response );
 			}
+
+			$files['img']['name'] = sanitize_file_name( $files['img']['name'] );
+			$files['img']['type'] = sanitize_mime_type( $files['img']['type'] );
 
 			$allowed_image_types = array(
 				'jpg'  => 'image/jpg',

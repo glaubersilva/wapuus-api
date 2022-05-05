@@ -97,7 +97,7 @@ function wapuus_api_comment_post( $request ) {
 	}
 
 	$user    = wp_get_current_user();
-	$post_id = sanitize_key( $request['id'] );
+	$post_id = absint( $request['id'] );
 
 	$new_wp_comment = array(
 		'user_id'         => $user->ID,

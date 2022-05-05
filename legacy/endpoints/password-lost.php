@@ -76,7 +76,7 @@ function wapuus_api_password_lost_permissions_check( $request ) {
  */
 function wapuus_api_password_lost( $request ) {
 
-	$login = $request['login'];
+	$login = sanitize_user( $request['login'] );
 
 	if ( empty( $login ) ) {
 		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Email or username are required.', 'wapuus-api' ) );

@@ -84,7 +84,7 @@ function wapuus_api_images_get( $request ) {
 
 	if ( isset( $request['_user'] ) && ! is_numeric( $request['_user'] ) ) {
 
-		$user = get_user_by( 'login', sanitize_text_field( $request['_user'] ) );
+		$user = get_user_by( 'login', sanitize_user( $request['_user'] ) );
 
 		if ( ! $user ) {
 
@@ -95,7 +95,7 @@ function wapuus_api_images_get( $request ) {
 
 	$_total = isset( $request['_total'] ) ? sanitize_text_field( $request['_total'] ) : 6;
 	$_page  = isset( $request['_page'] ) ? sanitize_text_field( $request['_page'] ) : 1;
-	$_user  = isset( $request['_user'] ) ? sanitize_text_field( $request['_user'] ) : 0;
+	$_user  = isset( $request['_user'] ) ? sanitize_user( $request['_user'] ) : 0;
 
 	if ( ! is_numeric( $_user ) ) {
 		$user  = get_user_by( 'login', $_user );

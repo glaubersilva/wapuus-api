@@ -60,7 +60,7 @@ function wapuus_api_image_delete_args() {
 function wapuus_api_image_delete_permissions_check( $request ) {
 
 	$user    = wp_get_current_user();
-	$post_id = sanitize_key( $request['id'] );
+	$post_id = absint( $request['id'] );
 	$post    = get_post( $post_id );
 
 	if ( (int) $user->ID !== (int) $post->post_author || ! isset( $post ) ) {
@@ -87,7 +87,7 @@ function wapuus_api_image_delete_permissions_check( $request ) {
  */
 function wapuus_api_image_delete( $request ) {
 
-	$post_id = sanitize_key( $request['id'] );
+	$post_id = absint( $request['id'] );
 
 	$attachment_id = get_post_meta( $post_id, 'img', true );
 	wp_delete_attachment( $attachment_id, true );

@@ -86,7 +86,7 @@ if ( ! class_exists( 'Images_Get_One' ) ) {
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$post_id = sanitize_key( $request['id'] );
+			$post_id = absint( $request['id'] );
 			$post    = get_post( $post_id );
 
 			if ( ! isset( $post ) || empty( $post_id ) ) {
