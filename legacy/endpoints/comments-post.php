@@ -18,7 +18,7 @@ function wapuus_api_register_comment_post() {
 		'wapuus-api/v1',
 		'/comments/(?P<id>[0-9]+)',
 		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the route accepts.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Comments_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
+			'schema' => array( \Wapuus_API\Src\Core\Schemas\Comments_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'args'                => wapuus_api_comment_post_args(),
@@ -66,12 +66,12 @@ function wapuus_api_comment_post_args() {
 function wapuus_api_comment_post_permissions_check( $request ) {
 
 	if ( ! is_user_logged_in() ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( wapuus_api_is_demo_user( get_current_user_id() ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -92,7 +92,7 @@ function wapuus_api_comment_post( $request ) {
 	$comment = sanitize_textarea_field( $request['comment'] );
 
 	if ( empty( $comment ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'The comment is required.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\Incomplete_Data( __( 'The comment is required.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -110,7 +110,7 @@ function wapuus_api_comment_post( $request ) {
 	$comment    = get_comment( $comment_id );
 	$comment    = wapuus_api_get_comment_data( $comment );
 
-	$response = new \Wapuus_API\Src\Classes\Responses\Valid\Created( $comment );
+	$response = new \Wapuus_API\Src\Core\Responses\Valid\Created( $comment );
 
 	return rest_ensure_response( $response );
 }

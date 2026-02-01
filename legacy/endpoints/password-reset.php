@@ -85,19 +85,19 @@ function wapuus_api_password_reset( $request ) {
 	$user  = get_user_by( 'login', $login );
 
 	if ( empty( $user ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'User does not exist.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\Not_Found( __( 'User does not exist.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( wapuus_api_is_demo_user( $user ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	$check_key = check_password_reset_key( $key, $login );
 
 	if ( is_wp_error( $check_key ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Acceptable( __( 'Expired token.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\Not_Acceptable( __( 'Expired token.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -106,7 +106,7 @@ function wapuus_api_password_reset( $request ) {
 
 	reset_password( $user, $password );
 
-	$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( __( 'Password has been changed.', 'wapuus-api' ) );
+	$response = new \Wapuus_API\Src\Core\Responses\Valid\OK( __( 'Password has been changed.', 'wapuus-api' ) );
 
 	return rest_ensure_response( $response );
 }
