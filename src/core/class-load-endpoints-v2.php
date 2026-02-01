@@ -11,57 +11,80 @@
 
 namespace Wapuus_API\Src\Core;
 
+use Wapuus_API\Src\Core\Endpoints\Comments_Delete;
+use Wapuus_API\Src\Core\Endpoints\Comments_Get;
+use Wapuus_API\Src\Core\Endpoints\Comments_Post;
+use Wapuus_API\Src\Core\Endpoints\Images_Delete;
+use Wapuus_API\Src\Core\Endpoints\Images_Get;
+use Wapuus_API\Src\Core\Endpoints\Images_Get_One;
+use Wapuus_API\Src\Core\Endpoints\Images_Post;
+use Wapuus_API\Src\Core\Endpoints\Password_Lost;
+use Wapuus_API\Src\Core\Endpoints\Password_Reset;
+use Wapuus_API\Src\Core\Endpoints\Sample_Rest_Posts_Controller;
+use Wapuus_API\Src\Core\Endpoints\Stats_Get;
+use Wapuus_API\Src\Core\Endpoints\Users_Get;
+use Wapuus_API\Src\Core\Endpoints\Users_Post;
+
 defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Load_Endpoints_V2' ) ) {
 
 	/**
 	 * This class loads the API V2 endpoints.
+	 *
+	 * Endpoints are registered explicitly to avoid accidentally loading
+	 * non-endpoint classes (e.g. service providers) from the same directory.
 	 */
 	class Load_Endpoints_V2 {
 
 		/**
-		 * The list of implemented endpoint classes.
+		 * Endpoint classes (implement Endpoint interface).
+		 * "Endpoint Wrap" approach: https://carlalexander.ca/designing-system-wordpress-rest-api-endpoints/
 		 *
-		 * @var array
+		 * @var string[]
+		 */
+		private $endpoint_classes = array(
+			Comments_Delete::class,
+			Comments_Get::class,
+			Comments_Post::class,
+			Images_Delete::class,
+			Images_Get::class,
+			Images_Get_One::class,
+			Images_Post::class,
+			Password_Lost::class,
+			Password_Reset::class,
+			Stats_Get::class,
+			Users_Get::class,
+			Users_Post::class,
+		);
+
+		/**
+		 * REST Controller classes (WP_REST_Controller approach).
+		 * https://developer.wordpress.org/rest-api/extending-the-rest-api/controller-classes/
+		 *
+		 * @var string[]
+		 */
+		private $controller_classes = array(
+			Sample_Rest_Posts_Controller::class,
+		);
+
+		/**
+		 * Instances of endpoint classes to register.
+		 *
+		 * @var \Wapuus_API\Src\Interfaces\Endpoint[]
 		 */
 		private $endpoints = array();
 
 		/**
-		 * Initializes all "Rest controller" and "Endpoint" classes automatically.
+		 * Initializes and registers endpoints explicitly.
 		 */
 		public function __construct() {
+			foreach ( $this->controller_classes as $controller_class ) {
+				new $controller_class();
+			}
 
-			$dir = new \DirectoryIterator( WAPUUS_API_DIR . '/src/core/endpoints/' );
-
-			foreach ( $dir as $file_info ) {
-
-				if ( ! $file_info->isDot() && false === strpos( strtolower( $file_info ), 'abstract' ) ) {
-
-					$class_name = $file_info->getFilename();
-					$class_name = str_replace( 'class-', '', $class_name );
-					$class_name = str_replace( '.php', '', $class_name );
-					$class_name = str_replace( '-', '_', $class_name );
-					$class_name = '\Wapuus_API\Src\Core\Endpoints\\' . $class_name;
-
-					if ( false !== strpos( strtolower( $file_info ), 'controller' ) ) {
-
-						/**
-						 * The "REST Controller" class approach.
-						 * https://developer.wordpress.org/rest-api/extending-the-rest-api/controller-classes/
-						 */
-						new $class_name();
-
-					} else {
-
-						/**
-						 * The "Endpoint Wrap" class approach.
-						 * https://carlalexander.ca/designing-system-wordpress-rest-api-endpoints/
-						 */
-						array_push( $this->endpoints, new $class_name() );
-
-					}
-				}
+			foreach ( $this->endpoint_classes as $endpoint_class ) {
+				$this->endpoints[] = new $endpoint_class();
 			}
 
 			add_action( 'rest_api_init', array( $this, 'register_endpoints' ) );
