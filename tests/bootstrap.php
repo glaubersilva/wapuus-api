@@ -2,46 +2,46 @@
 /**
  * PHPUnit bootstrap file.
  *
+ * Uses wp-tests-config.php for environment (DB, ABSPATH) and WordPress
+ * test suite from vendor (Composer). Same pattern as GiveWP.
+ *
  * @package Wapuus_API
  * @author Glauber Silva <info@glaubersilva.me>
  * @link https://glaubersilva.me/
  */
 
-/**
- * Set of polyfills for changed PHPUnit functionality to allow
- * for creating PHPUnit cross-version compatible tests.
- *
- * @link https://github.com/Yoast/PHPUnit-Polyfills
- */
-require dirname( dirname( __FILE__ ) ) . '/vendor/yoast/phpunit-polyfills/phpunitpolyfills-autoload.php';
+require dirname( __DIR__ ) . '/vendor/autoload.php';
 
-if ( PHP_MAJOR_VERSION >= 8 ) {
-	echo 'The scaffolded tests cannot currently be run on PHP 8.0+. See https://github.com/wp-cli/scaffold-command/issues/285' . PHP_EOL; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+$wp_tests_config = __DIR__ . '/wp-tests-config.php';
+
+if ( ! file_exists( $wp_tests_config ) ) {
+	echo 'wp-tests-config.php not found. Copy tests/wp-tests-config.dist.php to tests/wp-tests-config.php and set your DB credentials.' . PHP_EOL;
 	exit( 1 );
 }
 
-$_tests_dir = getenv( 'WP_TESTS_DIR' );
+define( 'WP_TESTS_CONFIG_FILE_PATH', $wp_tests_config );
 
-if ( ! $_tests_dir ) {
-	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
+// Ensure wp-content/uploads exists and is writable (vendor WordPress does not include it; WP_UnitTestCase and media_handle_sideload need it).
+$wp_uploads_dir = dirname( __DIR__ ) . '/vendor/wordpress/wordpress/src/wp-content/uploads';
+if ( ! is_dir( $wp_uploads_dir ) ) {
+	mkdir( $wp_uploads_dir, 0755, true );
+}
+// Create year/month subdir so wp_upload_dir() and media_handle_sideload() can write (same as bash install).
+$wp_uploads_subdir = $wp_uploads_dir . '/' . gmdate( 'Y' ) . '/' . gmdate( 'm' );
+if ( ! is_dir( $wp_uploads_subdir ) ) {
+	mkdir( $wp_uploads_subdir, 0755, true );
 }
 
-if ( ! file_exists( "{$_tests_dir}/includes/functions.php" ) ) {
-	echo "Could not find {$_tests_dir}/includes/functions.php, have you run bin/install-wp-tests.sh ?" . PHP_EOL; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	exit( 1 );
+// Pre-register plugin load (WordPress test bootstrap will run muplugins_loaded later).
+if ( ! isset( $GLOBALS['wp_filter'] ) ) {
+	$GLOBALS['wp_filter'] = array();
 }
+$plugin_loader = function () {
+	require dirname( __DIR__ ) . '/wapuus-api.php';
+};
+$GLOBALS['wp_filter']['muplugins_loaded'][10]['wapuus_api_plugin'] = array(
+	'function'      => $plugin_loader,
+	'accepted_args' => 1,
+);
 
-// Give access to tests_add_filter() function.
-require_once "{$_tests_dir}/includes/functions.php";
-
-/**
- * Manually load the plugin being tested.
- */
-function _manually_load_plugin() {
-	require dirname( dirname( __FILE__ ) ) . '/wapuus-api.php';
-}
-
-tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
-
-// Start up the WP testing environment.
-require "{$_tests_dir}/includes/bootstrap.php";
+require dirname( __DIR__ ) . '/vendor/wordpress/wordpress/tests/phpunit/includes/bootstrap.php';

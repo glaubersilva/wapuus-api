@@ -1,2 +1,28 @@
+# Dependencies
 /vendor
+
+# Tests
 .phpunit.result.cache
+tests/wp-tests-config.php
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE / Editor
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Logs & temp
+*.log
+*.tmp
+.cache/
