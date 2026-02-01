@@ -3,6 +3,28 @@
         "wp-coding-standards/wpcs": "^2.3",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
         "phpunit/phpunit": "^9",
-        "yoast/phpunit-polyfills": "^1.0"
+        "yoast/phpunit-polyfills": "^1.0",
+        "wordpress/wordpress": "dev-trunk"
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit --colors",
+        "tests": "./vendor/bin/phpunit --colors",
+        "post-install-cmd": [
+            "@php -r \"file_exists('tests/wp-tests-config.php') || copy('tests/wp-tests-config.dist.php', 'tests/wp-tests-config.php');\""
+        ],
+        "post-update-cmd": [
+            "@php -r \"file_exists('tests/wp-tests-config.php') || copy('tests/wp-tests-config.dist.php', 'tests/wp-tests-config.php');\""
+        ]
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/wordpress/wordpress-develop.git"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace Wapuus_API\Tests;
 
 defined( 'ABSPATH' ) || exit;
 
-use Wapuus_API\Src\Classes\Wapuus_Custom_Post_Type;
+use Wapuus_API\Src\Core\Wapuus_Custom_Post_Type;
 use Yoast\PHPUnitPolyfills\Polyfills\AssertIsType;
 
 if ( ! class_exists( 'Unit_Test_Case' ) ) {

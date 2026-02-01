@@ -18,7 +18,7 @@ function wapuus_api_register_images_get() {
 		'wapuus-api/v1',
 		'/images',
 		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the route accepts.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
+			'schema' => array( \Wapuus_API\Src\Core\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'args'                => wapuus_api_images_get_args(),
@@ -88,7 +88,7 @@ function wapuus_api_images_get( $request ) {
 
 		if ( ! $user ) {
 
-			$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Found( __( 'User not found.', 'wapuus-api' ) );
+			$response = new \Wapuus_API\Src\Core\Responses\Error\Not_Found( __( 'User not found.', 'wapuus-api' ) );
 			return rest_ensure_response( $response );
 		}
 	}
@@ -120,7 +120,7 @@ function wapuus_api_images_get( $request ) {
 		}
 	}
 
-	$response = new \Wapuus_API\Src\Classes\Responses\Valid\OK( $images );
+	$response = new \Wapuus_API\Src\Core\Responses\Valid\OK( $images );
 
 	return rest_ensure_response( $response );
 }

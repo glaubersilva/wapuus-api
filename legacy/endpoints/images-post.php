@@ -18,7 +18,7 @@ function wapuus_api_register_image_post() {
 		'wapuus-api/v1',
 		'/images',
 		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the route accepts.
-			'schema' => array( \Wapuus_API\Src\Classes\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
+			'schema' => array( \Wapuus_API\Src\Core\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'args'                => wapuus_api_image_post_args(),
@@ -80,12 +80,12 @@ function wapuus_api_image_post_args() {
 function wapuus_api_image_post_permissions_check( $request ) {
 
 	if ( ! is_user_logged_in() ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( wapuus_api_is_demo_user( get_current_user_id() ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -107,7 +107,7 @@ function wapuus_api_image_post( $request ) {
 	$name  = sanitize_text_field( $request['name'] );
 
 	if ( empty( $name ) || ! isset( $files['img'] ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\Incomplete_Data( __( 'Image and name are required.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\Incomplete_Data( __( 'Image and name are required.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -121,7 +121,7 @@ function wapuus_api_image_post( $request ) {
 	);
 
 	if ( ! in_array( strtolower( $files['img']['type'] ), $allowed_image_types, true ) ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\Unsupported_Media_Type( __( 'Invalide Image.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\Unsupported_Media_Type( __( 'Invalide Image.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -134,7 +134,7 @@ function wapuus_api_image_post( $request ) {
 	$file_size = round( $file_size / pow( 1024, 2 ), 2 );
 
 	if ( $file_size > 1 ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Acceptable( __( 'The image is greater than 1MB - the maximum size allowed.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\Not_Acceptable( __( 'The image is greater than 1MB - the maximum size allowed.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -143,7 +143,7 @@ function wapuus_api_image_post( $request ) {
 	$img_height = $img_size[1];
 
 	if ( $img_width < 1000 || $img_height < 1000 ) {
-		$response = new \Wapuus_API\Src\Classes\Responses\Error\Not_Acceptable( __( 'The image should have at least 1000px X 1000px of dimensions.', 'wapuus-api' ) );
+		$response = new \Wapuus_API\Src\Core\Responses\Error\Not_Acceptable( __( 'The image should have at least 1000px X 1000px of dimensions.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -209,7 +209,7 @@ function wapuus_api_image_post( $request ) {
 
 	$wapuu = wapuus_api_get_post_data( $post_id );
 
-	$response = new \Wapuus_API\Src\Classes\Responses\Valid\Created( $wapuu );
+	$response = new \Wapuus_API\Src\Core\Responses\Valid\Created( $wapuu );
 
 	return rest_ensure_response( $response );
 }
