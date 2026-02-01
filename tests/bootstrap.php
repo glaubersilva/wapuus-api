@@ -45,3 +45,7 @@ $GLOBALS['wp_filter']['muplugins_loaded'][10]['wapuus_api_plugin'] = array(
 );
 
 require dirname( __DIR__ ) . '/vendor/wordpress/wordpress/tests/phpunit/includes/bootstrap.php';
+
+// Base test case classes (must be loaded before test files under legacy/ and src/).
+require_once __DIR__ . '/class-unit-test-case.php';
+require_once __DIR__ . '/class-unit-api-test-case.php';

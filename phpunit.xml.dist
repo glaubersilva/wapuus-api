@@ -8,8 +8,11 @@
 	convertWarningsToExceptions="true"
 >
 	<testsuites>
-		<testsuite name="default">
-			<directory prefix="test-" suffix=".php">./tests/</directory>
+		<testsuite name="legacy-endpoints">
+			<directory prefix="test-" suffix=".php">./tests/legacy/endpoints/</directory>
+		</testsuite>
+		<testsuite name="src-core-endpoints">
+			<directory prefix="test-" suffix=".php">./tests/src/core/endpoints/</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
