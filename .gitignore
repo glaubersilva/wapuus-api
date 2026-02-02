@@ -3,11 +3,6 @@
 
 # Tests
 .phpunit.result.cache
-phpunit-output.txt
-phpunit-result.txt
-phpunit-log.xml
-phpunit-ran.txt
-stderr.txt
 tests/wp-tests-config.php
 
 # OS
