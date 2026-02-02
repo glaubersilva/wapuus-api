@@ -66,7 +66,7 @@ function wapuus_api_image_delete_permissions_check( $request ) {
 		return rest_ensure_response( $response );
 	}
 
-	if ( \WapuusApi\Helpers::isDemoUser( $user ) ) {
+	if ( \WapuusApi\Core\Helpers::isDemoUser( $user ) ) {
 		$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}

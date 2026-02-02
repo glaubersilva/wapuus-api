@@ -82,7 +82,7 @@ function wapuus_api_image_post_permissions_check( $request ) {
 		return rest_ensure_response( $response );
 	}
 
-	if ( \WapuusApi\Helpers::isDemoUser( get_current_user_id() ) ) {
+	if ( \WapuusApi\Core\Helpers::isDemoUser( get_current_user_id() ) ) {
 		$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
@@ -205,7 +205,7 @@ function wapuus_api_image_post( $request ) {
 	update_post_meta( $post_id, 'img', $image_id );
 	set_post_thumbnail( $post_id, $image_id );
 
-	$wapuu = \WapuusApi\Helpers::getPostData( $post_id );
+	$wapuu = \WapuusApi\Core\Helpers::getPostData( $post_id );
 
 	$response = new \WapuusApi\Core\Responses\Valid\Created( $wapuu );
 

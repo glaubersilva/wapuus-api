@@ -11,7 +11,7 @@ namespace WapuusApi\Core\Endpoints;
 
 use WapuusApi\Core\Endpoints\AbstractEndpoint;
 use WapuusApi\Core\Schemas\CommentsResource;
-use WapuusApi\Helpers;
+use WapuusApi\Core\Helpers;
 	/**
 	 * The "comment delete" endpoint class.
 	 */

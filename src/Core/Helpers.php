@@ -1,13 +1,13 @@
 <?php
 /**
- * Helper methods used across the codebase.
+ * Helper methods used across the Core API.
  *
  * @package WapuusApi
  * @author Glauber Silva <info@glaubersilva.me>
  * @link https://glaubersilva.me/
  */
 
-namespace WapuusApi;
+namespace WapuusApi\Core;
 
 /**
  * Helper methods for Wapuus API.

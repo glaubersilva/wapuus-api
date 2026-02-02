@@ -68,7 +68,7 @@ function wapuus_api_comment_post_permissions_check( $request ) {
 		return rest_ensure_response( $response );
 	}
 
-	if ( \WapuusApi\Helpers::isDemoUser( get_current_user_id() ) ) {
+	if ( \WapuusApi\Core\Helpers::isDemoUser( get_current_user_id() ) ) {
 		$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
@@ -106,7 +106,7 @@ function wapuus_api_comment_post( $request ) {
 
 	$comment_id = wp_insert_comment( $new_wp_comment );
 	$comment    = get_comment( $comment_id );
-	$comment    = \WapuusApi\Helpers::getCommentData( $comment );
+	$comment    = \WapuusApi\Core\Helpers::getCommentData( $comment );
 
 	$response = new \WapuusApi\Core\Responses\Valid\Created( $comment );
 

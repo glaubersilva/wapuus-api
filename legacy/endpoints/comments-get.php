@@ -81,7 +81,7 @@ function wapuus_api_comments_get( $request ) {
 	);
 
 	foreach ( $comments as $key => $comment ) {
-		$comments[ $key ] = \WapuusApi\Helpers::getCommentData( $comment );
+		$comments[ $key ] = \WapuusApi\Core\Helpers::getCommentData( $comment );
 	}
 
 	$response = new \WapuusApi\Core\Responses\Valid\Ok( $comments );

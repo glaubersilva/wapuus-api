@@ -114,7 +114,7 @@ function wapuus_api_images_get( $request ) {
 
 	if ( $posts ) {
 		foreach ( $posts as $post ) {
-			$images[] = \WapuusApi\Helpers::getPostData( $post );
+			$images[] = \WapuusApi\Core\Helpers::getPostData( $post );
 		}
 	}
 

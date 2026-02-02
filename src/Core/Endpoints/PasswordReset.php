@@ -10,7 +10,7 @@
 namespace WapuusApi\Core\Endpoints;
 
 use WapuusApi\Core\Endpoints\AbstractEndpoint;
-use WapuusApi\Helpers;
+use WapuusApi\Core\Helpers;
 	/**
 	 * The "password reset" endpoint class.
 	 */

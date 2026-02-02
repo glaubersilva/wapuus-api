@@ -81,7 +81,7 @@ function wapuus_api_image_get( $request ) {
 		return rest_ensure_response( $response );
 	}
 
-	$image          = \WapuusApi\Helpers::getPostData( $post );
+	$image          = \WapuusApi\Core\Helpers::getPostData( $post );
 	$image['views'] = (int) $image['views'] + 1;
 
 	update_post_meta( $post_id, 'views', $image['views'] );
@@ -94,7 +94,7 @@ function wapuus_api_image_get( $request ) {
 	);
 
 	foreach ( $comments as $key => $comment ) {
-		$comments[ $key ] = \WapuusApi\Helpers::getCommentData( $comment );
+		$comments[ $key ] = \WapuusApi\Core\Helpers::getCommentData( $comment );
 	}
 
 	$image = array(
