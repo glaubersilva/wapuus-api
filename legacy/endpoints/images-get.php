@@ -7,8 +7,6 @@
  * @link https://glaubersilva.me/
  */
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * Register the "images get" endpoint.
  */
@@ -18,7 +16,7 @@ function wapuus_api_register_images_get() {
 		'wapuus-api/v1',
 		'/images',
 		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the route accepts.
-			'schema' => array( \Wapuus_API\Src\Core\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
+			'schema' => array( \WapuusApi\Core\Schemas\ImagesResource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'args'                => wapuus_api_images_get_args(),
@@ -88,7 +86,7 @@ function wapuus_api_images_get( $request ) {
 
 		if ( ! $user ) {
 
-			$response = new \Wapuus_API\Src\Core\Responses\Error\Not_Found( __( 'User not found.', 'wapuus-api' ) );
+			$response = new \WapuusApi\Core\Responses\Error\NotFound( __( 'User not found.', 'wapuus-api' ) );
 			return rest_ensure_response( $response );
 		}
 	}
@@ -116,11 +114,11 @@ function wapuus_api_images_get( $request ) {
 
 	if ( $posts ) {
 		foreach ( $posts as $post ) {
-			$images[] = wapuus_api_get_post_data( $post );
+			$images[] = \WapuusApi\Helpers::getPostData( $post );
 		}
 	}
 
-	$response = new \Wapuus_API\Src\Core\Responses\Valid\OK( $images );
+	$response = new \WapuusApi\Core\Responses\Valid\Ok( $images );
 
 	return rest_ensure_response( $response );
 }

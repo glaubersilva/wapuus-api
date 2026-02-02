@@ -7,8 +7,6 @@
  * @link https://glaubersilva.me/
  */
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * Register the "user post" endpoint.
  */
@@ -18,7 +16,7 @@ function wapuus_api_register_user_post() {
 		'wapuus-api/v1',
 		'/users',
 		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the route accepts.
-			'schema' => array( \Wapuus_API\Src\Core\Schemas\Users_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
+			'schema' => array( \WapuusApi\Core\Schemas\UsersResource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'args'                => wapuus_api_user_post_args(),
@@ -90,17 +88,17 @@ function wapuus_api_user_post( $request ) {
 	$username = sanitize_user( $request['username'] );
 
 	if ( empty( $email ) || empty( $username ) ) {
-		$response = new \Wapuus_API\Src\Core\Responses\Error\Incomplete_Data( __( 'Email and username are required.', 'wapuus-api' ) );
+		$response = new \WapuusApi\Core\Responses\Error\IncompleteData( __( 'Email and username are required.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( username_exists( $username ) ) {
-		$response = new \Wapuus_API\Src\Core\Responses\Error\Not_Acceptable( __( 'Username already in use.', 'wapuus-api' ) );
+		$response = new \WapuusApi\Core\Responses\Error\NotAcceptable( __( 'Username already in use.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
 	if ( email_exists( $email ) ) {
-		$response = new \Wapuus_API\Src\Core\Responses\Error\Not_Acceptable( __( 'Email already in use.', 'wapuus-api' ) );
+		$response = new \WapuusApi\Core\Responses\Error\NotAcceptable( __( 'Email already in use.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -132,7 +130,7 @@ function wapuus_api_user_post( $request ) {
 		'email'    => $email,
 	);
 
-	$response = new \Wapuus_API\Src\Core\Responses\Valid\Created( $user );
+	$response = new \WapuusApi\Core\Responses\Valid\Created( $user );
 
 	return rest_ensure_response( $response );
 }

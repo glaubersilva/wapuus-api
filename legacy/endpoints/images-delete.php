@@ -7,8 +7,6 @@
  * @link https://glaubersilva.me/
  */
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * Register the "image delete" endpoint.
  */
@@ -18,7 +16,7 @@ function wapuus_api_register_image_delete() {
 		'wapuus-api/v1',
 		'/images/(?P<id>[0-9]+)',
 		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the route accepts.
-			'schema' => array( \Wapuus_API\Src\Core\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
+			'schema' => array( \WapuusApi\Core\Schemas\ImagesResource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::DELETABLE,
 				'args'                => wapuus_api_image_delete_args(),
@@ -64,12 +62,12 @@ function wapuus_api_image_delete_permissions_check( $request ) {
 	$post    = get_post( $post_id );
 
 	if ( (int) $user->ID !== (int) $post->post_author || ! isset( $post ) ) {
-		$response = new \Wapuus_API\Src\Core\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
+		$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'User does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
-	if ( wapuus_api_is_demo_user( $user ) ) {
-		$response = new \Wapuus_API\Src\Core\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
+	if ( \WapuusApi\Helpers::isDemoUser( $user ) ) {
+		$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -95,9 +93,9 @@ function wapuus_api_image_delete( $request ) {
 	$deleted = wp_delete_post( $post_id, true );
 
 	if ( $deleted ) {
-		$response = new \Wapuus_API\Src\Core\Responses\Valid\OK( true );
+		$response = new \WapuusApi\Core\Responses\Valid\Ok( true );
 	} else {
-		$response = new \Wapuus_API\Src\Core\Responses\Error\Bad_Request( false );
+		$response = new \WapuusApi\Core\Responses\Error\BadRequest( false );
 	}
 
 	return rest_ensure_response( $response );

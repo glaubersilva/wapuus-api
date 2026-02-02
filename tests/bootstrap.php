@@ -3,7 +3,7 @@
  * PHPUnit bootstrap file.
  *
  * Uses wp-tests-config.php for environment (DB, ABSPATH) and WordPress
- * test suite from vendor (Composer). Same pattern as GiveWP.
+ * test suite from vendor (Composer).
  *
  * @package Wapuus_API
  * @author Glauber Silva <info@glaubersilva.me>
@@ -46,6 +46,6 @@ $GLOBALS['wp_filter']['muplugins_loaded'][10]['wapuus_api_plugin'] = array(
 
 require dirname( __DIR__ ) . '/vendor/wordpress/wordpress/tests/phpunit/includes/bootstrap.php';
 
-// Base test case classes (must be loaded before test files under legacy/ and src/).
+// Base test case classes (must be loaded before test files under legacy/ and Core/Endpoints/).
 require_once __DIR__ . '/class-unit-test-case.php';
 require_once __DIR__ . '/class-unit-api-test-case.php';

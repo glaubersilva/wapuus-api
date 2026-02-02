@@ -15,8 +15,8 @@
  * @link https://glaubersilva.me/
  */
 
-use Wapuus_API\Src\Container\Container;
-use Wapuus_API\Src\Interfaces\Service_Provider_Interface;
+use WapuusApi\Container\Container;
+use WapuusApi\Interfaces\ServiceProviderInterface;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -45,8 +45,8 @@ final class Wapuus_Api {
 	 * @var array
 	 */
 	private $service_providers = array(
-		\Wapuus_API\Src\Core\Core_Service_Provider::class,
-		\Wapuus_API\Src\Core\Endpoints\Endpoints_Service_Provider::class,
+		\WapuusApi\Core\CoreServiceProvider::class,
+		\WapuusApi\Core\Endpoints\EndpointsServiceProvider::class,
 	);
 
 	/**
@@ -97,14 +97,14 @@ final class Wapuus_Api {
 		$providers = array();
 
 		foreach ( $this->service_providers as $service_provider ) {
-			if ( ! is_subclass_of( $service_provider, Service_Provider_Interface::class ) ) {
+			if ( ! is_subclass_of( $service_provider, ServiceProviderInterface::class ) ) {
 				$name = is_string( $service_provider ) ? $service_provider : get_class( $service_provider );
 				throw new InvalidArgumentException(
 					esc_html( $name . ' must implement the Service_Provider_Interface' )
 				);
 			}
 
-			/** @var Service_Provider_Interface $provider */
+			/** @var ServiceProviderInterface $provider */
 			$provider = new $service_provider();
 			$provider->register();
 			$providers[] = $provider;
@@ -196,8 +196,7 @@ function wapuus_api( $abstract = null ) {
 /**
  * Initial Setup
  */
-require_once WAPUUS_API_DIR . '/autoload.php';
-require_once WAPUUS_API_DIR . '/src/helpers.php';
+require_once WAPUUS_API_DIR . '/vendor/autoload.php';
 
 /**
  * API V1 files - Legacy code left to demonstrate extending the WP API without using classes.

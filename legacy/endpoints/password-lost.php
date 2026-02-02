@@ -7,8 +7,6 @@
  * @link https://glaubersilva.me/
  */
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * Register the "password lost" endpoint.
  */
@@ -79,7 +77,7 @@ function wapuus_api_password_lost( $request ) {
 	$login = sanitize_user( $request['login'] );
 
 	if ( empty( $login ) ) {
-		$response = new \Wapuus_API\Src\Core\Responses\Error\Incomplete_Data( __( 'Email or username are required.', 'wapuus-api' ) );
+		$response = new \WapuusApi\Core\Responses\Error\IncompleteData( __( 'Email or username are required.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -90,12 +88,12 @@ function wapuus_api_password_lost( $request ) {
 	}
 
 	if ( empty( $user ) ) {
-		$response = new \Wapuus_API\Src\Core\Responses\Error\Not_Found( __( 'User does not exist.', 'wapuus-api' ) );
+		$response = new \WapuusApi\Core\Responses\Error\NotFound( __( 'User does not exist.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
-	if ( wapuus_api_is_demo_user( $user ) ) {
-		$response = new \Wapuus_API\Src\Core\Responses\Error\No_Permission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
+	if ( \WapuusApi\Helpers::isDemoUser( $user ) ) {
+		$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'Demo user does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -115,7 +113,7 @@ function wapuus_api_password_lost( $request ) {
 
 	wp_mail( $user_email, __( 'Password Reset', 'wapuus-api' ), $body );
 
-	$response = new \Wapuus_API\Src\Core\Responses\Valid\OK( __( 'Email sent.', 'wapuus-api' ) );
+	$response = new \WapuusApi\Core\Responses\Valid\Ok( __( 'Email sent.', 'wapuus-api' ) );
 
 	return rest_ensure_response( $response );
 }

@@ -7,8 +7,6 @@
  * @link https://glaubersilva.me/
  */
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * Register the "comments get" endpoint.
  */
@@ -18,7 +16,7 @@ function wapuus_api_register_comments_get() {
 		'wapuus-api/v1',
 		'/comments/(?P<id>[0-9]+)',
 		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the route accepts.
-			'schema' => array( \Wapuus_API\Src\Core\Schemas\Comments_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
+			'schema' => array( \WapuusApi\Core\Schemas\CommentsResource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'args'                => wapuus_api_comments_get_args(),
@@ -83,10 +81,10 @@ function wapuus_api_comments_get( $request ) {
 	);
 
 	foreach ( $comments as $key => $comment ) {
-		$comments[ $key ] = wapuus_api_get_comment_data( $comment );
+		$comments[ $key ] = \WapuusApi\Helpers::getCommentData( $comment );
 	}
 
-	$response = new \Wapuus_API\Src\Core\Responses\Valid\OK( $comments );
+	$response = new \WapuusApi\Core\Responses\Valid\Ok( $comments );
 
 	return rest_ensure_response( $response );
 }

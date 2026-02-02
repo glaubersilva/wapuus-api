@@ -9,8 +9,6 @@
 
 namespace Wapuus_API\Tests;
 
-defined( 'ABSPATH' ) || exit;
-
 if ( ! class_exists( 'Unit_API_Test_Case' ) ) {
 
 	/**
