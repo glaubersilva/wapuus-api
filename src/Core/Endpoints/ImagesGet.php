@@ -20,22 +20,22 @@ use WapuusApi\Helpers;
 		/**
 		 * Route for the "images get" endpoint.
 		 */
-		public function get_path() {
-			return '/' . ImagesResource::get_instance()->name();
+		public function getPath() {
+			return '/' . ImagesResource::getInstance()->getName();
 		}
 
 		/**
 		 * Resource schema callback for the "images get" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
-			return ImagesResource::get_instance()->schema();
+		public function resourceSchema() {
+			return ImagesResource::getInstance()->getSchema();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "images get" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::READABLE;
 		}
 
@@ -46,7 +46,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array(
 				'_total' => array(
@@ -73,7 +73,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
 			return true;
 		}
@@ -100,20 +100,20 @@ use WapuusApi\Helpers;
 				}
 			}
 
-			$_total = isset( $request['_total'] ) ? sanitize_text_field( $request['_total'] ) : 6;
-			$_page  = isset( $request['_page'] ) ? sanitize_text_field( $request['_page'] ) : 1;
-			$_user  = isset( $request['_user'] ) ? sanitize_user( $request['_user'] ) : 0;
+			$total = isset( $request['_total'] ) ? sanitize_text_field( $request['_total'] ) : 6;
+			$page  = isset( $request['_page'] ) ? sanitize_text_field( $request['_page'] ) : 1;
+			$userFilter = isset( $request['_user'] ) ? sanitize_user( $request['_user'] ) : 0;
 
-			if ( ! is_numeric( $_user ) ) {
-				$user  = get_user_by( 'login', $_user );
-				$_user = $user->ID;
+			if ( ! is_numeric( $userFilter ) ) {
+				$user       = get_user_by( 'login', $userFilter );
+				$userFilter = $user->ID;
 			}
 
 			$args = array(
 				'post_type'      => 'wapuu',
-				'author'         => $_user,
-				'posts_per_page' => $_total,
-				'paged'          => $_page,
+				'author'         => $userFilter,
+				'posts_per_page' => $total,
+				'paged'          => $page,
 			);
 
 			$query = new \WP_Query( $args );

@@ -66,15 +66,15 @@ class CommentsTest extends Unit_API_Test_Case {
 		/**
 		 * Test the "coment post" endpoint.
 		 */
-		public function test_comments_post() {
+		public function testCommentsPost() {
 
 			$request = new \WP_REST_Request( 'POST', '/wapuus-api/v2/comments/' . $this->photo_sample_id );
 
-			$request_query = array(
+			$requestQuery = array(
 				'comment' => $this->comment_sample,
 			);
 
-			$request->set_query_params( $request_query );
+			$request->set_query_params( $requestQuery );
 
 			$response = $this->server->dispatch( $request );
 
@@ -96,7 +96,7 @@ class CommentsTest extends Unit_API_Test_Case {
 		/**
 		 * Test the "coments get" endpoint.
 		 */
-		public function test_comments_get() {
+		public function testCommentsGet() {
 
 			$request = new \WP_REST_Request( 'GET', '/wapuus-api/v2/comments/' . $this->photo_sample_id );
 
@@ -124,7 +124,7 @@ class CommentsTest extends Unit_API_Test_Case {
 		/**
 		 * Test the "coment delete" endpoint.
 		 */
-		public function test_comment_delete() {
+		public function testCommentDelete() {
 
 			$request = new \WP_REST_Request( 'DELETE', '/wapuus-api/v2/comments/' . $this->comment_sample_id );
 

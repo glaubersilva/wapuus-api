@@ -26,13 +26,13 @@ class CoreServiceProvider implements ServiceProviderInterface  {
 	 * @return void
 	 */
 	public function register() {
-		// Singletons that use get_instance() pattern.
+		// Singletons that use getInstance() pattern.
 		wapuus_api()->singleton( GeneralTweaks::class, function () {
-			return GeneralTweaks::get_instance();
+			return GeneralTweaks::getInstance();
 		} );
 
 		wapuus_api()->singleton( WapuusCustomPostType::class, function () {
-			return WapuusCustomPostType::get_instance();
+			return WapuusCustomPostType::getInstance();
 		} );
 	}
 

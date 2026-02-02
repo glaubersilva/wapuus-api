@@ -20,22 +20,22 @@ use WapuusApi\Helpers;
 		/**
 		 * Route for the "comment get" endpoint.
 		 */
-		public function get_path() {
-			return '/' . CommentsResource::get_instance()->name() . '/(?P<id>[0-9]+)';
+		public function getPath() {
+			return '/' . CommentsResource::getInstance()->getName() . '/(?P<id>[0-9]+)';
 		}
 
 		/**
 		 * Resource schema callback for the "comment get" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
-			return CommentsResource::get_instance()->schema();
+		public function resourceSchema() {
+			return CommentsResource::getInstance()->getSchema();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "comment get" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::READABLE;
 		}
 
@@ -46,7 +46,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array(
 				'id' => array(
@@ -66,7 +66,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
 			return true;
 		}
@@ -82,11 +82,11 @@ use WapuusApi\Helpers;
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$post_id = absint( $request['id'] );
+			$postId = absint( $request['id'] );
 
 			$comments = get_comments(
 				array(
-					'post_id' => $post_id,
+					'post_id' => $postId,
 				)
 			);
 

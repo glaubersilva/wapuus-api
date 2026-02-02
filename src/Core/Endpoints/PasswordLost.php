@@ -19,7 +19,7 @@ use WapuusApi\Helpers;
 		/**
 		 * Route for the "password lost" endpoint.
 		 */
-		public function get_path() {
+		public function getPath() {
 			return '/password/lost';
 		}
 
@@ -27,14 +27,14 @@ use WapuusApi\Helpers;
 		 * Resource schema callback for the "password lost" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
+		public function resourceSchema() {
 			return array();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "password lost" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::CREATABLE;
 		}
 
@@ -45,7 +45,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array(
 				'login' => array(
@@ -71,7 +71,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
 			return true;
 		}
@@ -117,14 +117,14 @@ use WapuusApi\Helpers;
 				$user = get_user_by( 'login', $login );
 			}
 
-			$user_login = $user->user_login;
-			$user_email = $user->user_email;
-			$key        = get_password_reset_key( $user );
-			$message    = __( 'Use the link below to reset your password:', 'wapuus-api' ) . "\r\n";
-			$url        = esc_url_raw( $url . "/?key=$key&login=" . rawurlencode( $user_login ) . "\r\n" );
-			$body       = $message . $url;
+			$userLogin = $user->user_login;
+			$userEmail = $user->user_email;
+			$key       = get_password_reset_key( $user );
+			$message   = __( 'Use the link below to reset your password:', 'wapuus-api' ) . "\r\n";
+			$url       = esc_url_raw( $url . "/?key=$key&login=" . rawurlencode( $userLogin ) . "\r\n" );
+			$body      = $message . $url;
 
-			wp_mail( $user_email, __( 'Password Reset', 'wapuus-api' ), $body );
+			wp_mail( $userEmail, __( 'Password Reset', 'wapuus-api' ), $body );
 
 			$response = new \WapuusApi\Core\Responses\Valid\Ok( __( 'Email sent.', 'wapuus-api' ) );
 

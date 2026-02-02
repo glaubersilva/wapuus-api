@@ -19,22 +19,22 @@ use WapuusApi\Core\Schemas\StatsResource;
 		/**
 		 * Route for the "stats get" endpoint.
 		 */
-		public function get_path() {
-			return '/' . StatsResource::get_instance()->name();
+		public function getPath() {
+			return '/' . StatsResource::getInstance()->getName();
 		}
 
 		/**
 		 * Resource schema callback for the "stats get" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
-			return StatsResource::get_instance()->schema();
+		public function resourceSchema() {
+			return StatsResource::getInstance()->getSchema();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "stats get" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::READABLE;
 		}
 
@@ -45,7 +45,7 @@ use WapuusApi\Core\Schemas\StatsResource;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array();
 
@@ -59,7 +59,7 @@ use WapuusApi\Core\Schemas\StatsResource;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
 			if ( ! is_user_logged_in() ) {
 				$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'User does not have permission.', 'wapuus-api' ) );

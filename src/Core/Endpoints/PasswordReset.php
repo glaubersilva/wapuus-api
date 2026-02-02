@@ -19,7 +19,7 @@ use WapuusApi\Helpers;
 		/**
 		 * Route for the "password reset" endpoint.
 		 */
-		public function get_path() {
+		public function getPath() {
 			return '/password/reset';
 		}
 
@@ -27,14 +27,14 @@ use WapuusApi\Helpers;
 		 * Resource schema callback for the "password reset" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
+		public function resourceSchema() {
 			return array();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "password reset" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::CREATABLE;
 		}
 
@@ -45,7 +45,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array(
 				'login'    => array(
@@ -75,7 +75,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
 			return true;
 		}
@@ -105,9 +105,9 @@ use WapuusApi\Helpers;
 				return rest_ensure_response( $response );
 			}
 
-			$check_key = check_password_reset_key( $key, $login );
+			$checkKey = check_password_reset_key( $key, $login );
 
-			if ( is_wp_error( $check_key ) ) {
+			if ( is_wp_error( $checkKey ) ) {
 				$response = new \WapuusApi\Core\Responses\Error\NotAcceptable( __( 'Expired token.', 'wapuus-api' ) );
 				return rest_ensure_response( $response );
 			}

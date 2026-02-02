@@ -24,19 +24,19 @@ use WapuusApi\Traits\Singleton;
 		 *
 		 * @var string
 		 */
-		public $cpt_name = 'wapuu';
+		public $cptName = 'wapuu';
 
 		/**
 		 * Register our Custom Post Type in the "init" hook.
 		 */
 		protected function init() {
-			add_action( 'init', array( $this, 'register_post_type' ) );
+			add_action( 'init', array( $this, 'registerPostType' ) );
 		}
 
 		/**
 		 * Callback to register our Custom Post Type.
 		 */
-		public function register_post_type() {
+		public function registerPostType() {
 
 			$labels = array(
 				'name'                     => __( 'Wapuus', 'wapuus-api' ),
@@ -72,6 +72,6 @@ use WapuusApi\Traits\Singleton;
 				'exclude_from_search' => true,
 			);
 
-			register_post_type( $this->cpt_name, $args );
+			register_post_type( $this->cptName, $args );
 		}
 	}

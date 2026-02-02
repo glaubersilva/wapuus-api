@@ -29,10 +29,10 @@ final class Helpers {
 			$post = get_post( $post );
 		}
 
-		$post_meta      = get_post_meta( $post->ID );
-		$src            = wp_get_attachment_image_src( $post_meta['img'][0], 'large' )[0];
-		$user           = get_userdata( $post->post_author );
-		$total_comments = get_comments_number( $post->ID );
+		$postMeta      = get_post_meta( $post->ID );
+		$src           = wp_get_attachment_image_src( $postMeta['img'][0], 'large' )[0];
+		$user          = get_userdata( $post->post_author );
+		$totalComments = get_comments_number( $post->ID );
 
 		return array(
 			'id'             => $post->ID,
@@ -40,11 +40,11 @@ final class Helpers {
 			'title'          => $post->post_title,
 			'date'           => $post->post_date,
 			'src'            => $src,
-			'from'           => $post_meta['from'][0],
-			'from_url'       => esc_url( $post_meta['from_url'][0] ),
-			'caption'        => $post_meta['caption'][0],
-			'views'          => $post_meta['views'][0],
-			'total_comments' => $total_comments,
+			'from'           => $postMeta['from'][0],
+			'from_url'       => esc_url( $postMeta['from_url'][0] ),
+			'caption'        => $postMeta['caption'][0],
+			'views'          => $postMeta['views'][0],
+			'total_comments' => $totalComments,
 		);
 	}
 

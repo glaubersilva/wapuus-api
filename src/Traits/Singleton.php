@@ -51,12 +51,21 @@ trait Singleton {
 	 *
 	 * @return object
 	 */
-	final public static function get_instance() {
+	final public static function getInstance() {
 		if ( ! isset( self::$instance ) ) {
 			self::$instance = new self();
 		}
 
 		return self::$instance;
+	}
+
+	/**
+	 * Alias for getInstance() for legacy code outside src/.
+	 *
+	 * @return object
+	 */
+	final public static function get_instance() {
+		return self::getInstance();
 	}
 
 	/**

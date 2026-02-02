@@ -19,17 +19,17 @@ class UsersAndPasswordTest extends Unit_API_Test_Case {
 		/**
 		 * Test the "user post" endpoint.
 		 */
-		public function test_user_post() {
+		public function testUserPost() {
 
 			$request = new \WP_REST_Request( 'POST', '/wapuus-api/v2/users' );
 
-			$body_params = array(
+			$bodyParams = array(
 				'username' => 'usertest',
 				'email'    => 'usertest@localhost.com',
 				'url'      => 'http://localhost:3000',
 			);
 
-			$request->set_body_params( $body_params );
+			$request->set_body_params( $bodyParams );
 
 			$response = $this->server->dispatch( $request );
 
@@ -38,7 +38,7 @@ class UsersAndPasswordTest extends Unit_API_Test_Case {
 			$this->assertEquals( $expected, $result );
 
 			$data     = $response->get_data();
-			$expected = $body_params['username'];
+			$expected = $bodyParams['username'];
 			$result   = $data['username'];
 			$this->assertEquals( $expected, $result );
 		}
@@ -46,7 +46,7 @@ class UsersAndPasswordTest extends Unit_API_Test_Case {
 		/**
 		 * Test the "user get" endpoint.
 		 */
-		public function test_users_get() {
+		public function testUsersGet() {
 
 			$request = new \WP_REST_Request( 'GET', '/wapuus-api/v2/users' );
 
@@ -70,16 +70,16 @@ class UsersAndPasswordTest extends Unit_API_Test_Case {
 		/**
 		 * Test the "password lost" endpoint.
 		 */
-		public function test_password_lost() {
+		public function testPasswordLost() {
 
 			$request = new \WP_REST_Request( 'POST', '/wapuus-api/v2/password/lost' );
 
-			$body_params = array(
+			$bodyParams = array(
 				'login' => $this->user_login,
 				'url'   => 'http://localhost:3000',
 			);
 
-			$request->set_body_params( $body_params );
+			$request->set_body_params( $bodyParams );
 
 			$response = $this->server->dispatch( $request );
 
@@ -94,19 +94,19 @@ class UsersAndPasswordTest extends Unit_API_Test_Case {
 		/**
 		 * Test the "password reset" endpoint.
 		 */
-		public function test_password_reset() {
+		public function testPasswordReset() {
 
 			$request = new \WP_REST_Request( 'POST', '/wapuus-api/v2/password/reset' );
 
 			$user = get_user_by( 'email', $this->user_email );
 
-			$body_params = array(
+			$bodyParams = array(
 				'login'    => $this->user_login,
 				'password' => 'newpasswordtest4003403',
 				'key'      => get_password_reset_key( $user ),
 			);
 
-			$request->set_body_params( $body_params );
+			$request->set_body_params( $bodyParams );
 
 			$response = $this->server->dispatch( $request );
 

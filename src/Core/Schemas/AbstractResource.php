@@ -39,7 +39,7 @@ namespace WapuusApi\Core\Schemas;
 		 *
 		 * @return array
 		 */
-		final public function schema() {
+		final public function getSchema() {
 
 			if ( $this->schema ) {
 				/**
@@ -58,9 +58,18 @@ namespace WapuusApi\Core\Schemas;
 		}
 
 		/**
+		 * Alias for getSchema() for legacy code outside src/.
+		 *
+		 * @return array
+		 */
+		final public function schema() {
+			return $this->getSchema();
+		}
+
+		/**
 		 * Return the name of the resource - comment, image, user etc.
 		 */
-		final public function name() {
+		final public function getName() {
 
 			if ( empty( $this->name ) ) {
 				$this->name = __( 'Undefined', 'wapuus-api' );

@@ -19,22 +19,22 @@ use WapuusApi\Core\Schemas\UsersResource;
 		/**
 		 * Route for the "user post" endpoint.
 		 */
-		public function get_path() {
-			return '/' . UsersResource::get_instance()->name();
+		public function getPath() {
+			return '/' . UsersResource::getInstance()->getName();
 		}
 
 		/**
 		 * Resource schema callback for the "user post" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
-			return UsersResource::get_instance()->schema();
+		public function resourceSchema() {
+			return UsersResource::getInstance()->getSchema();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "user post" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::CREATABLE;
 		}
 
@@ -45,7 +45,7 @@ use WapuusApi\Core\Schemas\UsersResource;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array(
 				'username' => array(
@@ -77,7 +77,7 @@ use WapuusApi\Core\Schemas\UsersResource;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
 			return true;
 		}
@@ -113,7 +113,7 @@ use WapuusApi\Core\Schemas\UsersResource;
 
 			$url = $request['url'];
 
-			$user_id = wp_insert_user(
+			$userId = wp_insert_user(
 				array(
 					'user_login' => $username,
 					'user_email' => $email,
@@ -122,9 +122,9 @@ use WapuusApi\Core\Schemas\UsersResource;
 				)
 			);
 
-			if ( $user_id && ! is_wp_error( $user_id ) ) {
+			if ( $userId && ! is_wp_error( $userId ) ) {
 
-				$user    = get_user_by( 'ID', $user_id );
+				$user    = get_user_by( 'ID', $userId );
 				$key     = get_password_reset_key( $user );
 				$message = __( 'Use the link below to create your password:', 'wapuus-api' ) . "\r\n";
 				$url     = esc_url_raw( $url . "/?key=$key&login=" . rawurlencode( $username ) . "\r\n" );
@@ -134,7 +134,7 @@ use WapuusApi\Core\Schemas\UsersResource;
 			}
 
 			$user = array(
-				'id'       => $user_id,
+				'id'       => $userId,
 				'username' => $username,
 				'email'    => $email,
 			);

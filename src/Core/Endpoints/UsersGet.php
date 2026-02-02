@@ -19,22 +19,22 @@ use WapuusApi\Core\Schemas\UsersResource;
 		/**
 		 * Route for the "user get" endpoint.
 		 */
-		public function get_path() {
-			return '/' . UsersResource::get_instance()->name();
+		public function getPath() {
+			return '/' . UsersResource::getInstance()->getName();
 		}
 
 		/**
 		 * Resource schema callback for the "user get" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
-			return UsersResource::get_instance()->schema();
+		public function resourceSchema() {
+			return UsersResource::getInstance()->getSchema();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "user get" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::READABLE;
 		}
 
@@ -45,7 +45,7 @@ use WapuusApi\Core\Schemas\UsersResource;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array();
 
@@ -59,7 +59,7 @@ use WapuusApi\Core\Schemas\UsersResource;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
 			if ( ! is_user_logged_in() ) {
 				$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'User does not have permission.', 'wapuus-api' ) );
@@ -80,12 +80,12 @@ use WapuusApi\Core\Schemas\UsersResource;
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$user = wp_get_current_user();
+			$currentUser = wp_get_current_user();
 
 			$user = array(
-				'id'       => $user->ID,
-				'username' => $user->user_login,
-				'email'    => $user->user_email,
+				'id'       => $currentUser->ID,
+				'username' => $currentUser->user_login,
+				'email'    => $currentUser->user_email,
 			);
 
 			$response = new \WapuusApi\Core\Responses\Valid\Ok( $user );

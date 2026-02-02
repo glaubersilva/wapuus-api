@@ -20,22 +20,22 @@ use WapuusApi\Helpers;
 		/**
 		 * Route for the "comment post" endpoint.
 		 */
-		public function get_path() {
-			return '/' . CommentsResource::get_instance()->name() . '/(?P<id>[0-9]+)';
+		public function getPath() {
+			return '/' . CommentsResource::getInstance()->getName() . '/(?P<id>[0-9]+)';
 		}
 
 		/**
 		 * Resource schema callback for the "comment post" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
-			return CommentsResource::get_instance()->schema();
+		public function resourceSchema() {
+			return CommentsResource::getInstance()->getSchema();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "comment post" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::CREATABLE;
 		}
 
@@ -46,7 +46,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array(
 				'id'      => array(
@@ -71,7 +71,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
 			if ( ! is_user_logged_in() ) {
 				$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'User does not have permission.', 'wapuus-api' ) );
@@ -104,18 +104,18 @@ use WapuusApi\Helpers;
 				return rest_ensure_response( $response );
 			}
 
-			$user    = wp_get_current_user();
-			$post_id = absint( $request['id'] );
+			$user   = wp_get_current_user();
+			$postId = absint( $request['id'] );
 
-			$new_wp_comment = array(
+			$newWpComment = array(
 				'user_id'         => $user->ID,
 				'comment_author'  => $user->user_login,
 				'comment_content' => $comment,
-				'comment_post_ID' => $post_id,
+				'comment_post_ID' => $postId,
 			);
 
-			$comment_id = wp_insert_comment( $new_wp_comment );
-			$comment    = get_comment( $comment_id );
+			$commentId = wp_insert_comment( $newWpComment );
+			$comment   = get_comment( $commentId );
 			$comment    = Helpers::getCommentData( $comment );
 
 			$response = new \WapuusApi\Core\Responses\Valid\Created( $comment );

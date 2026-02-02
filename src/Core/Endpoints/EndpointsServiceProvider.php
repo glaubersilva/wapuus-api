@@ -28,7 +28,7 @@ class EndpointsServiceProvider implements ServiceProviderInterface  {
 	 *
 	 * @var string[]
 	 */
-	private $endpoint_classes = array(
+	private $endpointClasses = array(
 		CommentsDelete::class,
 		CommentsGet::class,
 		CommentsPost::class,
@@ -65,11 +65,11 @@ class EndpointsServiceProvider implements ServiceProviderInterface  {
 	 * @return void
 	 */
 	public function boot() {
-		foreach ( $this->endpoint_classes as $endpoint_class ) {
-			$this->endpoints[] = new $endpoint_class();
+		foreach ( $this->endpointClasses as $endpointClass ) {
+			$this->endpoints[] = new $endpointClass();
 		}
 
-		add_action( 'rest_api_init', array( $this, 'register_endpoints' ) );
+		add_action( 'rest_api_init', array( $this, 'registerEndpoints' ) );
 	}
 
 	/**
@@ -77,9 +77,9 @@ class EndpointsServiceProvider implements ServiceProviderInterface  {
 	 *
 	 * @return void
 	 */
-	public function register_endpoints() {
+	public function registerEndpoints(): void {
 		foreach ( $this->endpoints as $endpoint ) {
-			$this->register_endpoint( $endpoint );
+			$this->registerEndpoint( $endpoint );
 		}
 	}
 
@@ -89,17 +89,17 @@ class EndpointsServiceProvider implements ServiceProviderInterface  {
 	 * @param Endpoint $endpoint Concrete class implementing the Endpoint interface.
 	 * @return void
 	 */
-	private function register_endpoint( Endpoint $endpoint ) {
+	private function registerEndpoint( Endpoint $endpoint ): void {
 		register_rest_route(
 			'wapuus-api/v2',
-			$endpoint->get_path(),
+			$endpoint->getPath(),
 			array(
-				'schema' => $endpoint->get_schema(),
+				'schema' => $endpoint->getSchema(),
 				array(
-					'methods'             => $endpoint->get_methods(),
-					'args'                => $endpoint->get_arguments(),
-					'permission_callback' => $endpoint->get_permission_callback(),
-					'callback'            => $endpoint->get_callback(),
+					'methods'             => $endpoint->getMethods(),
+					'args'                => $endpoint->getArguments(),
+					'permission_callback' => $endpoint->getPermissionCallback(),
+					'callback'            => $endpoint->getCallback(),
 				),
 			)
 		);

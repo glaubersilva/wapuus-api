@@ -20,22 +20,22 @@ use WapuusApi\Helpers;
 		/**
 		 * Route for the "image delete" endpoint.
 		 */
-		public function get_path() {
-			return '/' . ImagesResource::get_instance()->name() . '/(?P<id>[0-9]+)';
+		public function getPath() {
+			return '/' . ImagesResource::getInstance()->getName() . '/(?P<id>[0-9]+)';
 		}
 
 		/**
 		 * Resource schema callback for the "image delete" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
-			return ImagesResource::get_instance()->schema();
+		public function resourceSchema() {
+			return ImagesResource::getInstance()->getSchema();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "image delete" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::DELETABLE;
 		}
 
@@ -46,7 +46,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array(
 				'id' => array(
@@ -66,11 +66,11 @@ use WapuusApi\Helpers;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
-			$user    = wp_get_current_user();
-			$post_id = absint( $request['id'] );
-			$post    = get_post( $post_id );
+			$user   = wp_get_current_user();
+			$postId = absint( $request['id'] );
+			$post   = get_post( $postId );
 
 			if ( (int) $user->ID !== (int) $post->post_author || ! isset( $post ) ) {
 				$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'User does not have permission.', 'wapuus-api' ) );
@@ -96,12 +96,12 @@ use WapuusApi\Helpers;
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$post_id = absint( $request['id'] );
+			$postId = absint( $request['id'] );
 
-			$attachment_id = get_post_meta( $post_id, 'img', true );
-			wp_delete_attachment( $attachment_id, true );
+			$attachmentId = get_post_meta( $postId, 'img', true );
+			wp_delete_attachment( $attachmentId, true );
 
-			$deleted = wp_delete_post( $post_id, true );
+			$deleted = wp_delete_post( $postId, true );
 
 			if ( $deleted ) {
 				$response = new \WapuusApi\Core\Responses\Valid\Ok( true );

@@ -25,47 +25,47 @@ use WapuusApi\Interfaces\Endpoint;
 		 * Defines the schema for the resource - comment, image, user, etc. - that the endpoint handle.
 		 *
 		 * The abstract keyword force extending classes to define this method that
-		 * is used as a callback on the get_schema() method from this base class.
+		 * is used as a callback on the getSchema() method from this base class.
 		 *
 		 * @return array
 		 */
-		abstract public function resource_schema();
+		abstract public function resourceSchema();
 
 		/**
 		 * Get the schema callback used by the REST API endpoint.
 		 *
 		 * @return callable
 		 */
-		final public function get_schema() {
-			return array( $this, 'resource_schema' );
+		final public function getSchema() {
+			return array( $this, 'resourceSchema' );
 		}
 
 		/**
 		 * Check the permissions to the REST API endpoint.
 		 *
 		 * The abstract keyword force extending classes to define this method that
-		 * is used as a callback on the get_permission_callback() method from this base class.
+		 * is used as a callback on the getPermissionCallback() method from this base class.
 		 *
 		 *  @param \WP_REST_Request $request The current request object.
 		 *
 		 * @return mixed
 		 */
-		abstract public function check_permissions( \WP_REST_Request $request );
+		abstract public function checkPermissions( \WP_REST_Request $request );
 
 		/**
 		 * Get the permission callback used by the REST API endpoint.
 		 *
 		 * @return callable
 		 */
-		final public function get_permission_callback() {
-			return array( $this, 'check_permissions' );
+		final public function getPermissionCallback() {
+			return array( $this, 'checkPermissions' );
 		}
 
 		/**
 		 * Respond to a request to the REST API endpoint.
 		 *
 		 * The abstract keyword force extending classes to define this method that
-		 * is used as a callback on the get_callback() method from this base class.
+		 * is used as a callback on the getCallback() method from this base class.
 		 *
 		 * @param \WP_REST_Request $request The current request object.
 		 *
@@ -78,7 +78,7 @@ use WapuusApi\Interfaces\Endpoint;
 		 *
 		 * @return callable
 		 */
-		final public function get_callback() {
+		final public function getCallback() {
 			return array( $this, 'respond' );
 		}
 	}

@@ -19,7 +19,7 @@ interface Endpoint {
 	 *
 	 * @return string
 	 */
-	public function get_path();
+	public function getPath();
 
 	/**
 	 * Get the callback used to define the Resource Schema to the REST API endpoint.
@@ -28,14 +28,14 @@ interface Endpoint {
 	 *
 	 * @return callable
 	 */
-	public function get_schema();
+	public function getSchema();
 
 	/**
 	 * Get the HTTP methods that the REST API endpoint responds to.
 	 *
 	 * @return mixed
 	 */
-	public function get_methods();
+	public function getMethods();
 
 	/**
 	 * Get the expected arguments for the REST API endpoint.
@@ -44,19 +44,19 @@ interface Endpoint {
 	 *
 	 * @return array
 	 */
-	public function get_arguments();
+	public function getArguments();
 
 	/**
 	 * Get the callback used to validate a request to the REST API.
 	 *
 	 * @return callable
 	 */
-	public function get_permission_callback();
+	public function getPermissionCallback();
 
 	/**
 	 * Get the callback used by the REST API endpoint.
 	 *
 	 * @return callable
 	 */
-	public function get_callback();
+	public function getCallback();
 }

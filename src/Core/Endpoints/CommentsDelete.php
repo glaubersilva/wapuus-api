@@ -20,22 +20,22 @@ use WapuusApi\Helpers;
 		/**
 		 * Route for the "comment delete" endpoint.
 		 */
-		public function get_path() {
-			return '/' . CommentsResource::get_instance()->name() . '/(?P<id>[0-9]+)';
+		public function getPath() {
+			return '/' . CommentsResource::getInstance()->getName() . '/(?P<id>[0-9]+)';
 		}
 
 		/**
 		 * Resource schema callback for the "comment delete" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
-			return CommentsResource::get_instance()->schema();
+		public function resourceSchema() {
+			return CommentsResource::getInstance()->getSchema();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "comment delete" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::DELETABLE;
 		}
 
@@ -46,7 +46,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array(
 				'id' => array(
@@ -66,11 +66,11 @@ use WapuusApi\Helpers;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
-			$user       = wp_get_current_user();
-			$comment_id = absint( $request['id'] );
-			$comment    = get_comment( $comment_id );
+			$user      = wp_get_current_user();
+			$commentId = absint( $request['id'] );
+			$comment   = get_comment( $commentId );
 
 			if ( (int) $user->ID !== (int) $comment->user_id || ! isset( $comment ) ) {
 				$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'User does not have permission.', 'wapuus-api' ) );
@@ -96,8 +96,8 @@ use WapuusApi\Helpers;
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$comment_id = absint( $request['id'] );
-			$deleted    = wp_delete_comment( $comment_id, true );
+			$commentId = absint( $request['id'] );
+			$deleted   = wp_delete_comment( $commentId, true );
 
 			if ( $deleted ) {
 				$response = new \WapuusApi\Core\Responses\Valid\Ok( true );

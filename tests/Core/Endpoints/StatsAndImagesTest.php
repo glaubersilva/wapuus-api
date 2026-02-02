@@ -43,7 +43,7 @@ class StatsAndImagesTest extends Unit_API_Test_Case {
 			require_once ABSPATH . 'wp-admin/includes/media.php';
 
 			$files = array(
-				'img' => $this->temp_file_data(),
+				'img' => $this->tempFileData(),
 			);
 
 			$this->media_sample_id = media_handle_sideload( $files['img'], $this->image_sample_id );
@@ -55,7 +55,7 @@ class StatsAndImagesTest extends Unit_API_Test_Case {
 		/**
 		 * Test the "stats get" endpoint.
 		 */
-		public function test_stats_get() {
+		public function testStatsGet() {
 
 			$request = new \WP_REST_Request( 'GET', '/wapuus-api/v2/stats' );
 
@@ -79,12 +79,12 @@ class StatsAndImagesTest extends Unit_API_Test_Case {
 		/**
 		 * Sample temp file data for using on the tests.
 		 */
-		public function temp_file_data() {
+		public function tempFileData() {
 
-			$file_path = WAPUUS_API_DIR . '/tests/images/original-wapuu.png';
-			$file_name = basename( $file_path );
+			$filePath = WAPUUS_API_DIR . '/tests/images/original-wapuu.png';
+			$fileName = basename( $filePath );
 
-			$tmpfname = wp_tempnam( $file_name );
+			$tmpfname = wp_tempnam( $fileName );
 
 			$fp = fopen( $tmpfname, 'w+' ); //phpcs:ignore
 
@@ -96,39 +96,39 @@ class StatsAndImagesTest extends Unit_API_Test_Case {
 				);
 			}
 
-			fwrite( $fp, file_get_contents( $file_path ) ); //phpcs:ignore
+			fwrite( $fp, file_get_contents( $filePath ) ); //phpcs:ignore
 			fclose( $fp ); //phpcs:ignore
 
-			$file_data = array(
-				'name'     => $file_name,
+			$fileData = array(
+				'name'     => $fileName,
 				'type'     => 'image/png',
 				'tmp_name' => $tmpfname,
 				'error'    => 0,
 				'size'     => filesize( $tmpfname ),
 			);
 
-			return $file_data;
+			return $fileData;
 		}
 
 		/**
 		 * Test the "image post" endpoint.
 		 */
-		public function test_image_post() {
+		public function testImagePost() {
 
 			$request = new \WP_REST_Request( 'POST', '/wapuus-api/v2/images' );
 
 			$img = array(
-				'img' => $this->temp_file_data(),
+				'img' => $this->tempFileData(),
 			);
 
-			$body_params = array(
+			$bodyParams = array(
 				'name'     => 'The Original Wapuu',
 				'from'     => 'WordPress Japan',
 				'from_url' => 'https://ja.wordpress.org/',
 				'caption'  => 'This is the first one Wappu from the world!',
 			);
 
-			$request->set_body_params( $body_params );
+			$request->set_body_params( $bodyParams );
 			$request->set_file_params( $img );
 
 			$response = $this->server->dispatch( $request );
@@ -141,7 +141,7 @@ class StatsAndImagesTest extends Unit_API_Test_Case {
 		/**
 		 * Test the "images get" endpoint.
 		 */
-		public function test_images_get() {
+		public function testImagesGet() {
 
 			$request = new \WP_REST_Request( 'GET', '/wapuus-api/v2/images' );
 
@@ -160,7 +160,7 @@ class StatsAndImagesTest extends Unit_API_Test_Case {
 		/**
 		 * Test the "image get" endpoint.
 		 */
-		public function test_image_get() {
+		public function testImageGet() {
 
 			$request = new \WP_REST_Request( 'GET', '/wapuus-api/v2/images/' . $this->image_sample_id );
 
@@ -179,7 +179,7 @@ class StatsAndImagesTest extends Unit_API_Test_Case {
 		/**
 		 * Test the "image delete" endpoint.
 		 */
-		public function test_image_delete() {
+		public function testImageDelete() {
 
 			$request = new \WP_REST_Request( 'DELETE', '/wapuus-api/v2/images/' . $this->image_sample_id );
 

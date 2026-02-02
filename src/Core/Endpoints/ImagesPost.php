@@ -20,22 +20,22 @@ use WapuusApi\Helpers;
 		/**
 		 * Route for the "image post" endpoint.
 		 */
-		public function get_path() {
-			return '/' . ImagesResource::get_instance()->name();
+		public function getPath() {
+			return '/' . ImagesResource::getInstance()->getName();
 		}
 
 		/**
 		 * Resource schema callback for the "image post" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
-			return ImagesResource::get_instance()->schema();
+		public function resourceSchema() {
+			return ImagesResource::getInstance()->getSchema();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "image post" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::CREATABLE;
 		}
 
@@ -46,7 +46,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array(
 				'name'     => array(
@@ -86,7 +86,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
 			if ( ! is_user_logged_in() ) {
 				$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'User does not have permission.', 'wapuus-api' ) );
@@ -123,50 +123,50 @@ use WapuusApi\Helpers;
 			$files['img']['name'] = sanitize_file_name( $files['img']['name'] );
 			$files['img']['type'] = sanitize_mime_type( $files['img']['type'] );
 
-			$allowed_image_types = array(
+			$allowedImageTypes = array(
 				'jpg'  => 'image/jpg',
 				'jpeg' => 'image/jpeg',
 				'png'  => 'image/png',
 			);
 
-			if ( ! in_array( strtolower( $files['img']['type'] ), $allowed_image_types, true ) ) {
+			if ( ! in_array( strtolower( $files['img']['type'] ), $allowedImageTypes, true ) ) {
 				$response = new \WapuusApi\Core\Responses\Error\UnsupportedMediaType( __( 'Invalide Image.', 'wapuus-api' ) );
 				return rest_ensure_response( $response );
 			}
 
-			$file_size = $files['img']['size']; // In bytes.
+			$fileSize = $files['img']['size']; // In bytes.
 
 			/**
 			 * Convert Bytes to Megabytes
 			 * https://www.php.net/manual/pt_BR/function.filesize.php#112996
 			 */
-			$file_size = round( $file_size / pow( 1024, 2 ), 2 );
+			$fileSize = round( $fileSize / pow( 1024, 2 ), 2 );
 
-			if ( $file_size > 1 ) {
+			if ( $fileSize > 1 ) {
 				$response = new \WapuusApi\Core\Responses\Error\NotAcceptable( __( 'The image is greater than 1MB - the maximum size allowed.', 'wapuus-api' ) );
 				return rest_ensure_response( $response );
 			}
 
-			$img_size   = getimagesize( $files['img']['tmp_name'] );
-			$img_width  = $img_size[0];
-			$img_height = $img_size[1];
+			$imgSize   = getimagesize( $files['img']['tmp_name'] );
+			$imgWidth  = $imgSize[0];
+			$imgHeight = $imgSize[1];
 
-			if ( $img_width < 1000 || $img_height < 1000 ) {
+			if ( $imgWidth < 1000 || $imgHeight < 1000 ) {
 				$response = new \WapuusApi\Core\Responses\Error\NotAcceptable( __( 'The image should have at least 1000px X 1000px of dimensions.', 'wapuus-api' ) );
 				return rest_ensure_response( $response );
 			}
 
-			$user     = wp_get_current_user();
-			$from     = sanitize_text_field( $request['from'] );
-			$from_url = esc_url_raw( $request['from_url'] );
-			$caption  = sanitize_textarea_field( $request['caption'] );
+			$user    = wp_get_current_user();
+			$from    = sanitize_text_field( $request['from'] );
+			$fromUrl = esc_url_raw( $request['from_url'] );
+			$caption = sanitize_textarea_field( $request['caption'] );
 
 			if ( empty( $from ) ) {
 				$from = 'Unknown';
 			}
 
-			if ( empty( $from_url ) ) {
-				$from_url = '#';
+			if ( empty( $fromUrl ) ) {
+				$fromUrl = '#';
 			}
 
 			$post = array(
@@ -177,13 +177,13 @@ use WapuusApi\Helpers;
 				'files'       => $files,
 				'meta_input'  => array(
 					'from'     => $from,
-					'from_url' => $from_url,
+					'from_url' => $fromUrl,
 					'caption'  => substr( $caption, 0, 150 ),
 					'views'    => 0,
 				),
 			);
 
-			$post_id = wp_insert_post( $post );
+			$postId = wp_insert_post( $post );
 
 			// These files need to be included as dependencies when on the front end.
 			require_once ABSPATH . 'wp-admin/includes/image.php';
@@ -197,7 +197,7 @@ use WapuusApi\Helpers;
 				 *
 				 * So we need to use the media_handle_upload() function because it will use the PHP is_uploaded_file() method to check if the file on the $_FILES is valid.
 				 */
-				$image_id = media_handle_upload( 'img', $post_id ); // Should be used for file uploads (input file field).
+				$imageId = media_handle_upload( 'img', $postId ); // Should be used for file uploads (input file field).
 
 			} else {
 
@@ -209,14 +209,14 @@ use WapuusApi\Helpers;
 				 *
 				 * This is necessary to get the upload done - skipping the is_uploaded_file() verification - in cases where we are testing our endpoint via PHPUnit.
 				 */
-				$image_id = media_handle_sideload( $files['img'], $post_id ); // Should be used for remote file uploads (input text field).
+				$imageId = media_handle_sideload( $files['img'], $postId ); // Should be used for remote file uploads (input text field).
 
 			}
 
-			update_post_meta( $post_id, 'img', $image_id );
-			set_post_thumbnail( $post_id, $image_id );
+			update_post_meta( $postId, 'img', $imageId );
+			set_post_thumbnail( $postId, $imageId );
 
-			$wapuu = Helpers::getPostData( $post_id );
+			$wapuu = Helpers::getPostData( $postId );
 
 			$response = new \WapuusApi\Core\Responses\Valid\Created( $wapuu );
 

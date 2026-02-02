@@ -20,22 +20,22 @@ use WapuusApi\Helpers;
 		/**
 		 * Route for the "image get" endpoint.
 		 */
-		public function get_path() {
-			return '/' . ImagesResource::get_instance()->name() . '/(?P<id>[0-9]+)';
+		public function getPath() {
+			return '/' . ImagesResource::getInstance()->getName() . '/(?P<id>[0-9]+)';
 		}
 
 		/**
 		 * Resource schema callback for the "image get" endpoint, which is the same
 		 * for all methods (POST, GET, DELETE etc.) that the route accepts.
 		 */
-		public function resource_schema() {
-			return ImagesResource::get_instance()->schema();
+		public function resourceSchema() {
+			return ImagesResource::getInstance()->getSchema();
 		}
 
 		/**
 		 * Method (POST, GET, DELETE etc.) implemented for the "image get" endpoint.
 		 */
-		public function get_methods() {
+		public function getMethods() {
 			return \WP_REST_Server::READABLE;
 		}
 
@@ -46,7 +46,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return array Arguments.
 		 */
-		public function get_arguments() {
+		public function getArguments() {
 
 			$args = array(
 				'id' => array(
@@ -66,7 +66,7 @@ use WapuusApi\Helpers;
 		 *
 		 * @return true|\WP_Error Returns true on success or a WP_Error if it does not pass on the permissions check.
 		 */
-		public function check_permissions( \WP_REST_Request $request ) {
+		public function checkPermissions( \WP_REST_Request $request ) {
 
 			return true;
 		}
@@ -82,10 +82,10 @@ use WapuusApi\Helpers;
 		 */
 		public function respond( \WP_REST_Request $request ) {
 
-			$post_id = absint( $request['id'] );
-			$post    = get_post( $post_id );
+			$postId = absint( $request['id'] );
+			$post   = get_post( $postId );
 
-			if ( ! isset( $post ) || empty( $post_id ) ) {
+			if ( ! isset( $post ) || empty( $postId ) ) {
 				$response = new \WapuusApi\Core\Responses\Error\NotFound( __( 'Image not found.', 'wapuus-api' ) );
 				return rest_ensure_response( $response );
 			}
@@ -93,11 +93,11 @@ use WapuusApi\Helpers;
 			$image          = Helpers::getPostData( $post );
 			$image['views'] = (int) $image['views'] + 1;
 
-			update_post_meta( $post_id, 'views', $image['views'] );
+			update_post_meta( $postId, 'views', $image['views'] );
 
 			$comments = get_comments(
 				array(
-					'post_id' => $post_id,
+					'post_id' => $postId,
 					'order'   => 'ASC',
 				)
 			);
