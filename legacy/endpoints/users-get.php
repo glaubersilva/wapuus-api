@@ -7,8 +7,6 @@
  * @link https://glaubersilva.me/
  */
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * Register the "user get" endpoint.
  */
@@ -18,7 +16,7 @@ function wappus_api_register_user_get() {
 		'wapuus-api/v1',
 		'/users',
 		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the route accepts.
-			'schema' => array( \Wapuus_API\Src\Core\Schemas\Users_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
+			'schema' => array( \WapuusApi\Core\Schemas\UsersResource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'args'                => wappus_api_user_get_args(),
@@ -56,7 +54,7 @@ function wappus_api_user_get_args() {
 function wappus_api_user_get_permissions_check( $request ) {
 
 	if ( ! is_user_logged_in() ) {
-		$response = new \Wapuus_API\Src\Core\Responses\Error\No_Permission( __( 'User does not have permission.', 'wapuus-api' ) );
+		$response = new \WapuusApi\Core\Responses\Error\NoPermission( __( 'User does not have permission.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
@@ -82,7 +80,7 @@ function wappus_api_user_get( $request ) {
 		'email'    => $user->user_email,
 	);
 
-	$response = new \Wapuus_API\Src\Core\Responses\Valid\OK( $user );
+	$response = new \WapuusApi\Core\Responses\Valid\Ok( $user );
 
 	return rest_ensure_response( $response );
 }

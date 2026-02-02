@@ -7,8 +7,6 @@
  * @link https://glaubersilva.me/
  */
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * Register the "image get" endpoint.
  */
@@ -18,7 +16,7 @@ function wapuus_api_register_image_get() {
 		'wapuus-api/v1',
 		'/images/(?P<id>[0-9]+)',
 		array( // The callback to the "resource schema" which is the same for all methods (POST, GET, DELETE etc.) that the route accepts.
-			'schema' => array( \Wapuus_API\Src\Core\Schemas\Images_Resource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
+			'schema' => array( \WapuusApi\Core\Schemas\ImagesResource::get_instance(), 'schema' ), // https://developer.wordpress.org/rest-api/extending-the-rest-api/schema/#resource-schema <<< Reference.
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'args'                => wapuus_api_image_get_args(),
@@ -79,11 +77,11 @@ function wapuus_api_image_get( $request ) {
 	$post    = get_post( $post_id );
 
 	if ( ! isset( $post ) || empty( $post_id ) ) {
-		$response = new \Wapuus_API\Src\Core\Responses\Error\Not_Found( __( 'Image not found.', 'wapuus-api' ) );
+		$response = new \WapuusApi\Core\Responses\Error\NotFound( __( 'Image not found.', 'wapuus-api' ) );
 		return rest_ensure_response( $response );
 	}
 
-	$image          = wapuus_api_get_post_data( $post );
+	$image          = \WapuusApi\Core\Helpers::getPostData( $post );
 	$image['views'] = (int) $image['views'] + 1;
 
 	update_post_meta( $post_id, 'views', $image['views'] );
@@ -96,7 +94,7 @@ function wapuus_api_image_get( $request ) {
 	);
 
 	foreach ( $comments as $key => $comment ) {
-		$comments[ $key ] = wapuus_api_get_comment_data( $comment );
+		$comments[ $key ] = \WapuusApi\Core\Helpers::getCommentData( $comment );
 	}
 
 	$image = array(
@@ -104,7 +102,7 @@ function wapuus_api_image_get( $request ) {
 		'comments' => $comments,
 	);
 
-	$response = new \Wapuus_API\Src\Core\Responses\Valid\OK( $image );
+	$response = new \WapuusApi\Core\Responses\Valid\Ok( $image );
 
 	return rest_ensure_response( $response );
 }

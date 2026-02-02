@@ -9,8 +9,6 @@
 
 namespace Wapuus_API\Tests;
 
-defined( 'ABSPATH' ) || exit;
-
 if ( ! class_exists( 'Wapuus_API_V1_Comments_Tests' ) ) {
 
 	/**

@@ -15,8 +15,8 @@
  * @link https://glaubersilva.me/
  */
 
-use Wapuus_API\Src\Container\Container;
-use Wapuus_API\Src\Interfaces\Service_Provider_Interface;
+use WapuusApi\Container\Container;
+use WapuusApi\Interfaces\ServiceProviderInterface;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -44,9 +44,9 @@ final class Wapuus_Api {
 	 *
 	 * @var array
 	 */
-	private $service_providers = array(
-		\Wapuus_API\Src\Core\Core_Service_Provider::class,
-		\Wapuus_API\Src\Core\Endpoints\Endpoints_Service_Provider::class,
+	private $serviceProviders = array(
+		\WapuusApi\Core\CoreServiceProvider::class,
+		\WapuusApi\Core\Endpoints\EndpointsServiceProvider::class,
 	);
 
 	/**
@@ -54,7 +54,7 @@ final class Wapuus_Api {
 	 *
 	 * @var bool
 	 */
-	private $providers_loaded = false;
+	private $providersLoaded = false;
 
 	/**
 	 * Constructor. Sets up the Container.
@@ -74,7 +74,7 @@ final class Wapuus_Api {
 		 */
 		do_action( 'before_wapuus_api_init' );
 
-		$this->load_service_providers();
+		$this->loadServiceProviders();
 
 		/**
 		 * Fires after the Wapuus API core loads.
@@ -89,23 +89,23 @@ final class Wapuus_Api {
 	 *
 	 * @return void
 	 */
-	public function load_service_providers() {
-		if ( $this->providers_loaded ) {
+	public function loadServiceProviders(): void {
+		if ( $this->providersLoaded ) {
 			return;
 		}
 
 		$providers = array();
 
-		foreach ( $this->service_providers as $service_provider ) {
-			if ( ! is_subclass_of( $service_provider, Service_Provider_Interface::class ) ) {
-				$name = is_string( $service_provider ) ? $service_provider : get_class( $service_provider );
+		foreach ( $this->serviceProviders as $serviceProvider ) {
+			if ( ! is_subclass_of( $serviceProvider, ServiceProviderInterface::class ) ) {
+				$name = is_string( $serviceProvider ) ? $serviceProvider : get_class( $serviceProvider );
 				throw new InvalidArgumentException(
 					esc_html( $name . ' must implement the Service_Provider_Interface' )
 				);
 			}
 
-			/** @var Service_Provider_Interface $provider */
-			$provider = new $service_provider();
+			/** @var ServiceProviderInterface $provider */
+			$provider = new $serviceProvider();
 			$provider->register();
 			$providers[] = $provider;
 		}
@@ -114,7 +114,7 @@ final class Wapuus_Api {
 			$provider->boot();
 		}
 
-		$this->providers_loaded = true;
+		$this->providersLoaded = true;
 	}
 
 	/**
@@ -131,21 +131,21 @@ final class Wapuus_Api {
 	/**
 	 * Register a Service Provider.
 	 *
-	 * @param string $service_provider Fully qualified class name.
+	 * @param string $serviceProvider Fully qualified class name.
 	 * @return void
 	 */
-	public function register_service_provider( $service_provider ) {
-		$this->service_providers[] = $service_provider;
+	public function registerServiceProvider( $serviceProvider ): void {
+		$this->serviceProviders[] = $serviceProvider;
 	}
 
 	/**
 	 * Magic getter - delegate to container.
 	 *
-	 * @param string $property_name Property name.
+	 * @param string $propertyName Property name.
 	 * @return mixed
 	 */
-	public function __get( $property_name ) {
-		return $this->container->get( $property_name );
+	public function __get( $propertyName ) {
+		return $this->container->get( $propertyName );
 	}
 
 	/**
@@ -196,8 +196,7 @@ function wapuus_api( $abstract = null ) {
 /**
  * Initial Setup
  */
-require_once WAPUUS_API_DIR . '/autoload.php';
-require_once WAPUUS_API_DIR . '/src/helpers.php';
+require_once WAPUUS_API_DIR . '/vendor/autoload.php';
 
 /**
  * API V1 files - Legacy code left to demonstrate extending the WP API without using classes.

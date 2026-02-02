@@ -9,9 +9,7 @@
 
 namespace Wapuus_API\Tests;
 
-defined( 'ABSPATH' ) || exit;
-
-use Wapuus_API\Src\Core\Wapuus_Custom_Post_Type;
+use WapuusApi\Core\WapuusCustomPostType;
 use Yoast\PHPUnitPolyfills\Polyfills\AssertIsType;
 
 if ( ! class_exists( 'Unit_Test_Case' ) ) {
@@ -69,7 +67,7 @@ if ( ! class_exists( 'Unit_Test_Case' ) ) {
 			$this->user_id = $new_admin_user;
 
 			// Workaround for https://core.trac.wordpress.org/ticket/48300 bug.
-			Wapuus_Custom_Post_Type::get_instance();
+			WapuusCustomPostType::get_instance();
 		}
 
 		/**

@@ -1,10 +1,24 @@
 {
+    "name": "wapuus/wapuus-api",
+    "type": "wordpress-plugin",
+    "description": "A simple plugin that implements the API used by the wapuus.org project.",
+    "license": "GPL-2.0-or-later",
     "require-dev": {
         "wp-coding-standards/wpcs": "^2.3",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
         "phpunit/phpunit": "^9",
         "yoast/phpunit-polyfills": "^1.0",
         "wordpress/wordpress": "dev-trunk"
+    },
+    "autoload": {
+        "psr-4": {
+            "WapuusApi\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "WapuusApi\\Tests\\": "tests/"
+        }
     },
     "scripts": {
         "test": "./vendor/bin/phpunit --colors",
